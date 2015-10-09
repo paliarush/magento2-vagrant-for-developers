@@ -27,6 +27,8 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
 
  1. Run in command line from the directory which contains your projects:
  
+    :information_source: To have 'composer install' here work faster, remove 'prefer-source' option and follow the instructions provided in [Gighub limitations section](README.md#github-limitations)
+ 
      ```
     git clone git@github.com:paliarush/vagrant-magento.git vagrant-magento
     git clone git@github.com:magento/magento2.git magento2ce
