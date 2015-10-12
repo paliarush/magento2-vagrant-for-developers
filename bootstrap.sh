@@ -51,7 +51,7 @@ a2ensite magento2.conf
 sudo a2dissite 000-default
 
 # Setup PHP
-apt-get install -y php5 php5-mhash php5-mcrypt php5-curl php5-cli php5-mysql php5-gd php5-intl php5-xsl curl
+apt-get install -y php5 php5-mhash php5-mcrypt php5-curl php5-cli php5-mysql php5-gd php5-intl php5-xsl php5-xdebug curl
 if [ ! -f /etc/php5/apache2/conf.d/20-mcrypt.ini ]; then
     ln -s /etc/php5/mods-available/mcrypt.ini /etc/php5/apache2/conf.d/20-mcrypt.ini
 fi
