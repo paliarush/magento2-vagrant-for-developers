@@ -45,7 +45,12 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
         cd vagrant-magento
         vagrant up
         ```
- 1. At some point you will be prompted to [set up synchronization with PHP Storm](docs/phpstorm-configuration.md)
+ 1. Add corresponding record to your `hosts` file on the host machine:
+ 
+    ```
+    192.168.10.11 magento2.vagrant
+    ```
+ 1. After the installation is complete, [set up synchronization with PHP Storm](docs/phpstorm-configuration.md)
     
 ###To reinstall Magento
 To save some time and get clear Magento installation, you can skip installation of software like web server or php.
@@ -59,50 +64,21 @@ vagrant provision --provision-with install_magento
 
 ### After installation
 
-Upon a successful installation, you'll see the location and URL of the newly-installed Magento 2 application:
-```
-Magento application was deployed in /var/www/magento2ce and installed
-Access front store at http://${HOST}/
-Access admin panel at http://${HOST}/${admin_frontame}/
-```
+Upon a successful installation, you'll see the location and URL of the newly-installed Magento 2 application in console.
+See a list of [default credentials and settings](README.md#default-credentials) below.
 
-`/var/www/magento2ce` is a path to your Magento installation on the VM.
+### Default credentials and settings
 
-### Default credentials
+Web access:
+- Access storefront at `http://magento2.vagrant`
+- Access admin panel at `http://magento2.vagrant/admin/`
+- Magento admin user/password: `admin/123123q`
 
-```
-db host: localhost (not accessible remotely)
-db user/password: magento/magento
-db name: magento
-
-also available db user/password: root/password
-
-Magento admin user/password: admin/123123q
-```
-
-### Hostname
-
-The hostname of the Magento application is derived from hostname of the VM defined in the `Vagrantfile`:
-```
-config.vm.hostname = "magento2.vagrant"
-```
-
-Change this value in the `Vagrantfile` if you want to use different hostname.
-
-If Vagrant can't determine hostname of the VM for some reason, it will use its IP address (also specified in `Vagrantfile`).
-
-Also make sure you update your system `hosts` file with a record that links the IP address and hostname of the VM.
-For the following `Vagrantfile`
-```
-...
-config.vm.network :private_network, ip: '192.168.10.11'
-config.vm.hostname = "magento2.vagrant"
-...
-```
-Specify the following in your `hosts` file:
-```
-192.168.10.11    magento2.vagrant
-```
+Codebase and DB access:
+- Path to your Magento installation on the VM: `/var/www/magento2ce`
+- MySQL DB host: `localhost` (not accessible remotely)
+- MySQL DB name: `magento`
+- MySQL DB user/password: `magento/magento`. Alternatively `root/password`
 
 ### GitHub Limitations
 

@@ -75,7 +75,7 @@ php ${install_cmd}
 chown -R vagrant:vagrant ${magento_dir}
 
 # Enable Magento cron jobs
-echo "*/1 * * * * php ${magento_dir}/bin/magento cron:run &" | crontab -u vagrant -
+echo "* * * * * php ${magento_dir}/bin/magento cron:run &" | crontab -u vagrant -
 
 set +x
 echo "
