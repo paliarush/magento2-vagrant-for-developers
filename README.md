@@ -26,24 +26,26 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
 ### To install the whole image from scratch
 
  1. Run in command line from the directory which contains your projects:
- 
-    :information_source: To have 'composer install' here work faster, remove 'prefer-source' option and follow the instructions provided in [Gighub limitations section](README.md#github-limitations)
- 
-     ```
-    git clone git@github.com:paliarush/vagrant-magento.git vagrant-magento
-    git clone git@github.com:magento/magento2.git magento2ce
-    cd magento2ce
-    mkdir -p var/generation
-    composer install --prefer-source
-    cd ../vagrant-magento
-    vagrant up
-     ```
+     1. Prepare Magento codebase. This step is optional, just ensure you have 'magento2ce' directory with Magento code available.
+         
+         :information_source: To have 'composer install' here work faster, remove 'prefer-source' option and follow the instructions provided in [Gighub limitations section](README.md#github-limitations)
+     
+        ```
+        git clone git@github.com:magento/magento2.git magento2ce
+        cd magento2ce
+        mkdir -p var/generation
+        composer install --prefer-source
+        cd ..
+        ```
+    
+     1. Download project with Vagrant configuration and install Magento (~ 5 minutes):
+     
+        ```
+        git clone git@github.com:paliarush/vagrant-magento.git vagrant-magento
+        cd vagrant-magento
+        vagrant up
+        ```
  1. At some point you will be prompted to [set up synchronization with PHP Storm](docs/phpstorm-configuration.md)
-    and install Magento using:
- 
-     ```
-    vagrant provision --provision-with install_magento
-     ```
     
 ###To reinstall Magento
 To save some time and get clear Magento installation, you can skip installation of software like web server or php.
@@ -59,12 +61,12 @@ vagrant provision --provision-with install_magento
 
 Upon a successful installation, you'll see the location and URL of the newly-installed Magento 2 application:
 ```
-Magento application was deployed in /var/www/magento2 and installed
+Magento application was deployed in /var/www/magento2ce and installed
 Access front store at http://${HOST}/
 Access admin panel at http://${HOST}/${admin_frontame}/
 ```
 
-`/var/www/magento2` is a path to your Magento installation on the VM.
+`/var/www/magento2ce` is a path to your Magento installation on the VM.
 
 ### Default credentials
 

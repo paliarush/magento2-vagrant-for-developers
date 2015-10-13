@@ -15,12 +15,14 @@ Vagrant.configure(2) do |config|
   config.vm.hostname = "magento2.vagrant"
 
   config.vm.synced_folder '.', '/vagrant'
-  config.vm.synced_folder '../magento2ce/var/generation', '/var/www/magento2/var/generation', owner: "www-data", group: "www-data", mount_options: ["dmode=775", "fmode=775"]
-  config.vm.synced_folder '../magento2ce/app/etc', '/var/www/magento2/app/etc', owner: "www-data", group: "www-data", mount_options: ["dmode=775", "fmode=775"]
+  config.vm.synced_folder '../magento2ce/var/generation', '/var/www/magento2ce/var/generation'
+  config.vm.synced_folder '../magento2ce/app/etc', '/var/www/magento2ce/app/etc'
 
   config.vm.provision "install_environment", type: "shell" do |s|
-      s.path = "bootstrap.sh"
+      s.path = "install_environment.sh"
   end
+
+  config.vm.provision "deploy_magento_code", type: "file", source: '../magento2ce', destination: '/var/www'
 
   config.vm.provision "install_magento", type: "shell" do |s|
       s.path = "install_magento.sh"

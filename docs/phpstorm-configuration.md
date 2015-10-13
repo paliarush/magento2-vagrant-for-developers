@@ -7,8 +7,8 @@ This solution is applicable to any Vagrant configuration for Magento instance, s
     
     ```
     Vagrant.configure(2) do |config|
-      config.vm.synced_folder '../magento2ce/var/generation', '/var/www/magento2/var/generation'
-      config.vm.synced_folder '../magento2ce/app/etc', '/var/www/magento2/app/etc'
+      config.vm.synced_folder '../magento2ce/var/generation', '/var/www/magento2ce/var/generation'
+      config.vm.synced_folder '../magento2ce/app/etc', '/var/www/magento2ce/app/etc'
     end
     ```
 
@@ -30,7 +30,7 @@ This solution is applicable to any Vagrant configuration for Magento instance, s
  
              ![](images/private-key-auth-type.png)
 
-     1. Set up mapping between your local and remote versions of the project, for remote project use '/var/www/magento2'
+     1. Set up mapping between your local and remote versions of the project, for remote project use '/var/www/magento2ce'
 
          ![](images/projects-mapping.png)
 
@@ -41,7 +41,3 @@ This solution is applicable to any Vagrant configuration for Magento instance, s
      1. Go to Tools -> Deployment -> Options... and enable automatic upload to default server and check "Upload external changes"
 
         ![](images/automatic-upload.png)
-
- 1. Upload Magento code base to the virtual machine from the host machine using context menu on the root of the project in PHPStorm
-
-     ![](images/upload-magento-codebase.png)

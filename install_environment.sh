@@ -4,25 +4,6 @@ set -ex
 
 apt-get update
 
-# Check arguments
-#
-# Default values
-reinstall='';
-with_sample_data='';
-deploy_static_view_files='';
-for var in "$@"
-do
-    if [ "${var}" == "reinstall" ]; then
-        reinstall=true;
-    fi
-    if [ "${var}" == "with_sample_data" ]; then
-        with_sample_data=true;
-    fi
-    if [ "${var}" == "deploy_static_view_files" ]; then
-        deploy_static_view_files=true;
-    fi
-done
-
 # Determine external IP address
 set +x
 IP=`ifconfig eth1 | grep inet | awk '{print $2}' | sed 's/addr://'`
@@ -42,11 +23,16 @@ fi
 # Setup Apache
 apt-get install -y apache2
 a2enmod rewrite
+
+# Make suer Apache is run from 'vagrant' user to avoid permission issues
+sed -i 's/www-data/vagrant/g' /etc/apache2/envvars
+
+# Enable Magento virtual host
 apache_config="/etc/apache2/sites-available/magento2.conf"
 cp /vagrant/magento2.vhost.conf  ${apache_config}
 sed -i "s/<host>/${HOST}/g" ${apache_config}
-# Enable Magento virtual host
 a2ensite magento2.conf
+
 # Disable default virtual host
 sudo a2dissite 000-default
 
@@ -60,6 +46,9 @@ if [ ! -f /etc/php5/cli/conf.d/20-mcrypt.ini ]; then
 fi
 echo "date.timezone = America/Chicago" >> /etc/php5/cli/php.ini
 
+# Configure XDebug
+echo "xdebug.max_nesting_level=200" >> /etc/php5/cli/conf.d/20-xdebug.ini
+
 # Restart Apache
 service apache2 restart
 
@@ -69,9 +58,12 @@ debconf-set-selections <<< 'mysql-server mysql-server/root_password_again passwo
 apt-get install -q -y mysql-server-5.6 mysql-client-5.6
 
 # Setup Composer
-apt-get install -y git
 if [ ! -f /usr/local/bin/composer ]; then
     cd /tmp
     curl -sS https://getcomposer.org/installer | php
     mv composer.phar /usr/local/bin/composer
 fi
+
+# Set permissions to allow Magento codebase upload by Vagrant provision script
+chown -R vagrant:vagrant /var/www
+chmod -R 755 /var/www
