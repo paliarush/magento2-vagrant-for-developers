@@ -49,13 +49,13 @@ if [ ! -d "${magento_dir}/app/code/Magento" ]; then
 else
     # Clear cache
     cd ${magento_dir}
-    #clear var
+    # Clear var
     mv var/.htaccess .var_htaccess.back && rm -rf var/* && mv .var_htaccess.back var/.htaccess
-    #clear pub/statics
+    # Clear pub/statics
     mv pub/static/.htaccess pub/static_htaccess.back && rm -rf pub/static/* && mv pub/static_htaccess.back pub/static/.htaccess
-    #clear integration tests tmp
+    # Clear integration tests tmp
     cd "${magento_dir}/dev/tests/integration" && mv tmp/.gitignore tmp_gitignore.back && rm -rf tmp/* && mv tmp_gitignore.back tmp/.gitignore
-    #clear unit tests tmp
+    # Clear unit tests tmp
     cd "${magento_dir}/dev/tests/unit" && rm -rf tmp/*
 
     # Remove configuration files
@@ -81,13 +81,13 @@ else
         composer install --prefer-source
     fi
 
-    backend_frontame="backend"
+    admin_frontame="admin"
     install_cmd="./bin/magento setup:install \
         --db-host=localhost \
         --db-name=magento \
         --db-user=magento \
         --db-password=magento \
-        --backend-frontname=${backend_frontame} \
+        --backend-frontname=${admin_frontame} \
         --base-url=http://${HOST}/ \
         --language=en_US \
         --timezone=America/Chicago \
@@ -105,10 +105,13 @@ else
     chown -R www-data:www-data .
     usermod -a -G www-data vagrant #required to allow files modification via SSH
 
+    # Enable Magento cron jobs
+    echo "*/1 * * * * php ${magento_dir}/bin/magento cron:run &" | crontab -u www-data -
+
     set +x
     echo "Magento application was deployed in ${magento_dir} and installed"
     echo "Access front store at http://${HOST}/"
-    echo "Access admin panel at http://${HOST}/${backend_frontame}/"
+    echo "Access admin panel at http://${HOST}/${admin_frontame}/"
     if [ ${HOST} != ${IP} ]; then
         echo "Don't forget to update your 'hosts' file with '${IP} ${HOST}'"
     fi

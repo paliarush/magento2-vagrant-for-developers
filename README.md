@@ -61,7 +61,7 @@ Upon a successful installation, you'll see the location and URL of the newly-ins
 ```
 Magento application was deployed in /var/www/magento2 and installed
 Access front store at http://${HOST}/
-Access admin panel at http://${HOST}/${backend_frontame}/
+Access admin panel at http://${HOST}/${admin_frontame}/
 ```
 
 `/var/www/magento2` is a path to your Magento installation on the VM.
