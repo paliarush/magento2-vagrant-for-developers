@@ -12,7 +12,7 @@ With current configuration Vagrant will:
  1. Install all necessary libraries
  1. Install the Magento 2 application
 
-## Usage
+## Environment set up workflow
 
 If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com/v2/)
 
@@ -51,21 +51,11 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
     192.168.10.11 magento2.vagrant
     ```
  1. After the installation is complete, [set up synchronization with PHP Storm](docs/phpstorm-configuration.md)
-    
-###To reinstall Magento
-To save some time and get clear Magento installation, you can skip installation of software like web server or php.
-The following command will clear Magento DB, Magento caches and reinstall Magento instance.
-
-Go to 'vagrant-magento' created earlier and run in command line:
-
-```
-vagrant provision --provision-with install_magento
-```
 
 ### After installation
 
 Upon a successful installation, you'll see the location and URL of the newly-installed Magento 2 application in console.
-See a list of [default credentials and settings](README.md#default-credentials) below.
+See a list of [default credentials and settings](README.md#default-credentials).
 
 ### Default credentials and settings
 
@@ -77,8 +67,8 @@ Web access:
 Codebase and DB access:
 - Path to your Magento installation on the VM: `/var/www/magento2ce`
 - MySQL DB host: `localhost` (not accessible remotely)
-- MySQL DB name: `magento`
-- MySQL DB user/password: `magento/magento`. Alternatively `root/password`
+- MySQL DB name: `magento`, `magento_integration_tests`
+- MySQL DB user/password: just use `mysql` with no user and password (`root/password` will be used by default)
 
 ### GitHub Limitations
 
@@ -92,6 +82,34 @@ For the Vagrant configuration you may specify your token in `local.config/github
 ```
 Installing GitHub OAuth token from /vagrant/local.config/github.oauth.token
 ```
+
+## Magento development workflow
+    
+### Reinstall Magento
+To save some time and get clear Magento installation, you can skip installation of software like web server or php.
+The following command will clear Magento DB, Magento caches and reinstall Magento instance.
+
+Go to 'vagrant-magento' created earlier and run in command line:
+
+```
+vagrant provision --provision-with install_magento
+```
+
+### Clear magento cache
+
+Go to 'vagrant-magento' created earlier and run in command line:
+
+```
+vagrant ssh -c 'magento_clear_cache'
+```
+
+### Debugging with XDebug
+
+XDebug is already configured to connect to the host machine automatically. So just:
+ 
+ 1. Set XDEBUG_SESSION=1 cookie (e.g. using 'easy Xdebug' extension for Firefox). See [XDebug documentation](http://xdebug.org/docs/remote) for more details
+ 1. Start listening for PHP Debug connections in PhpStorm. See how to [integrate XDebug with PhpStorm](https://www.jetbrains.com/phpstorm/help/configuring-xdebug.html#integrationWithProduct)
+ 1. Set beakpoint or set option in PhpStorm menu 'Run -> Break at first line in PHP scripts'
 
 ## Related Repositories
 

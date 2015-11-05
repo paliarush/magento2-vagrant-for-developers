@@ -12,7 +12,7 @@ This solution is applicable to any Vagrant configuration for Magento instance, s
     end
     ```
 
- 1. Open your project on host machine in PHPStorm and set up deployment configuration, which will upload to the guest machine everything except for those folders which are synchronized by Vagrant.  :information_source: Note that rsync can be used instead of PHP Storm deployment.
+ 1. Open your project on host machine in PhpStorm and set up deployment configuration, which will upload to the guest machine everything except for those folders which are synchronized by Vagrant.  :information_source: Note that rsync can be used instead of PHP Storm deployment.
      1. Go to Tools -> Deployment -> Configuration
 
          ![](images/deployment-configuration.png)
@@ -34,7 +34,7 @@ This solution is applicable to any Vagrant configuration for Magento instance, s
 
          ![](images/projects-mapping.png)
 
-     1. Add remote paths excluded from synchronization by PHPStorm. You should add those paths which are specified in Vagrant config for synchronization. 
+     1. Add remote paths excluded from synchronization by PhpStorm. You should add those paths which are specified in Vagrant config for synchronization. 
 
          ![](images/exclude-paths-from-mapping.png)
 

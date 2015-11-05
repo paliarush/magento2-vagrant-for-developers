@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Enable trace printing and exit on the first error
 set -ex
 
 apt-get update
@@ -46,8 +47,10 @@ if [ ! -f /etc/php5/cli/conf.d/20-mcrypt.ini ]; then
 fi
 echo "date.timezone = America/Chicago" >> /etc/php5/cli/php.ini
 
-# Configure XDebug
-echo "xdebug.max_nesting_level=200" >> /etc/php5/cli/conf.d/20-xdebug.ini
+# Configure XDebug to allow remote connections from the host
+echo "xdebug.max_nesting_level=200\
+xdebug.remote_enable=1\
+xdebug.remote_connect_back=1" >> /etc/php5/cli/conf.d/20-xdebug.ini
 
 # Restart Apache
 service apache2 restart
@@ -56,6 +59,12 @@ service apache2 restart
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password password'
 debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password password'
 apt-get install -q -y mysql-server-5.6 mysql-client-5.6
+mysqladmin -uroot -ppassword password ''
+
+# Make it possible to run 'mysql' without username and password
+sed -i '/\[client\]/a\
+user = root\
+password =' /etc/mysql/my.cnf
 
 # Setup Composer
 if [ ! -f /usr/local/bin/composer ]; then
@@ -67,3 +76,7 @@ fi
 # Set permissions to allow Magento codebase upload by Vagrant provision script
 chown -R vagrant:vagrant /var/www
 chmod -R 755 /var/www
+
+# Declare path to scripts supplied with vagrant and Magento
+magento_dir="/var/www/magento2ce"
+echo "export PATH=\$PATH:/vagrant/bin:${magento_dir}/bin" >> /home/vagrant/.profile

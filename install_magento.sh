@@ -2,6 +2,7 @@
 
 # vagrant provision --provision-with install_magento
 
+# Enable trace printing and exit on the first error
 set -ex
 
 # Determine external IP address
@@ -34,9 +35,10 @@ rm -f "${magento_dir}/app/etc/config.php"
 rm -f "${magento_dir}/app/etc/env.php"
 
 # Create DB
-db_name="magento"
-mysql -u root -ppassword -e "drop database if exists ${db_name}; create database ${db_name};"
-mysql -u root -ppassword -e "GRANT ALL ON ${db_name}.* TO magento@localhost IDENTIFIED BY 'magento';"
+db_names=("magento" "magento_integration_tests")
+for db_name in "${db_names[@]}"; do
+    mysql -e "drop database if exists ${db_name}; create database ${db_name};"
+done
 
 # Install Magento application
 cd ${magento_dir}
@@ -55,8 +57,7 @@ admin_frontame="admin"
 install_cmd="./bin/magento setup:install \
     --db-host=localhost \
     --db-name=magento \
-    --db-user=magento \
-    --db-password=magento \
+    --db-user=root \
     --backend-frontname=${admin_frontame} \
     --base-url=http://${HOST}/ \
     --language=en_US \
@@ -86,8 +87,8 @@ Access admin panel at http://${HOST}/${admin_frontame}/
 Don't forget to update your 'hosts' file with '${IP} ${HOST}'
 
 [Optional] To finish developer environment set up:
-    1. Please create new PHPStorm project using 'magento2ce' directory on your host
+    1. Please create new PhpStorm project using 'magento2ce' directory on your host
     (this directory should already contain Magento repository cloned earlier)
 
     2. Use instructions provided here https://github.com/paliarush/vagrant-magento/blob/master/docs/phpstorm-configuration.md
-    to set up synchronization in PHPStorm (or using rsync) with ${magento_dir} directory"
+    to set up synchronization in PhpStorm (or using rsync) with ${magento_dir} directory"
