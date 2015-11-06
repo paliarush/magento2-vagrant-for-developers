@@ -48,8 +48,8 @@ fi
 echo "date.timezone = America/Chicago" >> /etc/php5/cli/php.ini
 
 # Configure XDebug to allow remote connections from the host
-echo "xdebug.max_nesting_level=200\
-xdebug.remote_enable=1\
+echo "xdebug.max_nesting_level=200 \
+xdebug.remote_enable=1 \
 xdebug.remote_connect_back=1" >> /etc/php5/cli/conf.d/20-xdebug.ini
 
 # Restart Apache
@@ -62,8 +62,8 @@ apt-get install -q -y mysql-server-5.6 mysql-client-5.6
 mysqladmin -uroot -ppassword password ''
 
 # Make it possible to run 'mysql' without username and password
-sed -i '/\[client\]/a\
-user = root\
+sed -i '/\[client\]/a \
+user = root \
 password =' /etc/mysql/my.cnf
 
 # Setup Composer

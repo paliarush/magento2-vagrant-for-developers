@@ -1,4 +1,4 @@
-# Vagrant for Magento CE, optimized for Windows hosts
+# Vagrant for Magento, optimized for Windows hosts
 
 ## What You get
 
