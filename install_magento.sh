@@ -25,10 +25,7 @@ magento_dir="/var/www/magento2ce"
 cd ${magento_dir}
 
 # Clear cache
-mv var/.htaccess .var_htaccess.back && rm -rf var/* && mv .var_htaccess.back var/.htaccess
-mv pub/static/.htaccess pub/static_htaccess.back && rm -rf pub/static/* && mv pub/static_htaccess.back pub/static/.htaccess
-cd "${magento_dir}/dev/tests/integration" && mv tmp/.gitignore tmp_gitignore.back && rm -rf tmp/* && mv tmp_gitignore.back tmp/.gitignore
-cd "${magento_dir}/dev/tests/unit" && rm -rf tmp/*
+magento_clear_cache
 
 # Remove configuration files
 rm -f "${magento_dir}/app/etc/config.php"

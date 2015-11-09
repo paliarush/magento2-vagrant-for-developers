@@ -48,9 +48,9 @@ fi
 echo "date.timezone = America/Chicago" >> /etc/php5/cli/php.ini
 
 # Configure XDebug to allow remote connections from the host
-echo "xdebug.max_nesting_level=200 \
-xdebug.remote_enable=1 \
-xdebug.remote_connect_back=1" >> /etc/php5/cli/conf.d/20-xdebug.ini
+echo 'xdebug.max_nesting_level=200
+xdebug.remote_enable=1
+xdebug.remote_connect_back=1' >> /etc/php5/cli/conf.d/20-xdebug.ini
 
 # Restart Apache
 service apache2 restart
@@ -79,4 +79,4 @@ chmod -R 755 /var/www
 
 # Declare path to scripts supplied with vagrant and Magento
 magento_dir="/var/www/magento2ce"
-echo "export PATH=\$PATH:/vagrant/bin:${magento_dir}/bin" >> /home/vagrant/.profile
+echo "export PATH=\$PATH:/vagrant/bin:${magento_dir}/bin" >> /etc/profile
