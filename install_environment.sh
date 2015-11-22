@@ -3,6 +3,8 @@
 # Enable trace printing and exit on the first error
 set -ex
 
+is_windows_host=$1
+
 apt-get update
 
 # Determine external IP address
@@ -73,10 +75,12 @@ if [ ! -f /usr/local/bin/composer ]; then
     mv composer.phar /usr/local/bin/composer
 fi
 
-# Set permissions to allow Magento codebase upload by Vagrant provision script
-chown -R vagrant:vagrant /var/www
-chmod -R 755 /var/www
-
 # Declare path to scripts supplied with vagrant and Magento
 magento_dir="/var/www/magento2ce"
 echo "export PATH=\$PATH:/vagrant/bin:${magento_dir}/bin" >> /etc/profile
+
+# Set permissions to allow Magento codebase upload by Vagrant provision script
+if [ ${is_windows_host} -eq 1 ]; then
+    chown -R vagrant:vagrant /var/www
+    chmod -R 755 /var/www
+fi

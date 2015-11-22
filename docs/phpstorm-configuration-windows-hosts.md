@@ -41,3 +41,11 @@ This solution is applicable to any Vagrant configuration for Magento instance, s
      1. Go to Tools -> Deployment -> Options... and enable automatic upload to default server and check "Upload external changes"
 
         ![](images/automatic-upload.png)
+
+
+Day-to-day development scenarios
+-----------------
+
+ 1. You can upload full Magento code base to the virtual machine from the host machine using context menu on the root of the project in PhpStorm. 
+ 
+     ![](images/upload-magento-codebase.png)
