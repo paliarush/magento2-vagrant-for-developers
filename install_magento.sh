@@ -5,6 +5,8 @@
 # Enable trace printing and exit on the first error
 set -ex
 
+is_windows_host=$1
+
 # Determine external IP address
 set +x
 IP=`ifconfig eth1 | grep inet | awk '{print $2}' | sed 's/addr://'`
@@ -70,10 +72,12 @@ install_cmd="./bin/magento setup:install \
 chmod +x bin/magento
 php ${install_cmd}
 
-chown -R vagrant:vagrant ${magento_dir}
-
 # Enable Magento cron jobs
 echo "* * * * * php ${magento_dir}/bin/magento cron:run &" | crontab -u vagrant -
+
+if [ ${is_windows_host} -eq 1 ]; then
+    chown -R vagrant:vagrant ${magento_dir}
+fi
 
 set +x
 echo "
@@ -81,11 +85,14 @@ Magento application was deployed in ${magento_dir} and installed successfully
 Access storefront at http://${HOST}/
 Access admin panel at http://${HOST}/${admin_frontame}/
 
-Don't forget to update your 'hosts' file with '${IP} ${HOST}'
+Don't forget to update your 'hosts' file with '${IP} ${HOST}'"
 
-[Optional] To finish developer environment set up:
-    1. Please create new PhpStorm project using 'magento2ce' directory on your host
-    (this directory should already contain Magento repository cloned earlier)
+if [ ${is_windows_host} -eq 1 ]; then
+    echo "
+    [Optional] To finish developer environment set up:
+        1. Please create new PhpStorm project using 'magento2ce' directory on your host
+        (this directory should already contain Magento repository cloned earlier)
 
-    2. Use instructions provided here https://github.com/paliarush/vagrant-magento/blob/master/docs/phpstorm-configuration.md
-    to set up synchronization in PhpStorm (or using rsync) with ${magento_dir} directory"
+        2. Use instructions provided here https://github.com/paliarush/vagrant-magento/blob/master/docs/phpstorm-configuration-windows-hosts.md
+        to set up synchronization in PhpStorm (or using rsync) with ${magento_dir} directory"
+fi

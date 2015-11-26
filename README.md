@@ -1,15 +1,17 @@
-# Vagrant for Magento, optimized for Windows hosts
+# Vagrant project for Magento 2 developers (optimized for Mac, Windows and \*nix hosts)
 
 ## What You get
 
-The current Vagrant configuration aims to solve performance issues of Magento installed on Virtual Box, when the host is Windows. 
-See [explanation of the proposed solution](docs/performance-issue-on-windows-hosts.md).
+It is expected that Magento 2 project source code will be located on the host and managed using [Composer](https://getcomposer.org/doc/00-intro.md). 
+This is necessary to allow IDE index project files quickly. All other infrastructure infrastructure is deployed on the guest machine.
+
+Current Vagrant configuration aims to solve performance issues of Magento installed on Virtual Box **for development**.
+Custom solution is implemented for Windows hosts. See [explanation of the proposed solution](docs/performance-issue-on-windows-hosts.md).
 
 With current configuration Vagrant will:
 
  1. Run Ubuntu box
  1. Install and configure all software necessary for Magento 2
- 1. Install all necessary libraries
  1. Install the Magento 2 application
 
 ## Environment set up workflow
@@ -38,7 +40,7 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
         cd ..
         ```
     
-     1. Download project with Vagrant configuration and install Magento (~ 5 minutes):
+     1. Download project with Vagrant configuration and install Magento (may take some time to download Ubuntu box for the first time, then ~ 5 minutes):
      
         ```
         git clone git@github.com:paliarush/vagrant-magento.git vagrant-magento
@@ -50,7 +52,7 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
     ```
     192.168.10.11 magento2.vagrant
     ```
- 1. After the installation is complete, [set up synchronization with PHP Storm](docs/phpstorm-configuration.md)
+ 1. For **Windows hosts only**: after the installation is complete, [set up synchronization with PHP Storm](docs/phpstorm-configuration-windows-hosts.md)
 
 ### After installation
 
@@ -83,7 +85,7 @@ For the Vagrant configuration you may specify your token in `local.config/github
 Installing GitHub OAuth token from /vagrant/local.config/github.oauth.token
 ```
 
-## Magento development workflow
+## Day-to-day development scenarios
     
 ### Reinstall Magento
 To save some time and get clear Magento installation, you can skip installation of software like web server or php.
