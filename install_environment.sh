@@ -84,3 +84,9 @@ if [ ${is_windows_host} -eq 1 ]; then
     chown -R vagrant:vagrant /var/www
     chmod -R 755 /var/www
 fi
+
+# Install RabbitMQ (is used by Enterprise edition)
+apt-get install -y rabbitmq-server
+rabbitmq-plugins enable rabbitmq_management
+invoke-rc.d rabbitmq-server stop
+invoke-rc.d rabbitmq-server start

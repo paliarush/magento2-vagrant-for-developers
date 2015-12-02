@@ -1,2 +1,5 @@
 /*
 !/.gitignore
+!/composer
+/composer/*
+!/composer/auth.json.dist
