@@ -39,24 +39,8 @@ for db_name in "${db_names[@]}"; do
     mysql -e "drop database if exists ${db_name}; create database ${db_name};"
 done
 
-# Install git
-apt-get install -y git
-
 # Install Magento application
 cd ${magento_dir}
-composer_auth_json="/vagrant/local.config/composer/auth.json"
-if [ -f ${composer_auth_json} ]; then
-    set +x
-    echo "Installing composer OAuth tokens from ${composer_auth_json}..."
-    set -x
-    if [ ! -d /home/vagrant/.composer ] ; then
-      sudo -H -u vagrant bash -c 'mkdir /home/vagrant/.composer'
-    fi
-    cp ${composer_auth_json} /home/vagrant/.composer/auth.json
-    sudo -H -u vagrant bash -c 'composer install'
-else
-    sudo -H -u vagrant bash -c 'composer install --prefer-source'
-fi
 
 admin_frontame="admin"
 install_cmd="./bin/magento setup:install \
@@ -77,7 +61,7 @@ install_cmd="./bin/magento setup:install \
     --use-rewrites=1"
 
 # Configure Rabbit MQ
-if [ -d "${magento_dir}/app/code/Magento/Amqp" ]; then
+if [ -f "${magento_dir}/app/code/Magento/Amqp/registration.php" ]; then
     install_cmd="${install_cmd} \
     --amqp-host=localhost \
     --amqp-port=5672 \

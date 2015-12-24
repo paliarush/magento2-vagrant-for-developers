@@ -68,11 +68,26 @@ sed -i '/\[client\]/a \
 user = root \
 password =' /etc/mysql/my.cnf
 
+# Install git
+apt-get install -y git
+
 # Setup Composer
 if [ ! -f /usr/local/bin/composer ]; then
     cd /tmp
     curl -sS https://getcomposer.org/installer | php
     mv composer.phar /usr/local/bin/composer
+fi
+
+# Configure composer
+composer_auth_json="/vagrant/local.config/composer/auth.json"
+if [ -f ${composer_auth_json} ]; then
+    set +x
+    echo "Installing composer OAuth tokens from ${composer_auth_json}..."
+    set -x
+    if [ ! -d /home/vagrant/.composer ] ; then
+      sudo -H -u vagrant bash -c 'mkdir /home/vagrant/.composer'
+    fi
+    cp ${composer_auth_json} /home/vagrant/.composer/auth.json
 fi
 
 # Declare path to scripts supplied with vagrant and Magento

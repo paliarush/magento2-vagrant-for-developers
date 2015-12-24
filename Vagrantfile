@@ -15,7 +15,7 @@ Vagrant.configure(2) do |config|
     config.vm.box = "ubuntu/trusty64"
 
     config.vm.provider "virtualbox" do |vb|
-        vb.memory = 2048
+        vb.memory = 3072 # Around 3Gb is necessary to be able to run tests
     end
     config.vm.network :private_network, ip: '192.168.10.11'
     config.vm.hostname = "magento2.vagrant"
