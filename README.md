@@ -1,5 +1,16 @@
 # Vagrant project for Magento 2 developers (optimized for Mac, Windows and \*nix hosts)
 
+ * [What You get](#what-you-get)
+ * [How to install](#how-to-install)
+   * [Requirements](#requirements)
+   * [Installation steps](#installation-steps)
+   * [Default credentials and settings](#default-credentials-and-settings)
+   * [GitHub limitations](#github-limitations)
+ * [Day-to-day development scenarios](#day-to-day-development-scenarios)
+   * [Reinstall Magento](#reinstall-magento)
+   * [Clear magento cache](#clear-magento-cache)
+   * [Debugging with XDebug](#debugging-with-xdebug)
+
 ## What You get
 
 It is expected that Magento 2 project source code will be located on the host and managed using [Composer](https://getcomposer.org/doc/00-intro.md). 
@@ -14,18 +25,19 @@ With current configuration Vagrant will:
  1. Install and configure all software necessary for Magento 2
  1. Install the Magento 2 application
 
-## Environment set up workflow
+## How to install
 
 If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com/v2/)
 
-### Prerequisites
+### Requirements
 - [Vagrant](https://www.vagrantup.com/downloads.html) is installed and available globally in command line
+- [Host manager plugin for Vagrant](https://github.com/smdahlen/vagrant-hostmanager)
 - [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 - [Composer](https://getcomposer.org/doc/00-intro.md) is installed and is available globally in command line
 - Make sure you have SSH keys generated and associated with your github account, see [manual](https://help.github.com/articles/generating-ssh-keys/).
 :information_source: You can use another way of getting codebase instead of cloning, it does not matter for successful installation.
 
-### To install the whole image from scratch
+### Installation steps
 
  1. Run in command line from the directory which contains your projects:
      1. Prepare Magento codebase. This step is optional, just ensure you have 'magento2ce' directory with Magento code available.
@@ -47,26 +59,18 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
         cd vagrant-magento
         vagrant up
         ```
- 1. Add corresponding record to your `hosts` file on the host machine:
- 
-    ```
-    192.168.10.11 magento2.vagrant
-    ```
  1. For **Windows hosts only**: after the installation is complete, [set up synchronization with PHP Storm](docs/phpstorm-configuration-windows-hosts.md)
 
-### After installation
-
-Upon a successful installation, you'll see the location and URL of the newly-installed Magento 2 application in console.
-See a list of [default credentials and settings](README.md#default-credentials).
-
 ### Default credentials and settings
+Upon a successful installation, you'll see the location and URL of the newly-installed Magento 2 application in console.
 
-Web access:
+**Web access**:
 - Access storefront at `http://magento2.vagrant`
 - Access admin panel at `http://magento2.vagrant/admin/`
 - Magento admin user/password: `admin/123123q`
+- Rabbit MQ control panel: `http://magento2.vagrant:15672`, credentials `guest`/`guest`
 
-Codebase and DB access:
+**Codebase and DB access**:
 - Path to your Magento installation on the VM:
   - Can be retrieved from environment variable: `echo ${MAGENTO_ROOT}`
   - On Windows hosts: `/var/www/magento2ce`
@@ -75,7 +79,7 @@ Codebase and DB access:
 - MySQL DB name: `magento`, `magento_integration_tests`
 - MySQL DB user/password: just use `mysql` with no user and password (`root/password` will be used by default)
 
-### GitHub Limitations
+### GitHub limitations
 
 Be aware that you may encounter GitHub limits on the number of downloads (used by Composer to download Magento dependencies).
 

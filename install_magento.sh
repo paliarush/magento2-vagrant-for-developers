@@ -7,22 +7,7 @@ set -ex
 
 is_windows_host=$1
 guest_magento_dir=$2
-
-# Determine external IP address
-set +x
-ip=`ifconfig eth1 | grep inet | awk '{print $2}' | sed 's/addr://'`
-echo "IP address is '${ip}'"
-set -x
-
-# Determine hostname for Magento web-site
-host=`hostname -f`
-if [ -z ${host} ]; then
-    # Use external IP address as hostname
-    set +x
-    host=${ip}
-    echo "Use IP address '${host}' as hostname"
-    set -x
-fi
+magento_host_name=$3
 
 cd ${guest_magento_dir}
 
@@ -48,7 +33,7 @@ install_cmd="./bin/magento setup:install \
     --db-name=magento \
     --db-user=root \
     --backend-frontname=${admin_frontame} \
-    --base-url=http://${host}/ \
+    --base-url=http://${magento_host_name}/ \
     --language=en_US \
     --timezone=America/Chicago \
     --currency=USD \
@@ -82,10 +67,8 @@ fi
 set +x
 echo "
 Magento application was deployed to ${guest_magento_dir} and installed successfully
-Access storefront at http://${host}/
-Access admin panel at http://${host}/${admin_frontame}/
-
-Don't forget to update your 'hosts' file with '${ip} ${host}'"
+Access storefront at http://${magento_host_name}/
+Access admin panel at http://${magento_host_name}/${admin_frontame}/"
 
 if [ ${is_windows_host} -eq 1 ]; then
     echo "

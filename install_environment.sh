@@ -5,24 +5,9 @@ set -ex
 
 is_windows_host=$1
 guest_magento_dir=$2
+magento_host_name=$3
 
 apt-get update
-
-# Determine external IP address
-set +x
-ip=`ifconfig eth1 | grep inet | awk '{print $2}' | sed 's/addr://'`
-echo "IP address is '${ip}'"
-set -x
-
-# Determine hostname for Magento web-site
-host=`hostname -f`
-if [ -z ${host} ]; then
-    # Use external IP address as hostname
-    set +x
-    host=${ip}
-    echo "Use IP address '${host}' as hostname"
-    set -x
-fi
 
 # Setup Apache
 apt-get install -y apache2
@@ -34,7 +19,7 @@ sed -i 's|www-data|vagrant|g' /etc/apache2/envvars
 # Enable Magento virtual host
 apache_config="/etc/apache2/sites-available/magento2.conf"
 cp /vagrant/magento2.vhost.conf  ${apache_config}
-sed -i "s|<host>|${host}|g" ${apache_config}
+sed -i "s|<host>|${magento_host_name}|g" ${apache_config}
 sed -i "s|<guest_magento_dir>|${guest_magento_dir}|g" ${apache_config}
 a2ensite magento2.conf
 
