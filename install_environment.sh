@@ -4,22 +4,23 @@
 set -ex
 
 is_windows_host=$1
+guest_magento_dir=$2
 
 apt-get update
 
 # Determine external IP address
 set +x
-IP=`ifconfig eth1 | grep inet | awk '{print $2}' | sed 's/addr://'`
-echo "IP address is '${IP}'"
+ip=`ifconfig eth1 | grep inet | awk '{print $2}' | sed 's/addr://'`
+echo "IP address is '${ip}'"
 set -x
 
 # Determine hostname for Magento web-site
-HOST=`hostname -f`
-if [ -z ${HOST} ]; then
+host=`hostname -f`
+if [ -z ${host} ]; then
     # Use external IP address as hostname
     set +x
-    HOST=${IP}
-    echo "Use IP address '${HOST}' as hostname"
+    host=${ip}
+    echo "Use IP address '${host}' as hostname"
     set -x
 fi
 
@@ -28,12 +29,13 @@ apt-get install -y apache2
 a2enmod rewrite
 
 # Make suer Apache is run from 'vagrant' user to avoid permission issues
-sed -i 's/www-data/vagrant/g' /etc/apache2/envvars
+sed -i 's|www-data|vagrant|g' /etc/apache2/envvars
 
 # Enable Magento virtual host
 apache_config="/etc/apache2/sites-available/magento2.conf"
 cp /vagrant/magento2.vhost.conf  ${apache_config}
-sed -i "s/<host>/${HOST}/g" ${apache_config}
+sed -i "s|<host>|${host}|g" ${apache_config}
+sed -i "s|<guest_magento_dir>|${guest_magento_dir}|g" ${apache_config}
 a2ensite magento2.conf
 
 # Disable default virtual host
@@ -91,8 +93,8 @@ if [ -f ${composer_auth_json} ]; then
 fi
 
 # Declare path to scripts supplied with vagrant and Magento
-magento_dir="/var/www/magento2ce"
-echo "export PATH=\$PATH:/vagrant/bin:${magento_dir}/bin" >> /etc/profile
+echo "export PATH=\$PATH:/vagrant/bin:${guest_magento_dir}/bin" >> /etc/profile
+echo "export MAGENTO_ROOT=${guest_magento_dir}" >> /etc/profile
 
 # Set permissions to allow Magento codebase upload by Vagrant provision script
 if [ ${is_windows_host} -eq 1 ]; then

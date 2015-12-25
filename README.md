@@ -67,7 +67,10 @@ Web access:
 - Magento admin user/password: `admin/123123q`
 
 Codebase and DB access:
-- Path to your Magento installation on the VM: `/var/www/magento2ce`
+- Path to your Magento installation on the VM:
+  - Can be retrieved from environment variable: `echo ${MAGENTO_ROOT}`
+  - On Windows hosts: `/var/www/magento2ce`
+  - On Mac, \*nix hosts: the same as on host
 - MySQL DB host: `localhost` (not accessible remotely)
 - MySQL DB name: `magento`, `magento_integration_tests`
 - MySQL DB user/password: just use `mysql` with no user and password (`root/password` will be used by default)
@@ -112,7 +115,3 @@ XDebug is already configured to connect to the host machine automatically. So ju
  1. Set XDEBUG_SESSION=1 cookie (e.g. using 'easy Xdebug' extension for Firefox). See [XDebug documentation](http://xdebug.org/docs/remote) for more details
  1. Start listening for PHP Debug connections in PhpStorm. See how to [integrate XDebug with PhpStorm](https://www.jetbrains.com/phpstorm/help/configuring-xdebug.html#integrationWithProduct)
  1. Set beakpoint or set option in PhpStorm menu 'Run -> Break at first line in PHP scripts'
-
-## Related Repositories
-
-- https://github.com/buskamuza/magento2-product-vagrant
