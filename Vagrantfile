@@ -8,15 +8,12 @@ module OS
 end
 
 require 'pathname.rb'
-host_magento_dir = Pathname.new(Dir.pwd + '/../magento2ce').realpath.to_s
+host_magento_dir = Pathname.new(Dir.pwd + '/magento2ce').realpath.to_s
 magento_host_name = 'magento2.vagrant'
 magento_ip_address = '192.168.10.11'
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
-Vagrant.configure(2) do |config|
+VAGRANT_API_VERSION = 2
+Vagrant.configure(VAGRANT_API_VERSION) do |config|
     config.vm.box = "ubuntu/trusty64"
 
     config.vm.provider "virtualbox" do |vb|
@@ -39,7 +36,7 @@ Vagrant.configure(2) do |config|
         magento_host_name
     ]
     config.vm.provision "install_environment", type: "shell" do |s|
-        s.path = "install_environment.sh"
+        s.path = "scripts/provision/install_environment.sh"
         s.args = shell_script_args
     end
 
@@ -48,7 +45,7 @@ Vagrant.configure(2) do |config|
     end
 
     config.vm.provision "install_magento", type: "shell" do |s|
-        s.path = "install_magento.sh"
+        s.path = "scripts/provision/install_magento.sh"
         s.args = shell_script_args
     end
 

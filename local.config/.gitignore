@@ -3,3 +3,6 @@
 !/composer
 /composer/*
 !/composer/auth.json.dist
+!/ce_repository_url.txt.dist
+!/ee_repository_url.txt.dist
+!/magento2_virtual_host.conf.dist

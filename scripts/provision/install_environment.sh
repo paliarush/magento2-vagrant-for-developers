@@ -17,10 +17,17 @@ a2enmod rewrite
 sed -i 's|www-data|vagrant|g' /etc/apache2/envvars
 
 # Enable Magento virtual host
-apache_config="/etc/apache2/sites-available/magento2.conf"
-cp /vagrant/magento2.vhost.conf  ${apache_config}
-sed -i "s|<host>|${magento_host_name}|g" ${apache_config}
-sed -i "s|<guest_magento_dir>|${guest_magento_dir}|g" ${apache_config}
+custom_virtual_host_config="/vagrant/local.config/magento2_virtual_host.conf"
+default_virtual_host_config="/vagrant/local.config/magento2_virtual_host.conf.dist"
+if [ -f ${custom_virtual_host_config} ]; then
+    virtual_host_config=${custom_virtual_host_config}
+else
+    virtual_host_config=${default_virtual_host_config}
+fi
+enabled_virtual_host_config="/etc/apache2/sites-available/magento2.conf"
+cp ${virtual_host_config}  ${enabled_virtual_host_config}
+sed -i "s|<host>|${magento_host_name}|g" ${enabled_virtual_host_config}
+sed -i "s|<guest_magento_dir>|${guest_magento_dir}|g" ${enabled_virtual_host_config}
 a2ensite magento2.conf
 
 # Disable default virtual host
@@ -78,7 +85,7 @@ if [ -f ${composer_auth_json} ]; then
 fi
 
 # Declare path to scripts supplied with vagrant and Magento
-echo "export PATH=\$PATH:/vagrant/bin:${guest_magento_dir}/bin" >> /etc/profile
+echo "export PATH=\$PATH:/vagrant/scripts/guest:${guest_magento_dir}/bin" >> /etc/profile
 echo "export MAGENTO_ROOT=${guest_magento_dir}" >> /etc/profile
 
 # Set permissions to allow Magento codebase upload by Vagrant provision script
