@@ -6,32 +6,17 @@
 set -ex
 
 is_windows_host=$1
+guest_magento_dir=$2
+magento_host_name=$3
 
-# Determine external IP address
-set +x
-IP=`ifconfig eth1 | grep inet | awk '{print $2}' | sed 's/addr://'`
-echo "IP address is '${IP}'"
-set -x
-
-# Determine hostname for Magento web-site
-HOST=`hostname -f`
-if [ -z ${HOST} ]; then
-    # Use external IP address as hostname
-    set +x
-    HOST=${IP}
-    echo "Use IP address '${HOST}' as hostname"
-    set -x
-fi
-
-magento_dir="/var/www/magento2ce"
-cd ${magento_dir}
+cd ${guest_magento_dir}
 
 # Clear cache
 magento_clear_cache
 
 # Remove configuration files
-rm -f "${magento_dir}/app/etc/config.php"
-rm -f "${magento_dir}/app/etc/env.php"
+rm -f "${guest_magento_dir}/app/etc/config.php"
+rm -f "${guest_magento_dir}/app/etc/env.php"
 
 # Create DB
 db_names=("magento" "magento_integration_tests")
@@ -40,17 +25,7 @@ for db_name in "${db_names[@]}"; do
 done
 
 # Install Magento application
-cd ${magento_dir}
-github_token="/vagrant/local.config/github.oauth.token"
-if [ -f ${github_token} ]; then
-    set +x
-    echo "Installing GitHub OAuth token from ${github_token}..."
-    composer config -g github-oauth.github.com `cat ${github_token}`
-    set -x
-    composer install
-else
-    composer install --prefer-source
-fi
+cd ${guest_magento_dir}
 
 admin_frontame="admin"
 install_cmd="./bin/magento setup:install \
@@ -58,7 +33,7 @@ install_cmd="./bin/magento setup:install \
     --db-name=magento \
     --db-user=root \
     --backend-frontname=${admin_frontame} \
-    --base-url=http://${HOST}/ \
+    --base-url=http://${magento_host_name}/ \
     --language=en_US \
     --timezone=America/Chicago \
     --currency=USD \
@@ -69,23 +44,31 @@ install_cmd="./bin/magento setup:install \
     --admin-password=123123q \
     --cleanup-database \
     --use-rewrites=1"
+
+# Configure Rabbit MQ
+if [ -f "${guest_magento_dir}/app/code/Magento/Amqp/registration.php" ]; then
+    install_cmd="${install_cmd} \
+    --amqp-host=localhost \
+    --amqp-port=5672 \
+    --amqp-user=guest \
+    --amqp-password=guest"
+fi
+
 chmod +x bin/magento
 php ${install_cmd}
 
 # Enable Magento cron jobs
-echo "* * * * * php ${magento_dir}/bin/magento cron:run &" | crontab -u vagrant -
+echo "* * * * * php ${guest_magento_dir}/bin/magento cron:run &" | crontab -u vagrant -
 
 if [ ${is_windows_host} -eq 1 ]; then
-    chown -R vagrant:vagrant ${magento_dir}
+    chown -R vagrant:vagrant ${guest_magento_dir}
 fi
 
 set +x
 echo "
-Magento application was deployed in ${magento_dir} and installed successfully
-Access storefront at http://${HOST}/
-Access admin panel at http://${HOST}/${admin_frontame}/
-
-Don't forget to update your 'hosts' file with '${IP} ${HOST}'"
+Magento application was deployed to ${guest_magento_dir} and installed successfully
+Access storefront at http://${magento_host_name}/
+Access admin panel at http://${magento_host_name}/${admin_frontame}/"
 
 if [ ${is_windows_host} -eq 1 ]; then
     echo "
@@ -94,5 +77,5 @@ if [ ${is_windows_host} -eq 1 ]; then
         (this directory should already contain Magento repository cloned earlier)
 
         2. Use instructions provided here https://github.com/paliarush/vagrant-magento/blob/master/docs/phpstorm-configuration-windows-hosts.md
-        to set up synchronization in PhpStorm (or using rsync) with ${magento_dir} directory"
+        to set up synchronization in PhpStorm (or using rsync) with ${guest_magento_dir} directory"
 fi

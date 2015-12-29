@@ -4,36 +4,23 @@
 set -ex
 
 is_windows_host=$1
+guest_magento_dir=$2
+magento_host_name=$3
 
 apt-get update
-
-# Determine external IP address
-set +x
-IP=`ifconfig eth1 | grep inet | awk '{print $2}' | sed 's/addr://'`
-echo "IP address is '${IP}'"
-set -x
-
-# Determine hostname for Magento web-site
-HOST=`hostname -f`
-if [ -z ${HOST} ]; then
-    # Use external IP address as hostname
-    set +x
-    HOST=${IP}
-    echo "Use IP address '${HOST}' as hostname"
-    set -x
-fi
 
 # Setup Apache
 apt-get install -y apache2
 a2enmod rewrite
 
 # Make suer Apache is run from 'vagrant' user to avoid permission issues
-sed -i 's/www-data/vagrant/g' /etc/apache2/envvars
+sed -i 's|www-data|vagrant|g' /etc/apache2/envvars
 
 # Enable Magento virtual host
 apache_config="/etc/apache2/sites-available/magento2.conf"
 cp /vagrant/magento2.vhost.conf  ${apache_config}
-sed -i "s/<host>/${HOST}/g" ${apache_config}
+sed -i "s|<host>|${magento_host_name}|g" ${apache_config}
+sed -i "s|<guest_magento_dir>|${guest_magento_dir}|g" ${apache_config}
 a2ensite magento2.conf
 
 # Disable default virtual host
@@ -68,6 +55,9 @@ sed -i '/\[client\]/a \
 user = root \
 password =' /etc/mysql/my.cnf
 
+# Install git
+apt-get install -y git
+
 # Setup Composer
 if [ ! -f /usr/local/bin/composer ]; then
     cd /tmp
@@ -75,12 +65,30 @@ if [ ! -f /usr/local/bin/composer ]; then
     mv composer.phar /usr/local/bin/composer
 fi
 
+# Configure composer
+composer_auth_json="/vagrant/local.config/composer/auth.json"
+if [ -f ${composer_auth_json} ]; then
+    set +x
+    echo "Installing composer OAuth tokens from ${composer_auth_json}..."
+    set -x
+    if [ ! -d /home/vagrant/.composer ] ; then
+      sudo -H -u vagrant bash -c 'mkdir /home/vagrant/.composer'
+    fi
+    cp ${composer_auth_json} /home/vagrant/.composer/auth.json
+fi
+
 # Declare path to scripts supplied with vagrant and Magento
-magento_dir="/var/www/magento2ce"
-echo "export PATH=\$PATH:/vagrant/bin:${magento_dir}/bin" >> /etc/profile
+echo "export PATH=\$PATH:/vagrant/bin:${guest_magento_dir}/bin" >> /etc/profile
+echo "export MAGENTO_ROOT=${guest_magento_dir}" >> /etc/profile
 
 # Set permissions to allow Magento codebase upload by Vagrant provision script
 if [ ${is_windows_host} -eq 1 ]; then
     chown -R vagrant:vagrant /var/www
     chmod -R 755 /var/www
 fi
+
+# Install RabbitMQ (is used by Enterprise edition)
+apt-get install -y rabbitmq-server
+rabbitmq-plugins enable rabbitmq_management
+invoke-rc.d rabbitmq-server stop
+invoke-rc.d rabbitmq-server start
