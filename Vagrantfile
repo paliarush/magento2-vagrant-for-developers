@@ -1,23 +1,33 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# Method for reading values from local config
+def get_variable_value(variable_name)
+   custom_value_path = Dir.pwd + '/local.config/' + variable_name + '.txt'
+   default_value_path = Dir.pwd + '/local.config/' + variable_name + '.txt.dist'
+   if File.exist?(custom_value_path)
+      return File.read(custom_value_path)
+   else
+       return File.read(default_value_path)
+   end
+end
+
 module OS
     def OS.is_windows
         (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
     end
 end
 
-require 'pathname.rb'
-host_magento_dir = Pathname.new(Dir.pwd + '/magento2ce').realpath.to_s
-magento_host_name = 'magento2.vagrant'
-magento_ip_address = '192.168.10.11'
+host_magento_dir = Dir.pwd + '/magento2ce'
+magento_host_name = get_variable_value('magento_host_name')
+magento_ip_address = get_variable_value('magento_ip_address')
 
 VAGRANT_API_VERSION = 2
 Vagrant.configure(VAGRANT_API_VERSION) do |config|
     config.vm.box = "ubuntu/trusty64"
 
     config.vm.provider "virtualbox" do |vb|
-        vb.memory = 3072 # Around 3Gb is necessary to be able to run tests
+        vb.memory = get_variable_value('guest_ram') # Default is 2Gb, around 3Gb is necessary to run functional tests
     end
 
     config.vm.synced_folder '.', '/vagrant'
