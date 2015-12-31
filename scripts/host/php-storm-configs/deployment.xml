@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData">
+    <serverData>
+      <paths name="<host_name>">
+        <serverdata>
+          <mappings>
+            <mapping deploy="$PROJECT_DIR$/magento2ce" local="$PROJECT_DIR$/magento2ce" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

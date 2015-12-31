@@ -1,0 +1,35 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <option name="myLocal" value="true" />
+    <inspection_tool class="MessDetectorValidationInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <scope name="Changed Files" level="ERROR" enabled="true">
+        <option name="customRulesets">
+          <list>
+            <RulesetDescriptor>
+              <option name="name" value="Magento PHPMD rule set" />
+              <option name="path" value="$PROJECT_DIR$/magento2ce/dev/tests/static/testsuite/Magento/Test/Php/_files/phpmd/ruleset.xml" />
+            </RulesetDescriptor>
+          </list>
+        </option>
+      </scope>
+      <option name="customRulesets">
+        <list>
+          <RulesetDescriptor>
+            <option name="name" value="Magento PHPMD rule set" />
+            <option name="path" value="$PROJECT_DIR$/magento2ce/dev/tests/static/testsuite/Magento/Test/Php/_files/phpmd/ruleset.xml" />
+          </RulesetDescriptor>
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PhpCSValidationInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <scope name="Changed Files" level="ERROR" enabled="true">
+        <option name="CODING_STANDARD" value="Custom" />
+        <option name="CUSTOM_RULESET_PATH" value="$PROJECT_DIR$/magento2ce/dev/tests/static/testsuite/Magento/Test/Php/_files/phpcs" />
+      </scope>
+      <option name="CODING_STANDARD" value="Custom" />
+      <option name="CUSTOM_RULESET_PATH" value="$PROJECT_DIR$/magento2ce/dev/tests/static/testsuite/Magento/Test/Php/_files/phpcs" />
+      <option name="WARNING_HIGHLIGHT_LEVEL_NAME" value="ERROR" />
+    </inspection_tool>
+  </profile>
+</component>
