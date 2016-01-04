@@ -30,7 +30,9 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         vb.memory = get_variable_value('guest_ram') # Default is 2Gb, around 3Gb is necessary to run functional tests
     end
 
-    config.vm.synced_folder '.', '/vagrant'
+    config.vm.synced_folder '.', '/vagrant', disabled: true
+    config.vm.synced_folder './local.config', '/vagrant/local.config'
+    config.vm.synced_folder './scripts', '/vagrant/scripts'
     if OS.is_windows
         guest_magento_dir = '/var/www/magento2ce'
         config.vm.synced_folder host_magento_dir + '/var/generation', guest_magento_dir + '/var/generation'

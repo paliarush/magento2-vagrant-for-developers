@@ -22,20 +22,22 @@ Custom solution is implemented for Windows hosts. See [explanation of the propos
 With current configuration Vagrant will:
 
  1. Run Ubuntu box
- 1. Install and configure all software necessary for Magento 2
+ 1. Install and configure all software necessary for Magento 2 (Apache 2.4, PHP 7.0 (or 5.5.9), MySQL 5.6, git, Composer, XDebug, Rabbit MQ)
  1. Install the Magento 2 application
+ 1. Configure PHP Storm project
 
 ## How to install
 
 If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com/v2/)
 
 ### Requirements
-- [Vagrant](https://www.vagrantup.com/downloads.html) is installed and available globally in command line
+- [Vagrant 1.8+](https://www.vagrantup.com/downloads.html) is installed and available globally in command line
 - [Host manager plugin for Vagrant](https://github.com/smdahlen/vagrant-hostmanager)
 - [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 - [Composer](https://getcomposer.org/doc/00-intro.md) is installed and is available globally in command line
 - Make sure you have SSH keys generated and associated with your github account, see [manual](https://help.github.com/articles/generating-ssh-keys/).
 :information_source: You can use another way of getting codebase instead of cloning, it does not matter for successful installation.
+- \[Optional\] but highly recommended, [PHP Storm](https://www.jetbrains.com/phpstorm)
 
 ### Installation steps
 
