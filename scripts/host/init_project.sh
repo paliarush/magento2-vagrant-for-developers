@@ -10,8 +10,6 @@ set -ex
 bash "${vagrant_dir}/scripts/host/check_requirements.sh"
 
 # Check out CE repository
-rm -f "${magento_ee_dir}/.gitkeep"
-rm -rf ${magento_ee_dir}
 ce_repository_url=$(sh "${vagrant_dir}/scripts/host/get_variable_value.sh" "ce_repository_url")
 git clone ${ce_repository_url} ${magento_ce_dir}
 
@@ -25,7 +23,6 @@ else
     set +x
     echo "Note: URL to Magento EE repository may be specified in ${ee_repository_custom}, then it will be checked out automatically."
     set -x
-    mkdir ${magento_ee_dir}
 fi
 
 # Update Magento dependencies via Composer
