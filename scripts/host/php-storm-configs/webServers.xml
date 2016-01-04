@@ -2,7 +2,7 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="8eec3df1-5f59-4fcc-a1dc-dd86806122d4" name="<host_name>" url="http://127.0.0.1">
+      <webServer id="web-server-id-<host_name>" name="<host_name>" url="http://127.0.0.1">
         <fileTransfer host="127.0.0.1" port="<ssh_port>" privateKey="$PROJECT_DIR$/.vagrant/machines/<host_name>/virtualbox/private_key" accessType="SFTP" username="vagrant" keyPair="true">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />

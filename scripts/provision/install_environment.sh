@@ -64,9 +64,13 @@ if [ ${use_php7} -eq 1 ]; then
     xdebug.max_nesting_level=200
     xdebug.remote_enable=1
     xdebug.remote_connect_back=1' >> /etc/php/7.0/cli/conf.d/20-xdebug.ini
-    ln -s /etc/php/7.0/cli/conf.d/20-xdebug.ini /etc/php/7.0/apache2/conf.d/20-xdebug.ini
 
     echo "date.timezone = America/Chicago" >> /etc/php/7.0/cli/php.ini
+
+    sed -i "s|;include_path = \".:/usr/share/php\"|include_path = \".:/usr/share/php:${guest_magento_dir}/vendor/phpunit/phpunit\"|g" /etc/php/7.0/cli/php.ini
+
+    rm -rf /etc/php/7.0/apache2
+    ln -s /etc/php/7.0/cli /etc/php/7.0/apache2
 else
     apt-get install -y php5 php5-mhash php5-mcrypt php5-curl php5-cli php5-mysql php5-gd php5-intl php5-xsl php5-xdebug curl
     if [ ! -f /etc/php5/apache2/conf.d/20-mcrypt.ini ]; then

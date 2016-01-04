@@ -9,3 +9,4 @@
 !/magento_host_name.txt.dist
 !/magento_ip_address.txt.dist
 !/guest_ram.txt.dist
+!/use_php7.txt.dist
