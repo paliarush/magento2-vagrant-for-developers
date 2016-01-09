@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "$0")/../.."; pwd)
+vagrant_dir=$PWD
 magento_ce_dir="${vagrant_dir}/magento2ce"
 magento_ee_dir="${magento_ce_dir}/magento2ee"
 
 # Enable trace printing and exit on the first error
 set -ex
 
-bash "${vagrant_dir}/scripts/host/check_requirements.sh"
+bash "${vagrant_dir}/scripts/host/shell/check_requirements.sh"
 
 # Check out CE repository
-ce_repository_url=$(sh "${vagrant_dir}/scripts/host/get_variable_value.sh" "ce_repository_url")
+ce_repository_url=$(sh "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "ce_repository_url")
 git clone ${ce_repository_url} ${magento_ce_dir}
 
 # Check out EE repository
@@ -27,10 +27,10 @@ fi
 
 # Update Magento dependencies via Composer
 cd ${magento_ce_dir}
-bash "${vagrant_dir}/scripts/host/composer.sh" install
+bash "${vagrant_dir}/scripts/host/shell/composer.sh" install
 
 # Create vagrant project
 cd ${vagrant_dir}
 vagrant up
 
-bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
+bash "${vagrant_dir}/scripts/host/shell/configure_php_storm.sh"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "$0")/../.."; pwd)
+vagrant_dir=$(cd "$(dirname "$0")/../../.."; pwd)
 variable_name=$1
 
 # Enable trace printing and exit on the first error
