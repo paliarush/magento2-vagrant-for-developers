@@ -48,7 +48,7 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
         git clone git@github.com:magento/magento2.git magento2ce
         cd magento2ce
         mkdir -p var/generation
-        composer install --prefer-source
+        composer install --prefer-source --ignore-platform-reqs
         cd ..
         ```
     
