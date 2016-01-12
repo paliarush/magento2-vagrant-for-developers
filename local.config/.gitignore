@@ -3,10 +3,5 @@
 !/composer
 /composer/*
 !/composer/auth.json.dist
-!/ce_repository_url.txt.dist
-!/ee_repository_url.txt.dist
+!/config.yaml.dist
 !/magento2_virtual_host.conf.dist
-!/magento_host_name.txt.dist
-!/magento_ip_address.txt.dist
-!/guest_ram.txt.dist
-!/use_php7.txt.dist

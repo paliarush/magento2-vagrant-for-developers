@@ -23,7 +23,7 @@ sed -i '' "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/modules.x
 
 mv "${vagrant_dir}/.idea/<host_name>.iml" "${vagrant_dir}/.idea/${magento_host_name}.iml"
 
-ee_repository_url=$(sh "${vagrant_dir}/scripts/host/get_variable_value.sh" "ee_repository_url")
+ee_repository_url=$(sh "${vagrant_dir}/scripts/host/get_variable_value.sh" "repository_url_ee")
 if [ -z ${ee_repository_url} ]; then
     mv "${vagrant_dir}/.idea/vcs.ce.xml" "${vagrant_dir}/.idea/vcs.xml"
     rm "${vagrant_dir}/.idea/vcs.ee.xml"

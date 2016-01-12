@@ -9,6 +9,25 @@ is_windows_host=$1
 guest_magento_dir=$2
 magento_host_name=$3
 
+declare -A setupOptions
+setupOptions[backend_frontname]=$5
+setupOptions[language]=$6
+setupOptions[timezone]=$7
+setupOptions[currency]=$8
+setupOptions[admin_user]=$9
+setupOptions[admin_password]=$10
+setupOptions[db_host]='localhost'
+setupOptions[db_name]='magento'
+setupOptions[db_user]='root'
+setupOptions[base_url]='http://${magento_host_name}/'
+setupOptions[admin_lastname]='Admin'
+setupOptions[admin_firstname]='Admin'
+setupOptions[admin_email]='admin@example.com'
+setupOptions[amqp_host]='localhost'
+setupOptions[amqp_port]='5672'
+setupOptions[amqp_user]='guest'
+setupOptions[amqp_password]='guest'
+
 cd ${guest_magento_dir}
 
 # Clear cache
@@ -19,7 +38,7 @@ rm -f "${guest_magento_dir}/app/etc/config.php"
 rm -f "${guest_magento_dir}/app/etc/env.php"
 
 # Create DB
-db_names=("magento" "magento_integration_tests")
+db_names=(${setupOptions[db_name]} "magento_integration_tests" )
 for db_name in "${db_names[@]}"; do
     mysql -e "drop database if exists ${db_name}; create database ${db_name};"
 done
@@ -27,31 +46,30 @@ done
 # Install Magento application
 cd ${guest_magento_dir}
 
-admin_frontame="admin"
 install_cmd="./bin/magento setup:install \
-    --db-host=localhost \
-    --db-name=magento \
-    --db-user=root \
-    --backend-frontname=${admin_frontame} \
-    --base-url=http://${magento_host_name}/ \
-    --language=en_US \
-    --timezone=America/Chicago \
-    --currency=USD \
-    --admin-lastname=Admin \
-    --admin-firstname=Admin \
-    --admin-email=admin@example.com \
-    --admin-user=admin \
-    --admin-password=123123q \
+    --db-host=${setupOptions[db_host]} \
+    --db-name=${setupOptions[db_name]} \
+    --db-user=${setupOptions[db_user]} \
+    --backend-frontname=${setupOptions[backend_frontname]} \
+    --base-url=${setupOptions[base_url]} \
+    --language=${setupOptions[language]} \
+    --timezone=${setupOptions[timezone]} \
+    --currency=${setupOptions[currency]} \
+    --admin-lastname=${setupOptions[admin_lastname]} \
+    --admin-firstname=${setupOptions[admin_firstname]} \
+    --admin-email=${setupOptions[admin_email]} \
+    --admin-user=${setupOptions[admin_user]} \
+    --admin-password=${setupOptions[admin_password]} \
     --cleanup-database \
     --use-rewrites=1"
 
 # Configure Rabbit MQ
 if [ -f "${guest_magento_dir}/app/code/Magento/Amqp/registration.php" ]; then
     install_cmd="${install_cmd} \
-    --amqp-host=localhost \
-    --amqp-port=5672 \
-    --amqp-user=guest \
-    --amqp-password=guest"
+    --amqp-host=${setupOptions[amqp_host]} \
+    --amqp-port=${setupOptions[amqp_port]} \
+    --amqp-user=${setupOptions[amqp_user]} \
+    --amqp-password=${setupOptions[amqp_password]}"
 fi
 
 chmod +x bin/magento
@@ -67,8 +85,8 @@ fi
 set +x
 echo "
 Magento application was deployed to ${guest_magento_dir} and installed successfully
-Access storefront at http://${magento_host_name}/
-Access admin panel at http://${magento_host_name}/${admin_frontame}/"
+Access storefront at ${setupOptions[base_url]}
+Access admin panel at ${setupOptions[base_url]}${backend_frontame}/"
 
 if [ ${is_windows_host} -eq 1 ]; then
     echo "
