@@ -10,18 +10,13 @@ set -ex
 bash "${vagrant_dir}/scripts/host/shell/check_requirements.sh"
 
 # Check out CE repository
-ce_repository_url=$(sh "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "repository_url_ce")
-git clone ${ce_repository_url} ${magento_ce_dir}
+repository_url_ce=$(bash "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "repository_url_ce")
+git clone ${repository_url_ce} ${magento_ce_dir}
 # Check out EE repository
 # By default EE repository is not specified and EE project is not checked out
-ee_repository_custom="${vagrant_dir}/local.config/ee_repository_url.txt"
-if [ -f ${ee_repository_custom} ]; then
-    ee_repository_url=$(cat ${ee_repository_custom})
-    git clone ${ee_repository_url} ${magento_ee_dir}
-else
-    set +x
-    echo "Note: URL to Magento EE repository may be specified in ${ee_repository_custom}, then it will be checked out automatically."
-    set -x
+repository_url_ee=$(bash "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "repository_url_ee")
+if [ -n "${repository_url_ee}" ]; then
+    git clone ${repository_url_ee} ${magento_ee_dir}
 fi
 
 # Update Magento dependencies via Composer

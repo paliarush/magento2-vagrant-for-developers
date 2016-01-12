@@ -60,7 +60,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         config_data['magento']['timezone'],         #8
         config_data['magento']['currency'],         #9
         config_data['magento']['admin_user'],       #9
-        config_data['magento']['admin_password'],   #10
+        config_data['magento']['admin_password']    #10
     ]
     config.vm.provision "install_environment", type: "shell" do |s|
         s.path = "scripts/provision/install_environment.sh"

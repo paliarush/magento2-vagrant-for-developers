@@ -1,15 +1,15 @@
 repository_url:
-  ce: 'git@github.com:magento/magento2.git'
-  ee: ''
+  ce: "git@github.com:magento/magento2.git"
+  ee: ""
 guest:
   memory: 2048 # Default is 2Gb, around 3Gb is necessary to run functional tests
-  ip_address: '192.168.10.11'
+  ip_address: "192.168.10.11"
   use_php7: 1
 magento:
-  host_name: 'magento2.vagrant'
-  backend_frontname: 'admin'
-  language: 'en_US'
-  timezone: 'America/Chicago'
-  currrency: 'USD'
-  admin_user: 'admin'
-  admin_password: '123123q'
+  host_name: "magento2.vagrant"
+  backend_frontname: "admin"
+  language: "en_US"
+  timezone: "America/Chicago"
+  currency: "USD"
+  admin_user: "admin"
+  admin_password: "123123q"

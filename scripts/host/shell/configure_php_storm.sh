@@ -8,7 +8,7 @@ set -ex
 
 cd ${vagrant_dir}
 ssh_port="$(vagrant port --guest 22)"
-magento_host_name=$(sh "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "magento_host_name")
+magento_host_name=$(bash "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "magento_host_name")
 
 cp -R "${vagrant_dir}/scripts/host/php-storm-configs/." "${vagrant_dir}/.idea/"
 
@@ -31,8 +31,8 @@ ${sed_command} "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/modu
 
 mv "${vagrant_dir}/.idea/<host_name>.iml" "${vagrant_dir}/.idea/${magento_host_name}.iml"
 
-ee_repository_url=$(sh "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "ee_repository_url")
-if [ -z ${ee_repository_url} ]; then
+repository_url_ee=$(bash "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "repository_url_ee")
+if [ -z ${repository_url_ee} ]; then
     mv "${vagrant_dir}/.idea/vcs.ce.xml" "${vagrant_dir}/.idea/vcs.xml"
     rm "${vagrant_dir}/.idea/vcs.ee.xml"
 else
