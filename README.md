@@ -80,6 +80,10 @@ Upon a successful installation, you'll see the location and URL of the newly-ins
 - MySQL DB name: `magento`, `magento_integration_tests`
 - MySQL DB user/password: just use `mysql` with no user and password (`root/password` will be used by default)
 
+### Custom settings
+Some of default settings are available for override. These settings can be found in the file [local.config/config.yaml.dist](local.config/config.yaml.dist)
+To override settings just create a copy of the file under the name 'config.yaml' and put there your custom settings.
+
 ### GitHub limitations
 
 Be aware that you may encounter GitHub limits on the number of downloads (used by Composer to download Magento dependencies).

@@ -6,11 +6,10 @@ variable_name=$1
 # Enable trace printing and exit on the first error
 set -ex
 
-path_to_custom_value="${vagrant_dir}/local.config/${variable_name}.txt"
-path_to_default_value="${vagrant_dir}/local.config/${variable_name}.txt.dist"
+. parse_yaml.sh
 
-if [ -f ${path_to_custom_value} ]; then
-    cat ${path_to_custom_value}
-else
-    cat ${path_to_default_value}
-fi
+# read yaml file
+eval $(parse_yaml "${vagrant_dir}/local.config/config.yaml.dist")
+eval $(parse_yaml "${vagrant_dir}/local.config/config.yaml")
+
+echo ${!variable_name}
