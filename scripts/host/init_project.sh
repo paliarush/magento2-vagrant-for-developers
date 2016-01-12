@@ -10,7 +10,7 @@ set -ex
 bash "${vagrant_dir}/scripts/host/check_requirements.sh"
 
 # Check out CE repository
-ce_repository_url=$(sh "${vagrant_dir}/scripts/host/get_variable_value.sh" "ce_repository_url")
+ce_repository_url=$(sh "${vagrant_dir}/scripts/host/get_variable_value.sh" "repository_url_ce")
 git clone ${ce_repository_url} ${magento_ce_dir}
 
 # Check out EE repository
