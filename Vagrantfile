@@ -1,16 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Method for reading values from local config
-def get_variable_value(variable_name)
-   custom_value_path = Dir.pwd + '/local.config/' + variable_name + '.txt'
-   default_value_path = Dir.pwd + '/local.config/' + variable_name + '.txt.dist'
-   if File.exist?(custom_value_path)
-      return File.read(custom_value_path)
-   else
-       return File.read(default_value_path)
-   end
-end
+require 'yaml'
 
 module OS
     def OS.is_windows
@@ -18,16 +9,33 @@ module OS
     end
 end
 
+module Config
+    # Load and override config settings
+    def Config.load
+        local_config_dir = 'local.config'
+        config_dist_file = local_config_dir + '/config.yaml.dist'
+        config_file = local_config_dir + '/config.yaml'
+
+        config_data_dist = YAML.load_file(config_dist_file)
+        config_data = File.exists?(config_file) ? YAML.load_file(config_file) : {}
+        return config_data_dist.merge!(config_data)
+    end
+end
+
+# Get parameters from config file
+config_data = Config.load
+magento_host_name = config_data['magento']['host_name']
+magento_ip_address = config_data['guest']['ip_address']
+guest_memory = config_data['guest']['memory']
+
 host_magento_dir = Dir.pwd + '/magento2ce'
-magento_host_name = get_variable_value('magento_host_name')
-magento_ip_address = get_variable_value('magento_ip_address')
 
 VAGRANT_API_VERSION = 2
 Vagrant.configure(VAGRANT_API_VERSION) do |config|
     config.vm.box = "ubuntu/trusty64"
 
     config.vm.provider "virtualbox" do |vb|
-        vb.memory = get_variable_value('guest_ram') # Default is 2Gb, around 3Gb is necessary to run functional tests
+        vb.memory = guest_memory
     end
 
     config.vm.synced_folder '.', '/vagrant', disabled: true
@@ -43,9 +51,16 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
     end
 
     shell_script_args = [
-        OS.is_windows ? "1" : "0",
-        guest_magento_dir,
-        magento_host_name
+        OS.is_windows ? "1" : "0",                  #1
+        guest_magento_dir,                          #2
+        magento_host_name,                          #3
+        config_data['guest']['use_php7'],           #4
+        config_data['magento']['backend_frontname'],#5
+        config_data['magento']['language'],         #6
+        config_data['magento']['timezone'],         #8
+        config_data['magento']['currency'],         #9
+        config_data['magento']['admin_user'],       #9
+        config_data['magento']['admin_password']    #10
     ]
     config.vm.provision "install_environment", type: "shell" do |s|
         s.path = "scripts/provision/install_environment.sh"

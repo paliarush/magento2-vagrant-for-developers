@@ -13,31 +13,30 @@
 
 ## What You get
 
-It is expected that Magento 2 project source code will be located on the host and managed using [Composer](https://getcomposer.org/doc/00-intro.md). 
-This is necessary to allow IDE index project files quickly. All other infrastructure infrastructure is deployed on the guest machine.
+It is expected that Magento 2 project source code will be located on the host. 
+This is necessary to allow IDE index project files quickly. All other infrastructure is deployed on the guest machine.
 
 Current Vagrant configuration aims to solve performance issues of Magento installed on Virtual Box **for development**.
 Custom solution is implemented for Windows hosts. See [explanation of the proposed solution](docs/performance-issue-on-windows-hosts.md).
 
-With current configuration Vagrant will:
+[Project initialization script](init_project.sh) configures complete development environment:
 
- 1. Run Ubuntu box
- 1. Install and configure all software necessary for Magento 2 (Apache 2.4, PHP 7.0 (or 5.5.9), MySQL 5.6, git, Composer, XDebug, Rabbit MQ)
- 1. Install the Magento 2 application
- 1. Configure PHP Storm project
+ 1. Adds some missing software on the host
+ 1. Installs and configures all software necessary for Magento 2 on the Ubuntu vagrant box (Apache 2.4, PHP 7.0 (or 5.5.9), MySQL 5.6, git, Composer, XDebug, Rabbit MQ)
+ 1. Installs Magento 2
+ 1. Configures PHP Storm project
 
 ## How to install
 
-If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com/v2/)
+If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com/v2)
 
 ### Requirements
 - [Vagrant 1.8+](https://www.vagrantup.com/downloads.html) is installed and available globally in command line
-- [Host manager plugin for Vagrant](https://github.com/smdahlen/vagrant-hostmanager)
 - [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-- [Composer](https://getcomposer.org/doc/00-intro.md) is installed and is available globally in command line
-- Make sure you have SSH keys generated and associated with your github account, see [manual](https://help.github.com/articles/generating-ssh-keys/).
-:information_source: You can use another way of getting codebase instead of cloning, it does not matter for successful installation.
-- \[Optional\] but highly recommended, [PHP Storm](https://www.jetbrains.com/phpstorm)
+- [PHP](http://php.net/manual/en/install.php) (any version) to allow Magento dependency management with [Composer](https://getcomposer.org/doc/00-intro.md)
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). Make sure you have SSH keys generated and associated with your github account, see [manual](https://help.github.com/articles/generating-ssh-keys/).
+:information_source: It is possible to use another way of getting codebase instead of cloning, it does not matter for successful installation.
+- [PHP Storm](https://www.jetbrains.com/phpstorm) is optional but recommended.
 
 ### Installation steps
 
@@ -80,6 +79,10 @@ Upon a successful installation, you'll see the location and URL of the newly-ins
 - MySQL DB host: `localhost` (not accessible remotely)
 - MySQL DB name: `magento`, `magento_integration_tests`
 - MySQL DB user/password: just use `mysql` with no user and password (`root/password` will be used by default)
+
+### Custom settings
+Some of default settings are available for override. These settings can be found in the file [local.config/config.yaml.dist](local.config/config.yaml.dist).
+To override settings just create a copy of the file under the name 'config.yaml' and put there your custom settings.
 
 ### GitHub limitations
 

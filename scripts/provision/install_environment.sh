@@ -6,6 +6,7 @@ set -ex
 is_windows_host=$1
 guest_magento_dir=$2
 magento_host_name=$3
+use_php7=$4
 
 vagrant_dir="/vagrant"
 
@@ -39,7 +40,6 @@ a2ensite magento2.conf
 sudo a2dissite 000-default
 
 # Setup PHP
-use_php7=$(sh "${vagrant_dir}/scripts/host/get_variable_value.sh" "use_php7")
 if [ ${use_php7} -eq 1 ]; then
     # Workaround until php7.0 is available in official ubuntu repository
     apt-get install -y language-pack-en-base
