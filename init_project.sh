@@ -3,12 +3,23 @@
 vagrant_dir=$PWD
 magento_ce_dir="${vagrant_dir}/magento2ce"
 magento_ee_dir="${magento_ce_dir}/magento2ee"
+config_path="${vagrant_dir}/local.config/config.yaml"
 
 # Enable trace printing and exit on the first error
 set -ex
 
 bash "${vagrant_dir}/scripts/host/shell/check_requirements.sh"
 
+# Generate random IP address and host name to prevent collisions, if not specified explicitly in local config
+if [ ! -f "${vagrant_dir}/local.config/config.yaml" ]; then
+    cp "${config_path}.dist" ${config_path}
+fi
+random_ip=$(( ( RANDOM % 240 )  + 12 ))
+sed -i.back "s|ip_address: \"192.168.10.2\"|ip_address: \"192.168.10.${random_ip}\"|g" "${config_path}"
+sed -i.back "s|host_name: \"magento2.vagrant2\"|host_name: \"magento2.vagrant${random_ip}\"|g" "${config_path}"
+rm -f "${config_path}.back"
+
+# Clean up the project before initialization if "-f" option was specified
 force_project_cleaning=0
 while getopts 'f' flag; do
   case "${flag}" in
@@ -16,8 +27,6 @@ while getopts 'f' flag; do
     *) error "Unexpected option ${flag}" ;;
   esac
 done
-
-# Clean up the project before initialization if "-f" option was specified
 if [ ${force_project_cleaning} -eq 1 ]; then
     vagrant destroy -f
     rm -rf ${magento_ce_dir} ${vagrant_dir}/.idea ${vagrant_dir}/.vagrant

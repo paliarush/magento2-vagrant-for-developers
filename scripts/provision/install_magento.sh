@@ -10,7 +10,7 @@ guest_magento_dir=$2
 magento_host_name=$3
 
 declare -A setupOptions
-setupOptions[backend_frontname]=$5
+setupOptions[admin_frontname]=$5
 setupOptions[language]=$6
 setupOptions[timezone]=$7
 setupOptions[currency]=$8
@@ -50,7 +50,7 @@ install_cmd="./bin/magento setup:install \
     --db-host=${setupOptions[db_host]} \
     --db-name=${setupOptions[db_name]} \
     --db-user=${setupOptions[db_user]} \
-    --backend-frontname=${setupOptions[backend_frontname]} \
+    --backend-frontname=${setupOptions[admin_frontname]} \
     --base-url=${setupOptions[base_url]} \
     --language=${setupOptions[language]} \
     --timezone=${setupOptions[timezone]} \
@@ -86,7 +86,7 @@ set +x
 echo "
 Magento application was deployed to ${guest_magento_dir} and installed successfully
 Access storefront at ${setupOptions[base_url]}
-Access admin panel at ${setupOptions[base_url]}${setupOptions[backend_frontname]}/"
+Access admin panel at ${setupOptions[base_url]}${setupOptions[admin_frontname]}/"
 
 if [ ${use_nfs_for_synced_folders} -eq 0 ]; then
     echo "

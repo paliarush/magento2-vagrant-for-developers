@@ -6,13 +6,13 @@ guest:
   use_nfs: 1
   # Default is 2Gb, around 3Gb is necessary to run functional tests
   memory: 2048
-  ip_address: "192.168.10.11"
+  ip_address: "192.168.10.2"
 environment:
   # If set to 0, PHP 5 will be installed
   use_php7: 1
 magento:
-  host_name: "magento2.vagrant"
-  backend_frontname: "admin"
+  host_name: "magento2.vagrant2"
+  admin_frontname: "admin"
   language: "en_US"
   timezone: "America/Chicago"
   currency: "USD"

@@ -58,7 +58,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         guest_magento_dir,                          #2
         magento_host_name,                          #3
         config_data['environment']['use_php7'],     #4
-        config_data['magento']['backend_frontname'],#5
+        config_data['magento']['admin_frontname'],  #5
         config_data['magento']['language'],         #6
         config_data['magento']['timezone'],         #8
         config_data['magento']['currency'],         #9
