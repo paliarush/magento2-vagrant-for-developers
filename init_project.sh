@@ -35,6 +35,12 @@ if [ ! -d ${magento_ce_dir} ]; then
     fi
 fi
 
+use_nfs=$(bash "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "guest_use_nfs")
+var_generation_dir="${magento_ce_dir}/var/generation"
+if [[ ! -d ${var_generation_dir} ]] && [[ ${use_nfs} == 0 ]] ; then
+    mkdir ${var_generation_dir}
+fi
+
 # Update Magento dependencies via Composer
 cd ${magento_ce_dir}
 bash "${vagrant_dir}/scripts/host/shell/composer.sh" install
