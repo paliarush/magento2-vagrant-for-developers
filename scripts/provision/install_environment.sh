@@ -3,7 +3,7 @@
 # Enable trace printing and exit on the first error
 set -ex
 
-is_windows_host=$1
+use_nfs_for_synced_folders=$1
 guest_magento_dir=$2
 magento_host_name=$3
 use_php7=$4
@@ -125,7 +125,7 @@ echo "export PATH=\$PATH:${vagrant_dir}/scripts/guest:${guest_magento_dir}/bin" 
 echo "export MAGENTO_ROOT=${guest_magento_dir}" >> /etc/profile
 
 # Set permissions to allow Magento codebase upload by Vagrant provision script
-if [ ${is_windows_host} -eq 1 ]; then
+if [ ${use_nfs_for_synced_folders} -eq 0 ]; then
     chown -R vagrant:vagrant /var/www
     chmod -R 755 /var/www
 fi

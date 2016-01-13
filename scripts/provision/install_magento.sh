@@ -5,7 +5,7 @@
 # Enable trace printing and exit on the first error
 set -ex
 
-is_windows_host=$1
+use_nfs_for_synced_folders=$1
 guest_magento_dir=$2
 magento_host_name=$3
 
@@ -15,11 +15,11 @@ setupOptions[language]=$6
 setupOptions[timezone]=$7
 setupOptions[currency]=$8
 setupOptions[admin_user]=$9
-setupOptions[admin_password]=$10
+setupOptions[admin_password]=${10}
 setupOptions[db_host]='localhost'
 setupOptions[db_name]='magento'
 setupOptions[db_user]='root'
-setupOptions[base_url]='http://${magento_host_name}/'
+setupOptions[base_url]="http://${magento_host_name}/"
 setupOptions[admin_lastname]='Admin'
 setupOptions[admin_firstname]='Admin'
 setupOptions[admin_email]='admin@example.com'
@@ -78,7 +78,7 @@ php ${install_cmd}
 # Enable Magento cron jobs
 echo "* * * * * php ${guest_magento_dir}/bin/magento cron:run &" | crontab -u vagrant -
 
-if [ ${is_windows_host} -eq 1 ]; then
+if [ ${use_nfs_for_synced_folders} -eq 0 ]; then
     chown -R vagrant:vagrant ${guest_magento_dir}
 fi
 
@@ -86,9 +86,9 @@ set +x
 echo "
 Magento application was deployed to ${guest_magento_dir} and installed successfully
 Access storefront at ${setupOptions[base_url]}
-Access admin panel at ${setupOptions[base_url]}${backend_frontame}/"
+Access admin panel at ${setupOptions[base_url]}${setupOptions[backend_frontname]}/"
 
-if [ ${is_windows_host} -eq 1 ]; then
+if [ ${use_nfs_for_synced_folders} -eq 0 ]; then
     echo "
     [Optional] To finish developer environment set up:
         1. Please create new PhpStorm project using 'magento2ce' directory on your host

@@ -14,20 +14,14 @@ cp -R "${vagrant_dir}/scripts/host/php-storm-configs/." "${vagrant_dir}/.idea/"
 
 enabled_virtual_host_config="/etc/apache2/sites-available/magento2.conf"
 
-current_os="$(bash ${vagrant_dir}/scripts/host/shell/get_current_os.sh)"
-if [ ${current_os} -eq "OSX" ]; then
-    sed_command="sed -i ''"
-else
-    sed_command="sed -i"
-fi
-
-${sed_command} "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/webServers.xml"
-${sed_command} "s|<ssh_port>|${ssh_port}|g" "${vagrant_dir}/.idea/webServers.xml"
-${sed_command} "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/php.xml"
-${sed_command} "s|<ssh_port>|${ssh_port}|g" "${vagrant_dir}/.idea/php.xml"
-${sed_command} "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/deployment.xml"
-${sed_command} "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/.name"
-${sed_command} "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/modules.xml"
+sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/webServers.xml"
+sed -i.back "s|<ssh_port>|${ssh_port}|g" "${vagrant_dir}/.idea/webServers.xml"
+sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/php.xml"
+sed -i.back "s|<ssh_port>|${ssh_port}|g" "${vagrant_dir}/.idea/php.xml"
+sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/deployment.xml"
+sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/.name"
+sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/modules.xml"
+rm -rf ${vagrant_dir}/.idea/*.back
 
 mv "${vagrant_dir}/.idea/<host_name>.iml" "${vagrant_dir}/.idea/${magento_host_name}.iml"
 

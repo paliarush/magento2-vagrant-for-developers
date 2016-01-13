@@ -28,6 +28,9 @@ magento_host_name = config_data['magento']['host_name']
 magento_ip_address = config_data['guest']['ip_address']
 guest_memory = config_data['guest']['memory']
 
+# NFS will be used for *nix and OSX hosts, if not disabled explicitly in config
+use_nfs_for_synced_folders = !OS.is_windows && (config_data['guest']['use_nfs'] == 1)
+
 host_magento_dir = Dir.pwd + '/magento2ce'
 
 VAGRANT_API_VERSION = 2
@@ -41,20 +44,20 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
     config.vm.synced_folder '.', '/vagrant', disabled: true
     config.vm.synced_folder './local.config', '/vagrant/local.config'
     config.vm.synced_folder './scripts', '/vagrant/scripts'
-    if OS.is_windows
+    if use_nfs_for_synced_folders
+        guest_magento_dir = host_magento_dir
+        config.vm.synced_folder host_magento_dir, guest_magento_dir, type: "nfs"
+    else
         guest_magento_dir = '/var/www/magento2ce'
         config.vm.synced_folder host_magento_dir + '/var/generation', guest_magento_dir + '/var/generation'
         config.vm.synced_folder host_magento_dir + '/app/etc', guest_magento_dir + '/app/etc'
-    else
-        guest_magento_dir = host_magento_dir
-        config.vm.synced_folder host_magento_dir, guest_magento_dir, type: "nfs"
     end
 
     shell_script_args = [
-        OS.is_windows ? "1" : "0",                  #1
+        use_nfs_for_synced_folders ? "1" : "0",     #1
         guest_magento_dir,                          #2
         magento_host_name,                          #3
-        config_data['guest']['use_php7'],           #4
+        config_data['environment']['use_php7'],     #4
         config_data['magento']['backend_frontname'],#5
         config_data['magento']['language'],         #6
         config_data['magento']['timezone'],         #8
@@ -67,7 +70,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         s.args = shell_script_args
     end
 
-    if OS.is_windows
+    if !use_nfs_for_synced_folders
         config.vm.provision "deploy_magento_code", type: "file", source: host_magento_dir, destination: '/var/www'
     end
 
