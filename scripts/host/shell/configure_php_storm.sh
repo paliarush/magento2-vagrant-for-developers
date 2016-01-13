@@ -14,10 +14,22 @@ cp -R "${vagrant_dir}/scripts/host/php-storm-configs/." "${vagrant_dir}/.idea/"
 
 enabled_virtual_host_config="/etc/apache2/sites-available/magento2.conf"
 
+host_os=$(bash "${vagrant_dir}/scripts/host/shell/get_host_os.sh")
+if [[ ${host_os} == "Windows" || $(bash "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "guest_use_nfs") == 0 ]]; then
+    sed -i.back "s|<magento_guest_path>|/var/www/magento2ce|g" "${vagrant_dir}/.idea/deployment.xml"
+    sed -i.back 's|<auto_upload_attributes>| autoUpload="Always" autoUploadExternalChanges="true"|g' "${vagrant_dir}/.idea/deployment.xml"
+    sed -i.back 's|<auto_upload_option>|<option name="myAutoUpload" value="ALWAYS" />|g' "${vagrant_dir}/.idea/deployment.xml"
+else
+    sed -i.back "s|<magento_guest_path>|\$PROJECT_DIR\$/magento2ce|g" "${vagrant_dir}/.idea/deployment.xml"
+    sed -i.back 's|<auto_upload_attributes>||g' "${vagrant_dir}/.idea/deployment.xml"
+    sed -i.back 's|<auto_upload_option>||g' "${vagrant_dir}/.idea/deployment.xml"
+fi
+
 sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/webServers.xml"
 sed -i.back "s|<ssh_port>|${ssh_port}|g" "${vagrant_dir}/.idea/webServers.xml"
 sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/php.xml"
 sed -i.back "s|<ssh_port>|${ssh_port}|g" "${vagrant_dir}/.idea/php.xml"
+sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/deployment.xml"
 sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/deployment.xml"
 sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/.name"
 sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/modules.xml"
