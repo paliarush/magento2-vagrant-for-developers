@@ -40,7 +40,22 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
 
 ### Installation steps
 
+#### Windows
+
  1. Run in command line from the directory which contains your projects:
+
+     1. Download project with Vagrant configuration:
+     
+        ```
+        git clone git@github.com:paliarush/magento2-vagrant-for-developers.git vagrant-magento
+        cd vagrant-magento
+        git checkout develop
+        ```
+        
+     1. Copy [local.config/composer/auth.json.dist](local.config/composer/auth.json.dist) to `local.config/composer/auth.json` and specify your [GitHub OAuth token](https://github.com/settings/tokens) there. See [API rate limit and OAuth tokens](https://getcomposer.org/doc/articles/troubleshooting.md#api-rate-limit-and-oauth-tokens) for more information. 
+     
+     1. Optionally, copy [local.config/config.yaml.dist](local.config/config.yaml.dist) as `local.config/config.yaml` and make necessary customizations.
+           
      1. Prepare Magento codebase. This step is optional, just ensure you have 'magento2ce' directory with Magento code available.
          
          :information_source: To have 'composer install' here work faster, remove 'prefer-source' option and follow the instructions provided in [Gighub limitations section](README.md#github-limitations)
@@ -49,27 +64,51 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
         git clone git@github.com:magento/magento2.git magento2ce
         cd magento2ce
         mkdir -p var/generation
-        composer install --prefer-source
-        cd ..
+        composer install --ignore-platform-reqs --prefer-source
         ```
-    
-     1. Download project with Vagrant configuration and install Magento (may take some time to download Ubuntu box for the first time, then ~ 5 minutes):
-     
+        
+     1. Deploy environment and install Magento (may take some time to download Ubuntu box for the first time, then ~ 5 minutes):
+             
         ```
-        git clone git@github.com:paliarush/vagrant-magento.git vagrant-magento
-        cd vagrant-magento
         vagrant up
         ```
- 1. For **Windows hosts only**: after the installation is complete, [set up synchronization with PHP Storm](docs/phpstorm-configuration-windows-hosts.md)
+            
+ 1. After the installation is complete, [set up synchronization with PHP Storm](docs/phpstorm-configuration-windows-hosts.md)
+ 
+#### OSX and *nix
+ 
+ 1. Run in command line from the directory which contains your projects:
+
+      1. Download project with Vagrant configuration:
+      
+        ```
+        git clone git@github.com:paliarush/magento2-vagrant-for-developers.git vagrant-magento
+        cd vagrant-magento
+        git checkout develop
+        ```
+     
+      1. Copy [local.config/composer/auth.json.dist](local.config/composer/auth.json.dist) to `local.config/composer/auth.json` and specify your [GitHub OAuth token](https://github.com/settings/tokens) there. See [API rate limit and OAuth tokens](https://getcomposer.org/doc/articles/troubleshooting.md#api-rate-limit-and-oauth-tokens) for more information. 
+      
+      1. Optionally, copy [local.config/config.yaml.dist](local.config/config.yaml.dist) as `local.config/config.yaml` and make necessary customizations.
+      
+      1. Initialize project, configure environment, install Magento, configure PHPStorm project:
+      
+        ```
+        cd vagrant-magento
+        bash init_project.sh
+        ```
 
 ### Default credentials and settings
+Some of default settings are available for override. These settings can be found in the file [local.config/config.yaml.dist](local.config/config.yaml.dist).
+To override settings just create a copy of the file under the name 'config.yaml' and put there your custom settings.
+When using [init_project.sh](init_project.sh), if not specified manually, random IP address is generated and is used as suffix for host name to prevent collisions, in case when 2 or more instances are running at the same time.
 Upon a successful installation, you'll see the location and URL of the newly-installed Magento 2 application in console.
 
 **Web access**:
-- Access storefront at `http://magento2.vagrant`
-- Access admin panel at `http://magento2.vagrant/admin/`
+- Access storefront at `http://magento2.vagrant<random_suffix>`
+- Access admin panel at `http://magento2.vagrant<random_suffix>/admin/`
 - Magento admin user/password: `admin/123123q`
-- Rabbit MQ control panel: `http://magento2.vagrant:15672`, credentials `guest`/`guest`
+- Rabbit MQ control panel: `http://magento2.vagrant<random_suffix>:15672`, credentials `guest`/`guest`
 
 **Codebase and DB access**:
 - Path to your Magento installation on the VM:
@@ -80,10 +119,6 @@ Upon a successful installation, you'll see the location and URL of the newly-ins
 - MySQL DB name: `magento`, `magento_integration_tests`
 - MySQL DB user/password: just use `mysql` with no user and password (`root/password` will be used by default)
 
-### Custom settings
-Some of default settings are available for override. These settings can be found in the file [local.config/config.yaml.dist](local.config/config.yaml.dist).
-To override settings just create a copy of the file under the name 'config.yaml' and put there your custom settings.
-
 ### GitHub limitations
 
 Be aware that you may encounter GitHub limits on the number of downloads (used by Composer to download Magento dependencies).
@@ -92,10 +127,7 @@ These limits may significantly slow down the installation since all of the libra
 
 If you have a GitHub account, you can bypass these limitations by using an OAuth token in the Composer configuration. See [API rate limit and OAuth tokens](https://getcomposer.org/doc/articles/troubleshooting.md#api-rate-limit-and-oauth-tokens) for more information.
 
-For the Vagrant configuration you may specify your token in `local.config/github.oauth.token` file after cloning the repository. The file is a basic text file and is ignored by Git, so you'll need to create it yourself. Simply write your OAuth token in this file making sure to avoid any empty spaces, and it will be read during deployment. You should see the following message in the Vagrant log:
-```
-Installing GitHub OAuth token from /vagrant/local.config/github.oauth.token
-```
+For the Vagrant configuration you may specify your token in `local.config/github.oauth.token` file after cloning the repository. The file is a basic text file and is ignored by Git, so you'll need to create it yourself. Simply write your OAuth token in this file making sure to avoid any empty spaces, and it will be read during deployment.
 
 ## Day-to-day development scenarios
     
