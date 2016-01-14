@@ -35,7 +35,7 @@ sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/.name"
 sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/modules.xml"
 rm -rf ${vagrant_dir}/.idea/*.back
 
-mv "${vagrant_dir}/.idea/<host_name>.iml" "${vagrant_dir}/.idea/${magento_host_name}.iml"
+mv "${vagrant_dir}/.idea/host_name.iml" "${vagrant_dir}/.idea/${magento_host_name}.iml"
 
 repository_url_ee=$(bash "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "repository_url_ee")
 if [ -z ${repository_url_ee} ]; then
