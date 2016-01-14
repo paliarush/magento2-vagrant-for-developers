@@ -15,8 +15,10 @@ if [ ! -f "${vagrant_dir}/local.config/config.yaml" ]; then
     cp "${config_path}.dist" ${config_path}
 fi
 random_ip=$(( ( RANDOM % 240 )  + 12 ))
+forwarded_ssh_port=$(( random_ip + 3000 ))
 sed -i.back "s|ip_address: \"192.168.10.2\"|ip_address: \"192.168.10.${random_ip}\"|g" "${config_path}"
 sed -i.back "s|host_name: \"magento2.vagrant2\"|host_name: \"magento2.vagrant${random_ip}\"|g" "${config_path}"
+sed -i.back "s|forwarded_ssh_port: 3000|forwarded_ssh_port: ${forwarded_ssh_port}|g" "${config_path}"
 rm -f "${config_path}.back"
 
 # Clean up the project before initialization if "-f" option was specified
@@ -43,7 +45,6 @@ if [ ! -d ${magento_ce_dir} ]; then
         git clone ${repository_url_ee} ${magento_ee_dir}
     fi
 fi
-
 
 var_generation_dir="${magento_ce_dir}/var/generation"
 if [ ! -d ${var_generation_dir} ] ; then

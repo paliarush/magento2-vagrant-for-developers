@@ -26,6 +26,7 @@ end
 config_data = Config.load
 magento_host_name = config_data['magento']['host_name']
 magento_ip_address = config_data['guest']['ip_address']
+forwarded_ssh_port = config_data['guest']['forwarded_ssh_port']
 guest_memory = config_data['guest']['memory']
 
 # NFS will be used for *nix and OSX hosts, if not disabled explicitly in config
@@ -87,5 +88,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
     config.vm.define magento_host_name do |node|
         node.vm.hostname = magento_host_name
         node.vm.network :private_network, ip: magento_ip_address
+        node.vm.network :forwarded_port, guest: 22, host: forwarded_ssh_port
     end
+    config.ssh.guest_port = forwarded_ssh_port
 end
