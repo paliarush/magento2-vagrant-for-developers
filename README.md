@@ -47,6 +47,9 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
      1. Download project with Vagrant configuration:
      
         ```
+        git config --global core.autocrlf false
+        git config --global core.eol LF
+        git config --global diff.renamelimit 5000
         git clone git@github.com:paliarush/magento2-vagrant-for-developers.git vagrant-magento
         cd vagrant-magento
         git checkout develop
