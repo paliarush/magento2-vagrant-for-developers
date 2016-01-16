@@ -4,10 +4,10 @@ vagrant_dir=$(cd "$(dirname "$0")/../../.."; pwd)
 composer_auth_json="${vagrant_dir}/local.config/composer/auth.json"
 
 # Enable trace printing and exit on the first error
-set -ex
+set +x
 
 cd ${vagrant_dir}
-ssh_port="$(vagrant port --guest 22)"
+ssh_port=$(bash "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "guest_forwarded_ssh_port")
 magento_host_name=$(bash "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "magento_host_name")
 
 cp -R "${vagrant_dir}/scripts/host/php-storm-configs/." "${vagrant_dir}/.idea/"
@@ -34,6 +34,7 @@ sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/deploym
 sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/.name"
 sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/modules.xml"
 rm -rf ${vagrant_dir}/.idea/*.back
+rm -f ${vagrant_dir}/.idea/.name.back
 
 mv "${vagrant_dir}/.idea/host_name.iml" "${vagrant_dir}/.idea/${magento_host_name}.iml"
 
@@ -45,3 +46,5 @@ else
     mv "${vagrant_dir}/.idea/vcs.ee.xml" "${vagrant_dir}/.idea/vcs.xml"
     rm "${vagrant_dir}/.idea/vcs.ce.xml"
 fi
+
+set -x

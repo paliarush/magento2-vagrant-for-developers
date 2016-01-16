@@ -21,7 +21,7 @@ This is necessary to allow IDE index project files quickly. All other infrastruc
 Current Vagrant configuration aims to solve performance issues of Magento installed on Virtual Box **for development**.
 Custom solution is implemented for Windows hosts. See [explanation of the proposed solution](docs/performance-issue-on-windows-hosts.md).
 
-[Project initialization script](init_project.sh) configures complete development environment:
+[Project initialization script](init_project.sh) configures complete development environment (available for OSX and \*nix hosts):
 
  1. Adds some missing software on the host
  1. Installs and configures all software necessary for Magento 2 on the Ubuntu vagrant box (Apache 2.4, PHP 7.0 (or 5.5.9), MySQL 5.6, git, Composer, XDebug, Rabbit MQ)
@@ -59,25 +59,29 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
      
      1. Optionally, copy [local.config/config.yaml.dist](local.config/config.yaml.dist) as `local.config/config.yaml` and make necessary customizations.
            
-     1. Prepare Magento codebase. This step is optional, just ensure you have 'magento2ce' directory with Magento code available.
+     1. Prepare Magento codebase. This step is optional, just ensure you have `magento2ce` directory with Magento code available.
          
-         :information_source: To have 'composer install' here work faster, remove 'prefer-source' option and follow the instructions provided in [Gighub limitations section](README.md#github-limitations)
+         :information_source: If `composer install` fails to fetch some dependencies, add `--prefer-source` option or follow the instructions provided in [Gighub limitations section](README.md#github-limitations)
      
         ```
         cd vagrant-magento
         git clone git@github.com:magento/magento2.git magento2ce
         cd magento2ce
         mkdir -p var/generation
-        composer install --ignore-platform-reqs --prefer-source
+        composer install --ignore-platform-reqs
+        cd ..
         ```
         
      1. Deploy environment and install Magento (may take some time to download Ubuntu box for the first time, then ~ 5 minutes):
              
         ```
+        vagrant plugin install vagrant-hostmanager
+        vagrant plugin install vagrant-vbguest
         vagrant up
         ```
             
  1. After the installation is complete, [set up synchronization with PHP Storm](docs/phpstorm-configuration-windows-hosts.md)
+ 
  
 #### OSX and *nix
  
@@ -101,6 +105,8 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
         ```
         
         :information_source: NFS will be used by default to sync your project files with guest. On some hosts Vagrant cannot configure NFS properly, in this case it is possible to deploy project without NFS by setting `use_nfs` option in [config.yaml](local.config/config.yaml.dist) to `0`
+
+      1. Use `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`). This is important, because in this case PHP Storm will be configured automatically by [init_project.sh](init_project.sh)
 
 ### Default credentials and settings
 Some of default settings are available for override. These settings can be found in the file [local.config/config.yaml.dist](local.config/config.yaml.dist).
