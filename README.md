@@ -4,6 +4,8 @@
  * [How to install](#how-to-install)
    * [Requirements](#requirements)
    * [Installation steps](#installation-steps)
+     * [Windows](#windows)
+     * [OSX and \*nix](#osx-and-nix)
    * [Default credentials and settings](#default-credentials-and-settings)
    * [GitHub limitations](#github-limitations)
  * [Day-to-day development scenarios](#day-to-day-development-scenarios)
@@ -24,7 +26,7 @@ Custom solution is implemented for Windows hosts. See [explanation of the propos
  1. Adds some missing software on the host
  1. Installs and configures all software necessary for Magento 2 on the Ubuntu vagrant box (Apache 2.4, PHP 7.0 (or 5.5.9), MySQL 5.6, git, Composer, XDebug, Rabbit MQ)
  1. Installs Magento 2
- 1. Configures PHP Storm project
+ 1. Configures PHP Storm project (partially at the moment)
 
 ## How to install
 
@@ -100,6 +102,8 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
         cd vagrant-magento
         bash init_project.sh
         ```
+        
+        :information_source: NFS will be used by default to sync your project files with guest. On some hosts Vagrant cannot configure NFS properly, in this case it is possible to deploy project without NFS by setting `use_nfs` option in [config.yaml](local.config/config.yaml.dist) to `0`
 
 ### Default credentials and settings
 Some of default settings are available for override. These settings can be found in the file [local.config/config.yaml.dist](local.config/config.yaml.dist).
