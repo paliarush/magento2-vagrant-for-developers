@@ -53,8 +53,6 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
         git config --global core.eol LF
         git config --global diff.renamelimit 5000
         git clone git@github.com:paliarush/magento2-vagrant-for-developers.git vagrant-magento
-        cd vagrant-magento
-        git checkout develop
         ```
         
      1. Copy [local.config/composer/auth.json.dist](local.config/composer/auth.json.dist) to `local.config/composer/auth.json` and specify your [GitHub OAuth token](https://github.com/settings/tokens) there. See [API rate limit and OAuth tokens](https://getcomposer.org/doc/articles/troubleshooting.md#api-rate-limit-and-oauth-tokens) for more information. 
@@ -66,6 +64,7 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
          :information_source: To have 'composer install' here work faster, remove 'prefer-source' option and follow the instructions provided in [Gighub limitations section](README.md#github-limitations)
      
         ```
+        cd vagrant-magento
         git clone git@github.com:magento/magento2.git magento2ce
         cd magento2ce
         mkdir -p var/generation
@@ -88,8 +87,6 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
       
         ```
         git clone git@github.com:paliarush/magento2-vagrant-for-developers.git vagrant-magento
-        cd vagrant-magento
-        git checkout develop
         ```
      
       1. Copy [local.config/composer/auth.json.dist](local.config/composer/auth.json.dist) to `local.config/composer/auth.json` and specify your [GitHub OAuth token](https://github.com/settings/tokens) there. See [API rate limit and OAuth tokens](https://getcomposer.org/doc/articles/troubleshooting.md#api-rate-limit-and-oauth-tokens) for more information. 
