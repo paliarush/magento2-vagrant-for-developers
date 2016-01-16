@@ -1,5 +1,9 @@
 # Vagrant project for Magento 2 developers (optimized for Mac, Windows and \*nix hosts)
 
+[![GitHub release](https://img.shields.io/github/release/paliarush/magento2-vagrant-for-developers.svg)](https://github.com/paliarush/magento2-vagrant-for-developers/releases)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![Semver](http://img.shields.io/SemVer/2.0.0.png)](http://semver.org/spec/v2.0.0.html)
+
  * [What You get](#what-you-get)
  * [How to install](#how-to-install)
    * [Requirements](#requirements)

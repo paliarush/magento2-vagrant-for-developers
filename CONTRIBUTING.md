@@ -1,0 +1,1 @@
+Everyone is welcome to contribute improvements and fixes to this project. There are no specific requirements, just create a pull request with proposed modifications.
