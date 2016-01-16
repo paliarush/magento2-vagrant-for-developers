@@ -1,0 +1,21 @@
+repository_url:
+  ce: "git@github.com:magento/magento2.git"
+  ee: ""
+guest:
+  # NFS will be used for folder synchronization on *nix and OSX hosts by default
+  use_nfs: 1
+  # Default is 2Gb, around 3Gb is necessary to run functional tests
+  memory: 2048
+  ip_address: "192.168.10.2"
+  forwarded_ssh_port: 3000
+environment:
+  # If set to 0, PHP 5 will be installed
+  use_php7: 1
+magento:
+  host_name: "magento2.vagrant2"
+  admin_frontname: "admin"
+  language: "en_US"
+  timezone: "America/Chicago"
+  currency: "USD"
+  admin_user: "admin"
+  admin_password: "123123q"

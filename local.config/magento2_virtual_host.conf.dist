@@ -1,6 +1,6 @@
 <VirtualHost *:80>
     DocumentRoot <guest_magento_dir>
-    ServerName magento2.vagrant
+    ServerName <host>
     <Directory <guest_magento_dir>>
         Options Indexes FollowSymLinks
         AllowOverride All
@@ -9,4 +9,3 @@
     ErrorLog "${APACHE_LOG_DIR}/error.log"
     CustomLog "${APACHE_LOG_DIR}/access.log" common
 </VirtualHost>
-ServerName <host>

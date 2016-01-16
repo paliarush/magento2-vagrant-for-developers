@@ -3,3 +3,5 @@
 !/composer
 /composer/*
 !/composer/auth.json.dist
+!/config.yaml.dist
+!/magento2_virtual_host.conf.dist

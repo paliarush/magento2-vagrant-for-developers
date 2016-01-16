@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpUnit">
+    <phpunit_settings>
+      <PhpUnitSettings load_method="CUSTOM_LOADER" custom_loader_path="$PROJECT_DIR$/magento2ce/vendor/phpunit/phpunit/phpunit" phpunit_phar_path="" />
+    </phpunit_settings>
+  </component>
+  <component name="MessDetector">
+    <phpmd_settings>
+      <MessDetectorConfiguration tool_path="$USER_HOME$/PhpstormProjects/magento2-vagrant/magento2ce/vendor/phpmd/phpmd/src/bin/phpmd" />
+    </phpmd_settings>
+  </component>
+  <component name="PhpCodeSniffer">
+    <phpcs_settings>
+      <PhpCSConfiguration standards="MySource;PEAR;PHPCS;PSR1;PSR2;Squiz;Zend" tool_path="$USER_HOME$/PhpstormProjects/magento2-vagrant/magento2ce/vendor/squizlabs/php_codesniffer/scripts/phpcs" />
+    </phpcs_settings>
+  </component>
+  <component name="PhpInterpreters">
+    <interpreters>
+      <interpreter home="sftp://vagrant@127.0.0.1:<ssh_port>/usr/bin/php" id="php-interpreter-<host_name>" name="Remote PHP (<host_name>)" debugger_id="php.debugger.XDebug">
+        <remote_data WEB_SERVER_CONFIG_ID="web-server-id-<host_name>" WEB_SERVER_CONFIG_NAME="<host_name>" HOST="127.0.0.1" PORT="<ssh_port>" ANONYMOUS="false" USERNAME="vagrant" PASSWORD="" PRIVATE_KEY_FILE="$PROJECT_DIR$/.vagrant/machines/magento2.vagrant/virtualbox/private_key" MY_KNOWN_HOSTS_FILE="" PASSPHRASE="" USE_KEY_PAIR="true" INTERPRETER_PATH="/usr/bin/php" HELPERS_PATH="/home/vagrant/.phpstorm_helpers" INITIALIZED="false" VALID="true" />
+      </interpreter>
+    </interpreters>
+  </component>
+</project>

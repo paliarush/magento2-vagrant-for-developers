@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="<host_name>"<auto_upload_attributes>>
+    <serverData>
+      <paths name="<host_name>">
+        <serverdata>
+          <mappings>
+            <mapping deploy="<magento_guest_path>" local="$PROJECT_DIR$/magento2ce" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/magento2ce/app/etc" />
+            <excludedPath local="true" path="$PROJECT_DIR$/magento2ce/var/generation" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+    <auto_upload_option>
+  </component>
+</project>
