@@ -68,6 +68,9 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
     ]
     config.vm.provision "install_environment", type: "shell" do |s|
         s.path = "scripts/provision/install_environment.sh"
+    end
+    config.vm.provision "configure_environment", type: "shell" do |s|
+        s.path = "scripts/provision/configure_environment.sh"
         s.args = shell_script_args
     end
 
