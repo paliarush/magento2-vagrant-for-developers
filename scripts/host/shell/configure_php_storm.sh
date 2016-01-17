@@ -4,7 +4,7 @@ vagrant_dir=$(cd "$(dirname "$0")/../../.."; pwd)
 composer_auth_json="${vagrant_dir}/local.config/composer/auth.json"
 
 # Enable trace printing and exit on the first error
-set -ex
+set +x
 
 cd ${vagrant_dir}
 ssh_port=$(bash "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "guest_forwarded_ssh_port")
@@ -29,6 +29,7 @@ find ${vagrant_dir}/.idea -type f -print0 | xargs -0 sed -i.back "s|<host_name>|
 find ${vagrant_dir}/.idea -type f -print0 | xargs -0 sed -i.back "s|<ssh_port>|${ssh_port}|g"
 mv "${vagrant_dir}/.idea/host_name.iml" "${vagrant_dir}/.idea/${magento_host_name}.iml"
 rm -rf ${vagrant_dir}/.idea/*.back
+rm -f ${vagrant_dir}/.idea/.name.back
 
 repository_url_ee=$(bash "${vagrant_dir}/scripts/host/shell/get_variable_value.sh" "repository_url_ee")
 if [ -z ${repository_url_ee} ]; then
@@ -49,3 +50,5 @@ rm -rf ${vagrant_dir}/local.config/phpstorm-settings/*.back
 cd ${vagrant_dir}/local.config/phpstorm-settings
 jar cfM ${vagrant_dir}/local.config/phpstorm_settings.jar *
 rm -rf ${vagrant_dir}/local.config/phpstorm-settings
+
+set -x
