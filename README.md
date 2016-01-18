@@ -81,6 +81,7 @@ If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com
         ```
         vagrant plugin install vagrant-hostmanager
         vagrant plugin install vagrant-vbguest
+        vagrant plugin install vagrant-host-shell
         vagrant up
         ```
             

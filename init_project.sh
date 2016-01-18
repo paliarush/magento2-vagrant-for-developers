@@ -59,11 +59,14 @@ cd ${magento_ce_dir}
 bash "${vagrant_dir}/scripts/host/shell/composer.sh" install
 
 # Install necessary vagrant plugins if not installed
-if ! vagrant plugin list | grep -q 'hostmanager' ; then
+if ! vagrant plugin list | grep -q 'vagrant-hostmanager' ; then
     vagrant plugin install vagrant-hostmanager
 fi
-if ! vagrant plugin list | grep -q 'vbguest' ; then
+if ! vagrant plugin list | grep -q 'vagrant-vbguest' ; then
     vagrant plugin install vagrant-vbguest
+fi
+if ! vagrant plugin list | grep -q 'vagrant-host-shell' ; then
+    vagrant plugin install vagrant-host-shell
 fi
 
 # Create vagrant project
