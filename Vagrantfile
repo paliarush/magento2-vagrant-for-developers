@@ -36,7 +36,8 @@ host_magento_dir = Dir.pwd + '/magento2ce'
 
 VAGRANT_API_VERSION = 2
 Vagrant.configure(VAGRANT_API_VERSION) do |config|
-    config.vm.box = "ubuntu/trusty64"
+    config.vm.box = "paliarush/magento2.ubuntu"
+    config.vm.box_version = "~> 1.0"
 
     config.vm.provider "virtualbox" do |vb|
         vb.memory = guest_memory
@@ -66,9 +67,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         config_data['magento']['admin_user'],       #9
         config_data['magento']['admin_password']    #10
     ]
-    config.vm.provision "install_environment", type: "shell" do |s|
-        s.path = "scripts/provision/install_environment.sh"
-    end
+
     config.vm.provision "configure_environment", type: "shell" do |s|
         s.path = "scripts/provision/configure_environment.sh"
         s.args = shell_script_args

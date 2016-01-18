@@ -28,7 +28,7 @@ Custom solution is implemented for Windows hosts. See [explanation of the propos
 [Project initialization script](init_project.sh) configures complete development environment (available for OSX and \*nix hosts):
 
  1. Adds some missing software on the host
- 1. Installs and configures all software necessary for Magento 2 on the Ubuntu vagrant box (Apache 2.4, PHP 7.0 (or 5.5.9), MySQL 5.6, git, Composer, XDebug, Rabbit MQ)
+ 1. Configures all software necessary for Magento 2 using [custom Ubuntu vagrant box](https://atlas.hashicorp.com/paliarush/boxes/magento2.ubuntu) (Apache 2.4, PHP 7.0 (or 5.5.9), MySQL 5.6, Git, Composer, XDebug, Rabbit MQ)
  1. Installs Magento 2
  1. Configures PHP Storm project (partially at the moment)
 
@@ -37,7 +37,7 @@ Custom solution is implemented for Windows hosts. See [explanation of the propos
 If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com/v2)
 
 ### Requirements
-- [Vagrant 1.8+](https://www.vagrantup.com/downloads.html) is installed and available globally in command line
+- [Vagrant 1.8+](https://www.vagrantup.com/downloads.html)
 - [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 - [PHP](http://php.net/manual/en/install.php) (any version) to allow Magento dependency management with [Composer](https://getcomposer.org/doc/00-intro.md)
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). Make sure you have SSH keys generated and associated with your github account, see [manual](https://help.github.com/articles/generating-ssh-keys/).

@@ -31,10 +31,8 @@ sudo a2dissite 000-default
 if [ ${use_php7} -eq 1 ]; then
     sed -i "s|;include_path = \".:/usr/share/php\"|include_path = \".:/usr/share/php:${guest_magento_dir}/vendor/phpunit/phpunit\"|g" /etc/php/7.0/cli/php.ini
 else
-    # Uninstall PHP 7
-    apt-get install -y ppa-purge
-    ppa-purge -y ppa:ondrej/php-7.0
-    apt-get purge -y php*
+    # Uninstall PHP 7 pre-installed in the box
+    apt-get remove -y php*
 
     # Install PHP 5
     apt-get install -y php5 php5-mhash php5-mcrypt php5-curl php5-cli php5-mysql php5-gd php5-intl php5-xsl php5-xdebug curl
