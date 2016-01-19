@@ -22,5 +22,12 @@ fi
 # Configure composer credentials
 cd ${current_dir}
 cp ${composer_auth_json} "${PWD}/auth.json"
-php ${composer_phar} --ignore-platform-reqs "$@"
+
+host_os=$(bash "${vagrant_dir}/scripts/host/shell/get_host_os.sh")
+if [[ ${host_os} == "Windows" ]]; then
+    # prefer-source option guarantees that there will be no issues related to max path length on Windows
+    php ${composer_phar} --ignore-platform-reqs --prefer-source "$@"
+else
+    php ${composer_phar} --ignore-platform-reqs "$@"
+fi
 rm "${PWD}/auth.json"
