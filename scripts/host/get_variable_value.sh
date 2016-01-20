@@ -17,11 +17,11 @@ parse_yaml() {
     }'
 }
 
-vagrant_dir=$(cd "$(dirname "$0")/../../.."; pwd)
+vagrant_dir=$(cd "$(dirname "$0")/../.."; pwd)
 variable_name=$1
 
 # Read configs
-eval $(parse_yaml "${vagrant_dir}/local.config/config.yaml.dist")
-eval $(parse_yaml "${vagrant_dir}/local.config/config.yaml")
+eval $(parse_yaml "${vagrant_dir}/etc/config.yaml.dist")
+eval $(parse_yaml "${vagrant_dir}/etc/config.yaml")
 
 echo ${!variable_name}

@@ -14,7 +14,7 @@ end
 module Config
     # Load and override config settings
     def Config.load
-        local_config_dir = 'local.config'
+        local_config_dir = 'etc'
         config_dist_file = local_config_dir + '/config.yaml.dist'
         config_file = local_config_dir + '/config.yaml'
 
@@ -46,7 +46,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
     end
 
     config.vm.synced_folder '.', '/vagrant', disabled: true
-    config.vm.synced_folder './local.config', '/vagrant/local.config'
+    config.vm.synced_folder './etc', '/vagrant/etc'
     config.vm.synced_folder './scripts', '/vagrant/scripts'
     if use_nfs_for_synced_folders
         guest_magento_dir = host_magento_dir

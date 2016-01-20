@@ -11,8 +11,8 @@ use_php7=$4
 vagrant_dir="/vagrant"
 
 # Enable Magento virtual host
-custom_virtual_host_config="${vagrant_dir}/local.config/magento2_virtual_host.conf"
-default_virtual_host_config="${vagrant_dir}/local.config/magento2_virtual_host.conf.dist"
+custom_virtual_host_config="${vagrant_dir}/etc/magento2_virtual_host.conf"
+default_virtual_host_config="${vagrant_dir}/etc/magento2_virtual_host.conf.dist"
 if [ -f ${custom_virtual_host_config} ]; then
     virtual_host_config=${custom_virtual_host_config}
 else
@@ -52,7 +52,7 @@ fi
 service apache2 restart
 
 # Configure composer
-composer_auth_json="${vagrant_dir}/local.config/composer/auth.json"
+composer_auth_json="${vagrant_dir}/etc/composer/auth.json"
 if [ -f ${composer_auth_json} ]; then
     set +x
     echo "Installing composer OAuth tokens from ${composer_auth_json}..."
