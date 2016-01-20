@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+Vagrant.require_version "~> 1.8"
+
 require 'yaml'
 
 module OS
@@ -74,7 +76,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
     end
 
     if !use_nfs_for_synced_folders
-        config.vm.provision "host_compress_magento_code", type: "host_shell", inline: "tar cfh scripts/host/magento2ce.tar magento2ce"
+        config.vm.provision "host_compress_magento_code", type: "host_shell", inline: "tar cf scripts/host/magento2ce.tar magento2ce"
         config.vm.provision "guest_uncompress_magento_code", type: "shell", inline: "mkdir -p /var/www && tar xf /vagrant/scripts/host/magento2ce.tar -C /var/www &>/dev/null"
         config.vm.provision "guest_remove_compressed_code", type: "shell", inline: "rm -f /vagrant/scripts/host/magento2ce.tar"
     end
