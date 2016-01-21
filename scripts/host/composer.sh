@@ -13,6 +13,13 @@ set -ex
 
 bash "${vagrant_dir}/scripts/host/check_requirements.sh"
 
+# Find path to available PHP
+if php -v | grep -q 'Copyright' ; then
+    php_executable="php"
+else
+    php_executable="${vagrant_dir}/lib/php/php"
+fi
+
 # Setup composer if necessary
 if [ ! -f ${composer_phar} ]; then
     cd ${composer_dir}
@@ -26,8 +33,8 @@ cp ${composer_auth_json} "${PWD}/auth.json"
 host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
 if [[ $(bash "${vagrant_dir}/scripts/host/get_variable_value.sh" "environment_composer_prefer_source") == 1 ]]; then
     # prefer-source is slow but guarantees that there will be no issues related to max path length on Windows
-    php ${composer_phar} --ignore-platform-reqs --prefer-source "$@"
+    ${php_executable} ${composer_phar} --ignore-platform-reqs --prefer-source "$@"
 else
-    php ${composer_phar} --ignore-platform-reqs "$@"
+    ${php_executable} ${composer_phar} --ignore-platform-reqs "$@"
 fi
 rm "${PWD}/auth.json"

@@ -41,11 +41,9 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
 - [Vagrant 1.8+](https://www.vagrantup.com/downloads.html)
 - [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 - [PHP](http://php.net/manual/en/install.php) (any version) to allow Magento dependency management with [Composer](https://getcomposer.org/doc/00-intro.md)
-- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). Make sure you have SSH keys generated and associated with your github account, see [manual](https://help.github.com/articles/generating-ssh-keys/).
-
- :information_source: It is possible to use another way of getting codebase instead of cloning, it does not matter for successful installation. Just put Magento 2 codebase inside of `vagrant-magento/magento2ce`.
-
- :information_source: On Windows hosts make sure to set the following options to avoid issues with incorrect line separators:
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). Make sure you have SSH keys generated and associated with your github account, see [manual](https://help.github.com/articles/generating-ssh-keys/).<br />
+:information_source: It is possible to use another way of getting codebase instead of cloning, it does not matter for successful installation. Just put Magento 2 codebase inside of `vagrant-magento/magento2ce`.<br />
+:information_source: On Windows hosts make sure to set the following options to avoid issues with incorrect line separators:
 
     ```
     git config --global core.autocrlf false
@@ -76,7 +74,6 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
    ```
    
    :information_source: On OSX and \*nix hosts NFS will be used by default to sync your project files with guest. On some hosts Vagrant cannot configure NFS properly, in this case it is possible to deploy project without NFS by setting `use_nfs` option in [config.yaml](etc/config.yaml.dist) to `0`
-   
    :information_source: On Windows hosts you might face `Composer Install Error: ZipArchive::extractTo(): Full extraction path exceed MAXPATHLEN (260)` exception during `composer install`. This can be fixed in 2 ways: decrease path length to the project directory or set `composer_prefer_source` option in [config.yaml](etc/config.yaml.dist) to `1`
 
  1. Use `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`). This is important, because in this case PHP Storm will be configured automatically by [init_project.sh](init_project.sh). If NFS files sync is disabled in [config](etc/config.yaml.dist) and on Windows hosts [verify deployment configuration in PHP Storm](docs/phpstorm-configuration-windows-hosts.md)
