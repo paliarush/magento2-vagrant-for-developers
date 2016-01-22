@@ -11,6 +11,7 @@ guest:
 environment:
   # If set to 0, PHP 5 will be installed
   use_php7: 1
+  composer_prefer_source: 0
 magento:
   host_name: "magento2.vagrant2"
   admin_frontname: "admin"

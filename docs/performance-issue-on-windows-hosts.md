@@ -1,8 +1,8 @@
 Desired developer experience
 ----------------------------
 
-Vagrant provides convenient way to set up development environment consistently on different hosts (see [more](https://docs.vagrantup.com/v2/why-vagrant/)). Typically it uses Virtual Box as a provider with *nix system as guest OS.
-This allows Magento developers who use Windows machines to run their Magento instance in *nix environment similar to those on Bamboo or production.
+Vagrant provides convenient way to set up development environment consistently on different hosts (see [more](https://docs.vagrantup.com/v2/why-vagrant/)). Typically it uses Virtual Box as a provider with \*nix system as guest OS.
+This allows Magento developers who use Windows machines to run their Magento instance in \*nix environment similar to those on Bamboo or production.
 Project files editing, work with Git and running tests is usually done on host OS (Windows), since this approach provides better user experience. However, in this case project files must be synchronized between host and guest OSs to allow code modifications be visible on the running Magento instance as well as provide access to auto-generated files (e.g. view materialized files, generated classes) in the IDE. So two-way synchronization is required.
 
 Existing problem for Windows users
@@ -19,7 +19,7 @@ There are several other types of files synchronization available, but all of the
    time when SMB is enabled. 
  - RSync - requires extra software to be installed on the Windows,
    provides **one-way synchronization only**
- - NFS - is recommended and performant option for *nix hosts, but is
+ - NFS - is recommended and performant option for \*nix hosts, but is
    **unavailable for Windows** hosts
    
 Proposed solution

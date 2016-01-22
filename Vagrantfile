@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+Vagrant.require_version "~> 1.8"
+
 require 'yaml'
 
 module OS
@@ -12,7 +14,7 @@ end
 module Config
     # Load and override config settings
     def Config.load
-        local_config_dir = 'local.config'
+        local_config_dir = 'etc'
         config_dist_file = local_config_dir + '/config.yaml.dist'
         config_file = local_config_dir + '/config.yaml'
 
@@ -36,14 +38,15 @@ host_magento_dir = Dir.pwd + '/magento2ce'
 
 VAGRANT_API_VERSION = 2
 Vagrant.configure(VAGRANT_API_VERSION) do |config|
-    config.vm.box = "ubuntu/trusty64"
+    config.vm.box = "paliarush/magento2.ubuntu"
+    config.vm.box_version = "~> 1.0"
 
     config.vm.provider "virtualbox" do |vb|
         vb.memory = guest_memory
     end
 
     config.vm.synced_folder '.', '/vagrant', disabled: true
-    config.vm.synced_folder './local.config', '/vagrant/local.config'
+    config.vm.synced_folder './etc', '/vagrant/etc'
     config.vm.synced_folder './scripts', '/vagrant/scripts'
     if use_nfs_for_synced_folders
         guest_magento_dir = host_magento_dir
@@ -66,13 +69,16 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         config_data['magento']['admin_user'],       #9
         config_data['magento']['admin_password']    #10
     ]
-    config.vm.provision "install_environment", type: "shell" do |s|
-        s.path = "scripts/provision/install_environment.sh"
+
+    config.vm.provision "configure_environment", type: "shell" do |s|
+        s.path = "scripts/provision/configure_environment.sh"
         s.args = shell_script_args
     end
 
     if !use_nfs_for_synced_folders
-        config.vm.provision "deploy_magento_code", type: "file", source: host_magento_dir, destination: '/var/www'
+        config.vm.provision "host_compress_magento_code", type: "host_shell", inline: "tar cf scripts/host/magento2ce.tar magento2ce"
+        config.vm.provision "guest_uncompress_magento_code", type: "shell", inline: "mkdir -p /var/www && tar xf /vagrant/scripts/host/magento2ce.tar -C /var/www &>/dev/null"
+        config.vm.provision "guest_remove_compressed_code", type: "shell", inline: "rm -f /vagrant/scripts/host/magento2ce.tar"
     end
 
     config.vm.provision "install_magento", type: "shell" do |s|
