@@ -40,7 +40,6 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
 
 - [Vagrant 1.8+](https://www.vagrantup.com/downloads.html)
 - [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-- [PHP](http://php.net/manual/en/install.php) (any version) to allow Magento dependency management with [Composer](https://getcomposer.org/doc/00-intro.md)
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), on Windows must be [v2.7+](http://git-scm.com/download/win). Make sure you have SSH keys generated and associated with your github account, see [manual](https://help.github.com/articles/generating-ssh-keys/).<br />
 :information_source: It is possible to use another way of getting codebase instead of cloning, it does not matter for successful installation. Just put Magento 2 codebase inside of `vagrant-magento/magento2ce`.<br />
 :information_source: On Windows hosts make sure to set the following options to avoid issues with incorrect line separators:
@@ -50,6 +49,7 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
     git config --global core.eol LF
     git config --global diff.renamelimit 5000
     ```
+- [PHP](http://php.net/manual/en/install.php) (any version, will be installed automatically on Windows if missing) to allow Magento dependency management with [Composer](https://getcomposer.org/doc/00-intro.md)
 - [PHP Storm](https://www.jetbrains.com/phpstorm) is optional but recommended.
 
 ### Installation steps
