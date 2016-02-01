@@ -82,6 +82,9 @@ if [ ${use_nfs_for_synced_folders} -eq 0 ]; then
     chown -R vagrant:vagrant ${guest_magento_dir}
 fi
 
+# Generate XSD references for PHP Storm
+php bin/magento dev:urn-catalog:generate /vagrant/.idea/misc.xml
+
 set +x
 echo "
 Magento application was deployed to ${guest_magento_dir} and installed successfully

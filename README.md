@@ -14,14 +14,17 @@
    * [Reinstall Magento](#reinstall-magento)
    * [Clear magento cache](#clear-magento-cache)
    * [Debugging with XDebug](#debugging-with-xdebug)
+   * [Multiple Magento instances](#multiple-magento-instances)
 
 ## What You get
 
-It is expected that Magento 2 project source code will be located on the host. 
-This is necessary to allow IDE index project files quickly. All other infrastructure is deployed on the guest machine.
+It is expected that Magento 2 project source code will be located and managed on the host. This is necessary to allow quick indexing of project files by IDE. All other infrastructure is deployed on the guest machine.
 
-Current Vagrant configuration aims to solve performance issues of Magento installed on Virtual Box **for development**.
-Custom solution is implemented for Windows hosts. See [explanation of the proposed solution](docs/performance-issue-on-windows-hosts.md).
+Current Vagrant configuration aims to solve performance issues of Magento installed on Virtual Box **for development**. Custom solution is implemented for Windows hosts. See [explanation of the proposed solution](docs/performance-issue-on-windows-hosts.md).
+
+Environment for Magento EE development is configured as well.
+
+It is easy to [install multiple Magento instances](#multiple-magento-instances) based on different codebases simultaneously.
 
 [Project initialization script](init_project.sh) configures complete development environment:
 
@@ -40,21 +43,22 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
 
 - [Vagrant 1.8+](https://www.vagrantup.com/downloads.html)
 - [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), on Windows must be [v2.7+](http://git-scm.com/download/win). Make sure you have SSH keys generated and associated with your github account, see [manual](https://help.github.com/articles/generating-ssh-keys/).<br />
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). Make sure you have SSH keys generated and associated with your github account, see [how to check](https://help.github.com/articles/testing-your-ssh-connection/) and [how to configure](https://help.github.com/articles/generating-ssh-keys/) if not configured.<br />
 :information_source: It is possible to use another way of getting codebase instead of cloning, it does not matter for successful installation. Just put Magento 2 codebase inside of `vagrant-magento/magento2ce`.<br />
-:information_source: On Windows hosts make sure to set the following options to avoid issues with incorrect line separators:
+:information_source: ![](docs/images/windows-icon.png) On Windows hosts Git must be [v2.7+](http://git-scm.com/download/win), also make sure to set the following options to avoid issues with incorrect line separators:
 
     ```
     git config --global core.autocrlf false
     git config --global core.eol LF
     git config --global diff.renamelimit 5000
     ```
-- [PHP](http://php.net/manual/en/install.php) (any version, will be installed automatically on Windows if missing) to allow Magento dependency management with [Composer](https://getcomposer.org/doc/00-intro.md)
+- ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) [PHP](http://php.net/manual/en/install.php) to allow Magento dependency management with [Composer](https://getcomposer.org/doc/00-intro.md)
 - [PHP Storm](https://www.jetbrains.com/phpstorm) is optional but recommended.
+- ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) [NFS server](https://en.wikipedia.org/wiki/Network_File_System) must be installed and running on \*nix and OSX hosts. Is usually available, so just try to follow [installation steps](#how-to-install) first.
 
 ### Installation steps
  
- 1. Open terminal and change directory to the one which you want to contain Magento project. On Windows use Git Bash, which is available after Git installation
+ 1. Open terminal and change directory to the one which you want to contain Magento project. ![](docs/images/windows-icon.png) On Windows use Git Bash, which is available after Git installation
 
  1. Download project with Vagrant configuration:
  
@@ -73,10 +77,10 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
    bash init_project.sh
    ```
    
-   :information_source: On OSX and \*nix hosts NFS will be used by default to sync your project files with guest. On some hosts Vagrant cannot configure NFS properly, in this case it is possible to deploy project without NFS by setting `use_nfs` option in [config.yaml](etc/config.yaml.dist) to `0` <br />
-   :information_source: On Windows hosts you might face `Composer Install Error: ZipArchive::extractTo(): Full extraction path exceed MAXPATHLEN (260)` exception during `composer install`. This can be fixed in 2 ways: decrease path length to the project directory or set `composer_prefer_source` option in [config.yaml](etc/config.yaml.dist) to `1`
+   :information_source: ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) On OSX and \*nix hosts NFS will be used by default to sync your project files with guest. On some hosts Vagrant cannot configure NFS properly, in this case it is possible to deploy project without NFS by setting `use_nfs` option in [config.yaml](etc/config.yaml.dist) to `0` <br />
+   :information_source: ![](docs/images/windows-icon.png) On Windows hosts you might face `Composer Install Error: ZipArchive::extractTo(): Full extraction path exceed MAXPATHLEN (260)` exception during `composer install`. This can be fixed in 2 ways: decrease path length to the project directory or set `composer_prefer_source` option in [config.yaml](etc/config.yaml.dist) to `1`
 
- 1. Use `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`). This is important, because in this case PHP Storm will be configured automatically by [init_project.sh](init_project.sh). If NFS files sync is disabled in [config](etc/config.yaml.dist) and on Windows hosts [verify deployment configuration in PHP Storm](docs/phpstorm-configuration-windows-hosts.md)
+ 1. Use `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`). This is important, because in this case PHP Storm will be configured automatically by [init_project.sh](init_project.sh). If NFS files sync is disabled in [config](etc/config.yaml.dist) and ![](docs/images/windows-icon.png) on Windows hosts [verify deployment configuration in PHP Storm](docs/phpstorm-configuration-windows-hosts.md)
 
 ### Default credentials and settings
 Some of default settings are available for override. These settings can be found in the file [etc/config.yaml.dist](etc/config.yaml.dist).
@@ -93,11 +97,15 @@ Upon a successful installation, you'll see the location and URL of the newly-ins
 **Codebase and DB access**:
 - Path to your Magento installation on the VM:
   - Can be retrieved from environment variable: `echo ${MAGENTO_ROOT}`
-  - On Windows hosts: `/var/www/magento2ce`
-  - On Mac, \*nix hosts: the same as on host
+  - ![](docs/images/windows-icon.png) On Windows hosts: `/var/www/magento2ce`
+  - ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) On Mac and \*nix hosts: the same as on host
 - MySQL DB host: `localhost` (not accessible remotely)
 - MySQL DB name: `magento`, `magento_integration_tests`
 - MySQL DB user/password: just use `mysql` with no user and password (`root/password` will be used by default)
+
+**Codebase on host**
+- CE codebase: `vagrant_project_root/magento2ce`
+- EE codebase will be available if path to EE repository is specified in `etc/config.yaml`: `vagrant_project_root/magento2ce/magento2ee`
 
 ### GitHub limitations
 
@@ -136,3 +144,8 @@ XDebug is already configured to connect to the host machine automatically. So ju
  1. Set XDEBUG_SESSION=1 cookie (e.g. using 'easy Xdebug' extension for Firefox). See [XDebug documentation](http://xdebug.org/docs/remote) for more details
  1. Start listening for PHP Debug connections in PhpStorm on default 9000 port. See how to [integrate XDebug with PhpStorm](https://www.jetbrains.com/phpstorm/help/configuring-xdebug.html#integrationWithProduct)
  1. Set beakpoint or set option in PhpStorm menu 'Run -> Break at first line in PHP scripts'
+ 
+### Multiple Magento instances
+ 
+To install several Magento instances based on different code bases, just follow [Installation steps](#installation-steps) to initialize project in another directory on the host.
+Unique IP address, SSH port and domain name will be generated for each new instance if not specified manually in `etc/config.yaml`

@@ -30,6 +30,9 @@ sudo a2dissite 000-default
 # Setup PHP
 if [ ${use_php7} -eq 1 ]; then
     sed -i "s|;include_path = \".:/usr/share/php\"|include_path = \".:/usr/share/php:${guest_magento_dir}/vendor/phpunit/phpunit\"|g" /etc/php/7.0/cli/php.ini
+    sed -i "s|display_errors = Off|display_errors = On|g" /etc/php/7.0/cli/php.ini
+    sed -i "s|display_startup_errors = Off|display_startup_errors = On|g" /etc/php/7.0/cli/php.ini
+    sed -i "s|error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT|error_reporting = E_ALL|g" /etc/php/7.0/cli/php.ini
 else
     # Uninstall PHP 7 pre-installed in the box
     apt-get remove -y php*

@@ -11,6 +11,18 @@ set -ex
 
 bash "${vagrant_dir}/scripts/host/check_requirements.sh"
 
+# Install necessary vagrant plugins if not installed
+vagrant_plugin_list=$(vagrant plugin list)
+if ! echo ${vagrant_plugin_list} | grep -q 'vagrant-hostmanager' ; then
+    vagrant plugin install vagrant-hostmanager
+fi
+if ! echo ${vagrant_plugin_list} | grep -q 'vagrant-vbguest' ; then
+    vagrant plugin install vagrant-vbguest
+fi
+if ! echo ${vagrant_plugin_list} | grep -q 'vagrant-host-shell' ; then
+    vagrant plugin install vagrant-host-shell
+fi
+
 # Generate random IP address and host name to prevent collisions, if not specified explicitly in local config
 if [ ! -f "${vagrant_dir}/etc/config.yaml" ]; then
     cp "${config_path}.dist" ${config_path}
@@ -52,27 +64,9 @@ if [ ! -d ${magento_ce_dir} ]; then
     fi
 fi
 
-var_generation_dir="${magento_ce_dir}/var/generation"
-if [ ! -d ${var_generation_dir} ] ; then
-    if [[ ${host_os} == "Windows" || $(bash "${vagrant_dir}/scripts/host/get_variable_value.sh" "guest_use_nfs") == 0 ]]; then
-        mkdir ${var_generation_dir}
-    fi
-fi
-
 # Update Magento dependencies via Composer
 cd ${magento_ce_dir}
 bash "${vagrant_dir}/scripts/host/composer.sh" install
-
-# Install necessary vagrant plugins if not installed
-if ! vagrant plugin list | grep -q 'vagrant-hostmanager' ; then
-    vagrant plugin install vagrant-hostmanager
-fi
-if ! vagrant plugin list | grep -q 'vagrant-vbguest' ; then
-    vagrant plugin install vagrant-vbguest
-fi
-if ! vagrant plugin list | grep -q 'vagrant-host-shell' ; then
-    vagrant plugin install vagrant-host-shell
-fi
 
 # Create vagrant project
 cd ${vagrant_dir}
