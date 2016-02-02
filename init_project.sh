@@ -34,17 +34,22 @@ sed -i.back "s|host_name: \"magento2.vagrant2\"|host_name: \"magento2.vagrant${r
 sed -i.back "s|forwarded_ssh_port: 3000|forwarded_ssh_port: ${forwarded_ssh_port}|g" "${config_path}"
 rm -f "${config_path}.back"
 
-# Clean up the project before initialization if "-f" option was specified
+# Clean up the project before initialization if "-f" option was specified. Remove codebase if "-fc" is used.
 force_project_cleaning=0
-while getopts 'f' flag; do
+force_codebase_cleaning=0
+while getopts 'fc' flag; do
   case "${flag}" in
     f) force_project_cleaning=1 ;;
+    c) force_codebase_cleaning=1 ;;
     *) error "Unexpected option ${flag}" ;;
   esac
 done
 if [ ${force_project_cleaning} -eq 1 ]; then
     vagrant destroy -f
-    rm -rf ${magento_ce_dir} ${vagrant_dir}/.idea ${vagrant_dir}/.vagrant
+    rm -rf ${vagrant_dir}/.idea ${vagrant_dir}/.vagrant
+    if [ ${force_codebase_cleaning} -eq 1 ]; then
+        rm -rf ${magento_ce_dir}
+    fi
 fi
 
 if [ ! -d ${magento_ce_dir} ]; then
