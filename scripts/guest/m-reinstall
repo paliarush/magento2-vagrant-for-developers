@@ -82,6 +82,7 @@ fi
 
 # Generate XSD references for PHP Storm
 php bin/magento dev:urn-catalog:generate /vagrant/.idea/misc.xml
+sed -i "s|${MAGENTO_ROOT}|${MAGENTO_ROOT_HOST}|g" "/vagrant/.idea/misc.xml"
 
 set +x
 echo "

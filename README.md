@@ -2,7 +2,7 @@
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Semver](http://img.shields.io/SemVer/2.0.0.png?color=blue)](http://semver.org/spec/v2.0.0.html)
-[![Latest GitHub release](https://img.shields.io/github/release/paliarush/magento2-vagrant-for-developers.svg)](https://github.com/paliarush/magento2-vagrant-for-developers/releases/latest)
+[![Latest GitHub release](docs/images/release_badge.png)](https://github.com/paliarush/magento2-vagrant-for-developers/releases/latest)
 
  * [What You get](#what-you-get)
  * [How to install](#how-to-install)
