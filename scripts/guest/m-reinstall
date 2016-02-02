@@ -1,21 +1,19 @@
 #!/usr/bin/env bash
 
-# vagrant provision --provision-with install_magento
-
 # Enable trace printing and exit on the first error
 set -ex
 
-use_nfs_for_synced_folders=$1
-guest_magento_dir=$2
-magento_host_name=$3
+get_config_value="/vagrant/scripts/get_config_value.sh"
+use_nfs_for_synced_folders=$(bash ${get_config_value} "guest_use_nfs")
+magento_host_name=$(bash ${get_config_value} "magento_host_name")
 
 declare -A setupOptions
-setupOptions[admin_frontname]=$5
-setupOptions[language]=$6
-setupOptions[timezone]=$7
-setupOptions[currency]=$8
-setupOptions[admin_user]=$9
-setupOptions[admin_password]=${10}
+setupOptions[admin_frontname]=$(bash ${get_config_value} "magento_admin_frontname")
+setupOptions[language]=$(bash ${get_config_value} "magento_language")
+setupOptions[timezone]=$(bash ${get_config_value} "magento_timezone")
+setupOptions[currency]=$(bash ${get_config_value} "magento_currency")
+setupOptions[admin_user]=$(bash ${get_config_value} "magento_admin_user")
+setupOptions[admin_password]=$(bash ${get_config_value} "magento_admin_password")
 setupOptions[db_host]='localhost'
 setupOptions[db_name]='magento'
 setupOptions[db_user]='root'
@@ -28,14 +26,14 @@ setupOptions[amqp_port]='5672'
 setupOptions[amqp_user]='guest'
 setupOptions[amqp_password]='guest'
 
-cd ${guest_magento_dir}
+cd ${MAGENTO_ROOT}
 
 # Clear cache
-magento_clear_cache
+m-clear-cache
 
 # Remove configuration files
-rm -f "${guest_magento_dir}/app/etc/config.php"
-rm -f "${guest_magento_dir}/app/etc/env.php"
+rm -f "${MAGENTO_ROOT}/app/etc/config.php"
+rm -f "${MAGENTO_ROOT}/app/etc/env.php"
 
 # Create DB
 db_names=(${setupOptions[db_name]} "magento_integration_tests" )
@@ -44,7 +42,7 @@ for db_name in "${db_names[@]}"; do
 done
 
 # Install Magento application
-cd ${guest_magento_dir}
+cd ${MAGENTO_ROOT}
 
 install_cmd="./bin/magento setup:install \
     --db-host=${setupOptions[db_host]} \
@@ -64,7 +62,7 @@ install_cmd="./bin/magento setup:install \
     --use-rewrites=1"
 
 # Configure Rabbit MQ
-if [ -f "${guest_magento_dir}/app/code/Magento/Amqp/registration.php" ]; then
+if [ -f "${MAGENTO_ROOT}/app/code/Magento/Amqp/registration.php" ]; then
     install_cmd="${install_cmd} \
     --amqp-host=${setupOptions[amqp_host]} \
     --amqp-port=${setupOptions[amqp_port]} \
@@ -76,10 +74,10 @@ chmod +x bin/magento
 php ${install_cmd}
 
 # Enable Magento cron jobs
-echo "* * * * * php ${guest_magento_dir}/bin/magento cron:run &" | crontab -u vagrant -
+echo "* * * * * php ${MAGENTO_ROOT}/bin/magento cron:run &" | crontab -u vagrant -
 
 if [ ${use_nfs_for_synced_folders} -eq 0 ]; then
-    chown -R vagrant:vagrant ${guest_magento_dir}
+    chown -R vagrant:vagrant ${MAGENTO_ROOT}
 fi
 
 # Generate XSD references for PHP Storm
@@ -87,7 +85,7 @@ php bin/magento dev:urn-catalog:generate /vagrant/.idea/misc.xml
 
 set +x
 echo "
-Magento application was deployed to ${guest_magento_dir} and installed successfully
+Magento application was deployed to ${MAGENTO_ROOT} and installed successfully
 Access storefront at ${setupOptions[base_url]}
 Access admin panel at ${setupOptions[base_url]}${setupOptions[admin_frontname]}/"
 
@@ -98,5 +96,5 @@ if [ ${use_nfs_for_synced_folders} -eq 0 ]; then
         (this directory should already contain Magento repository cloned earlier)
 
         2. Use instructions provided here https://github.com/paliarush/vagrant-magento/blob/master/docs/phpstorm-configuration-windows-hosts.md
-        to set up synchronization in PhpStorm (or using rsync) with ${guest_magento_dir} directory"
+        to set up synchronization in PhpStorm (or using rsync) with ${MAGENTO_ROOT} directory"
 fi

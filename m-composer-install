@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+vagrant_dir=$(cd "$(dirname "$0")"; pwd)
+magento_ce_dir="${vagrant_dir}/magento2ce"
+
+# Enable trace printing and exit on the first error
+set -ex
+
+cd ${magento_ce_dir}
+bash "${vagrant_dir}/scripts/host/composer.sh" install

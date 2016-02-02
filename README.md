@@ -13,6 +13,8 @@
  * [Day-to-day development scenarios](#day-to-day-development-scenarios)
    * [Reinstall Magento](#reinstall-magento)
    * [Clear magento cache](#clear-magento-cache)
+   * [Update composer dependencies](#update-composer-dependencies)
+   * [Switch between CE and EE](#switch-between-ce-and-ee)
    * [Debugging with XDebug](#debugging-with-xdebug)
    * [Multiple Magento instances](#multiple-magento-instances)
 
@@ -52,7 +54,7 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
     git config --global core.eol LF
     git config --global diff.renamelimit 5000
     ```
-- ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) [PHP](http://php.net/manual/en/install.php) to allow Magento dependency management with [Composer](https://getcomposer.org/doc/00-intro.md)
+- ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) [PHP](http://php.net/manual/en/install.php) (any version) to allow Magento dependency management with [Composer](https://getcomposer.org/doc/00-intro.md)
 - [PHP Storm](https://www.jetbrains.com/phpstorm) is optional but recommended.
 - ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) [NFS server](https://en.wikipedia.org/wiki/Network_File_System) must be installed and running on \*nix and OSX hosts. Is usually available, so just try to follow [installation steps](#how-to-install) first.
 
@@ -126,7 +128,7 @@ The following command will clear Magento DB, Magento caches and reinstall Magent
 Go to 'vagrant-magento' created earlier and run in command line:
 
 ```
-vagrant provision --provision-with install_magento
+bash m-reinstall
 ```
 
 ### Clear magento cache
@@ -134,7 +136,27 @@ vagrant provision --provision-with install_magento
 Go to 'vagrant-magento' created earlier and run in command line:
 
 ```
-vagrant ssh -c 'magento_clear_cache'
+bash m-clear-cache
+```
+
+### Switch between CE and EE
+
+Assume, that EE codebase is available in `vagrant_project_root/magento2ce/magento2ee`.
+The following commands will link/unlink EE codebase, clear cache, update composer dependencies and reinstall Magento.
+Go to 'vagrant-magento' created earlier and run in command line:
+
+```
+bash m-switch-to-ce
+OR
+bash m-switch-to-ee
+```
+
+### Update composer dependencies
+
+Go to 'vagrant-magento' created earlier and run in command line:
+
+```
+bash m-composer-install
 ```
 
 ### Debugging with XDebug

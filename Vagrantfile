@@ -82,10 +82,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         config.vm.provision "guest_remove_compressed_code", type: "shell", inline: "rm -f /vagrant/scripts/host/magento2ce.tar"
     end
 
-    config.vm.provision "install_magento", type: "shell" do |s|
-        s.path = "scripts/provision/install_magento.sh"
-        s.args = shell_script_args
-    end
+    config.vm.provision "install_magento", type: "shell", inline: "m-reinstall"
 
     # Host manager plugin configuration
     config.hostmanager.enabled = true

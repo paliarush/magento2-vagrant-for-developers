@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+vagrant_dir=$(cd "$(dirname "$0")"; pwd)
+
+# Enable trace printing and exit on the first error
+set -ex
+
+cd ${vagrant_dir}
+vagrant ssh -c "m-reinstall"

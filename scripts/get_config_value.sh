@@ -17,7 +17,7 @@ parse_yaml() {
     }'
 }
 
-vagrant_dir=$(cd "$(dirname "$0")/../.."; pwd)
+vagrant_dir=$(cd "$(dirname "$0")/.."; pwd)
 variable_name=$1
 
 # Read configs

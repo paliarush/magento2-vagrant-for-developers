@@ -25,7 +25,7 @@ cp ${composer_auth_json} "${PWD}/auth.json"
 
 php_executable=$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")
 host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
-if [[ $(bash "${vagrant_dir}/scripts/host/get_variable_value.sh" "environment_composer_prefer_source") == 1 ]]; then
+if [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_composer_prefer_source") == 1 ]]; then
     # prefer-source is slow but guarantees that there will be no issues related to max path length on Windows
     ${php_executable} ${composer_phar} --ignore-platform-reqs --prefer-source "$@"
 else
