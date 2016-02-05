@@ -4,9 +4,14 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
  * [\[Unreleased\]](#unreleased)
+ * [\[v2.0.0\] - 2016-02-05](#v200---2016-02-05)
  * [\[v1.0.0\] - 2016-01-11](#v100---2016-01-11)
 
 ## [Unreleased]
+
+Nothing yet
+
+## [v2.0.0] - 2016-02-05
 
 ### Changed
 
@@ -15,16 +20,20 @@ This project adheres to [Semantic Versioning](http://semver.org/).
  - PHP 7.0 is installed by default instead of PHP 5.5.9 (can be configured in [etc/config.yaml.dist](etc/config.yaml.dist))
  - Renamed configuration folder from `local.config` to `etc`
  - Set minimum Vagrant version as 1.8
+ - Improved deployment speed in case of disabled NFS for folders sync
+ - Used custom Vagrant box with pre-installed software necessary for Magento 2 development
+ - Eliminated explicit dependency on PHP for Windows hosts (it can be downloaded and used locally for the project)
+ - XSD URN generation is executed after Magento installation
 
 ### Added
 
+ - Added [project initialization script](init_project.sh) and host scripts for routine flows (compatible with OSX, *nix and Windows)
  - Implemented static value of forwarded SSH port to prevent necessity to reconfigure software accessing guest via SSH
  - Implemented collision prevention for IP address and host name (in case when several machines are created at once)
  - Added configuration file [etc/config.yaml.dist](etc/config.yaml.dist)
  - Added PHP 7.0 support
- - Added PHP Storm configuration during project initialization
- - Added [project initialization script](init_project.sh) for *nix and OSX hosts 
- - Added ability to customize repository URLs and Apache config
+ - Added PHP Storm configuration during project initialization (particularly automatic deployment settings)
+ - Added automatic vagrant plugins installation
 
 ## [v1.0.0] - 2016-01-11
 

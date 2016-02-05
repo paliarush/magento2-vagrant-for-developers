@@ -156,7 +156,9 @@ bash m-switch-to-ee
 Go to 'vagrant-magento' created earlier and run in command line:
 
 ```
-bash m-composer-install
+bash m-composer install
+OR
+bash m-composer update
 ```
 
 ### Debugging with XDebug

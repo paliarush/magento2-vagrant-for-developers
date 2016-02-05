@@ -7,4 +7,4 @@ magento_ce_dir="${vagrant_dir}/magento2ce"
 set -ex
 
 cd ${magento_ce_dir}
-bash "${vagrant_dir}/scripts/host/composer.sh" install
+bash "${vagrant_dir}/scripts/host/composer.sh" "$@"
