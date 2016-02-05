@@ -36,5 +36,5 @@ if [[ ${host_os} == "Windows" || $(bash "${vagrant_dir}/scripts/get_config_value
 fi
 
 bash "${vagrant_dir}/m-clear-cache"
-bash "${vagrant_dir}/m-composer install"
+bash -c "${vagrant_dir}/m-composer install"
 bash "${vagrant_dir}/m-reinstall"

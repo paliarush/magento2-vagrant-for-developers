@@ -7,7 +7,7 @@ host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
 set -ex
 
 if [[ ${host_os} == "Windows" ]]; then
-    curl http://windows.php.net/downloads/releases/php-7.0.2-nts-Win32-VC14-x86.zip -o ${vagrant_dir}/lib/php.zip
+    curl http://windows.php.net/downloads/releases/archives/php-7.0.2-nts-Win32-VC14-x86.zip -o ${vagrant_dir}/lib/php.zip
     unzip -q ${vagrant_dir}/lib/php.zip -d ${vagrant_dir}/lib/php
     rm -f ${vagrant_dir}/lib/php.zip
     cp "${vagrant_dir}/lib/php/php.ini-development" "${vagrant_dir}/lib/php/php.ini"

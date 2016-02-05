@@ -9,6 +9,7 @@
    * [Requirements](#requirements)
    * [Installation steps](#installation-steps)
    * [Default credentials and settings](#default-credentials-and-settings)
+   * [Getting updates and fixes](#getting-updates-and-fixes)
    * [GitHub limitations](#github-limitations)
  * [Day-to-day development scenarios](#day-to-day-development-scenarios)
    * [Reinstall Magento](#reinstall-magento)
@@ -85,6 +86,7 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
  1. Use `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`). This is important, because in this case PHP Storm will be configured automatically by [init_project.sh](init_project.sh). If NFS files sync is disabled in [config](etc/config.yaml.dist) and ![](docs/images/windows-icon.png) on Windows hosts [verify deployment configuration in PHP Storm](docs/phpstorm-configuration-windows-hosts.md)
 
 ### Default credentials and settings
+
 Some of default settings are available for override. These settings can be found in the file [etc/config.yaml.dist](etc/config.yaml.dist).
 To override settings just create a copy of the file under the name 'config.yaml' and put there your custom settings.
 When using [init_project.sh](init_project.sh), if not specified manually, random IP address is generated and is used as suffix for host name to prevent collisions, in case when 2 or more instances are running at the same time.
@@ -108,6 +110,12 @@ Upon a successful installation, you'll see the location and URL of the newly-ins
 **Codebase on host**
 - CE codebase: `vagrant_project_root/magento2ce`
 - EE codebase will be available if path to EE repository is specified in `etc/config.yaml`: `vagrant_project_root/magento2ce/magento2ee`
+
+### Getting updates and fixes
+
+Current vagrant project follows [semantic versioning](http://semver.org/spec/v2.0.0.html) so feel free to pull the latest features and fixes, they will not break your project.
+For example your current branch is `2.0`, then it will be safe to pull any changes from `origin/2.0`. However branch `3.0` will contain changes backward incompatible with `2.0`.
+Note, that semantic versioning is only used for `x.0` branches (not for `develop`).
 
 ### GitHub limitations
 
