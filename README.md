@@ -16,6 +16,7 @@
    * [Clear magento cache](#clear-magento-cache)
    * [Update composer dependencies](#update-composer-dependencies)
    * [Switch between CE and EE](#switch-between-ce-and-ee)
+   * [Use Magento CLI (bin/magento)](#use-magento-cli-binmagento)
    * [Debugging with XDebug](#debugging-with-xdebug)
    * [Multiple Magento instances](#multiple-magento-instances)
 
@@ -167,6 +168,16 @@ Go to 'vagrant-magento' created earlier and run in command line:
 bash m-composer install
 OR
 bash m-composer update
+```
+
+### Use Magento CLI (bin/magento)
+
+Go to 'vagrant-magento' created earlier and run in command line:
+
+```
+bash m-bin-magento <command_name>
+e.g. 
+bash m-bin-magento list
 ```
 
 ### Debugging with XDebug

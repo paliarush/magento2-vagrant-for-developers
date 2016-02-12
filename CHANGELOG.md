@@ -9,7 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-Nothing yet
+ - Added host wrapper script for bin/magento command on guest
 
 ## [v2.0.0] - 2016-02-05
 
