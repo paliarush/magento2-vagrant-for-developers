@@ -9,6 +9,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+ - Fixed permissions during Magento installation on Windows hosts
+
+### Added
+
  - Added host wrapper script for bin/magento command on guest
 
 ## [v2.0.0] - 2016-02-05
