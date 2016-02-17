@@ -8,6 +8,7 @@ guest_magento_dir=$2
 magento_host_name=$3
 use_php7=$4
 host_magento_dir=$5
+is_windows_host=$6
 
 vagrant_dir="/vagrant"
 
@@ -71,6 +72,7 @@ fi
 echo "export PATH=\$PATH:${vagrant_dir}/scripts/guest:${guest_magento_dir}/bin" >> /etc/profile
 echo "export MAGENTO_ROOT=${guest_magento_dir}" >> /etc/profile
 echo "export MAGENTO_ROOT_HOST=${host_magento_dir}" >> /etc/profile
+echo "export IS_WINDOWS_HOST=${is_windows_host}" >> /etc/profile
 
 # Set permissions to allow Magento codebase upload by Vagrant provision script
 if [ ${use_nfs_for_synced_folders} -eq 0 ]; then

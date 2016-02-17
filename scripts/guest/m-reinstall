@@ -5,6 +5,7 @@ set -ex
 
 get_config_value="/vagrant/scripts/get_config_value.sh"
 magento_host_name=$(bash ${get_config_value} "magento_host_name")
+vagrant_dir="/vagrant"
 
 declare -A setupOptions
 setupOptions[admin_frontname]=$(bash ${get_config_value} "magento_admin_frontname")
@@ -75,9 +76,9 @@ php ${install_cmd}
 # Enable Magento cron jobs
 echo "* * * * * php ${MAGENTO_ROOT}/bin/magento cron:run &" | crontab -u vagrant -
 
-host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
 use_nfs=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")
-if [[ ${host_os} == "Windows" || ${use_nfs} == 0 ]]; then
+is_windows_host=${IS_WINDOWS_HOST}
+if [[ ${is_windows_host} == 1 || ${use_nfs} == 0 ]]; then
     chown -R vagrant:vagrant ${MAGENTO_ROOT}
 fi
 
@@ -91,7 +92,7 @@ Magento application was deployed to ${MAGENTO_ROOT} and installed successfully
 Access storefront at ${setupOptions[base_url]}
 Access admin panel at ${setupOptions[base_url]}${setupOptions[admin_frontname]}/"
 
-if [[ ${host_os} == "Windows" || ${use_nfs} == 0 ]]; then
+if [[ ${is_windows_host} == 1 || ${use_nfs} == 0 ]]; then
     echo "
     [Optional] To finish developer environment set up:
         1. Please create new PhpStorm project using 'magento2ce' directory on your host
