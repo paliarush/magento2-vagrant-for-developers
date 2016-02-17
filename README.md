@@ -160,10 +160,10 @@ OR
 bash m-switch-to-ee
 ```
 :information_source: ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) On OSX and \*nix hosts without NFS
-you will be asked to wait until uploading process is finished. To continue the process you need to press any key.
+you will be asked to wait until uploading process in PhpStorm is finished(PhpStorm should be lunched). To continue the process you need to press any key.
 process is finished. To continue the process you need to press any key.
 :information_source: ![](docs/images/windows-icon.png) On Windows hosts you will be asked to wait until uploading
-process is finished. To continue the process you need to press any key.
+process in PhpStorm is finished(PhpStorm should be lunched). To continue the process you need to press any key.
 
 ### Update composer dependencies
 
