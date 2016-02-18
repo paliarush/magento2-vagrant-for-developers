@@ -63,11 +63,17 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         guest_magento_dir,                          #2
         magento_host_name,                          #3
         config_data['environment']['use_php7'],     #4
-        host_magento_dir                            #5
+        host_magento_dir,                           #5
+        OS.is_windows ? "1" : "0"                   #6
     ]
 
     config.vm.provision "configure_environment", type: "shell" do |s|
         s.path = "scripts/provision/configure_environment.sh"
+        s.args = shell_script_args
+    end
+
+    config.vm.provision "export_env_variables", type: "shell", run: "always" do |s|
+        s.path = "scripts/provision/export_env_variables.sh"
         s.args = shell_script_args
     end
 
