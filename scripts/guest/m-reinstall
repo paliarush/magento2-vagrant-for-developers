@@ -96,6 +96,6 @@ if [ ${use_nfs_for_synced_folders} -eq 0 ]; then
         1. Please create new PhpStorm project using 'magento2ce' directory on your host
         (this directory should already contain Magento repository cloned earlier)
 
-        2. Use instructions provided here https://github.com/paliarush/vagrant-magento/blob/master/docs/phpstorm-configuration-windows-hosts.md
+        2. Use instructions provided here https://github.com/paliarush/vagrant-magento/blob/2.0/docs/phpstorm-configuration-windows-hosts.md
         to set up synchronization in PhpStorm (or using rsync) with ${MAGENTO_ROOT} directory"
 fi
