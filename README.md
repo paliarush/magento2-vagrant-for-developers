@@ -18,6 +18,7 @@
    * [Switch between CE and EE](#switch-between-ce-and-ee)
    * [Use Magento CLI (bin/magento)](#use-magento-cli-binmagento)
    * [Debugging with XDebug](#debugging-with-xdebug)
+   * [Connecting to MySQL DB](#connecting-to-mysql-db)
    * [Multiple Magento instances](#multiple-magento-instances)
 
 ## What You get
@@ -193,6 +194,10 @@ XDebug is already configured to connect to the host machine automatically. So ju
  1. Start listening for PHP Debug connections in PhpStorm on default 9000 port. See how to [integrate XDebug with PhpStorm](https://www.jetbrains.com/phpstorm/help/configuring-xdebug.html#integrationWithProduct)
  1. Set beakpoint or set option in PhpStorm menu 'Run -> Break at first line in PHP scripts'
  
+### Connecting to MySQL DB
+
+Answer can be found [here](https://github.com/paliarush/magento2-vagrant-for-developers/issues/8)
+
 ### Multiple Magento instances
  
 To install several Magento instances based on different code bases, just follow [Installation steps](#installation-steps) to initialize project in another directory on the host.
