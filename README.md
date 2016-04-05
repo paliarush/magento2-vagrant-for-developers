@@ -86,6 +86,8 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
    :information_source: ![](docs/images/windows-icon.png) On Windows hosts you might face `Composer Install Error: ZipArchive::extractTo(): Full extraction path exceed MAXPATHLEN (260)` exception during `composer install`. This can be fixed in 2 ways: decrease path length to the project directory or set `composer_prefer_source` option in [config.yaml](etc/config.yaml.dist) to `1`
 
  1. Use `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`). This is important, because in this case PHP Storm will be configured automatically by [init_project.sh](init_project.sh). If NFS files sync is disabled in [config](etc/config.yaml.dist) and ![](docs/images/windows-icon.png) on Windows hosts [verify deployment configuration in PHP Storm](docs/phpstorm-configuration-windows-hosts.md)
+ 
+ 1. Configure remote PHP interpreter in PHP Storm. Go to `Settings => Languages & Frameworks => PHP`, add new remote interpreter and select "Deployment configuration" as a source for connection details.
 
 ### Default credentials and settings
 
