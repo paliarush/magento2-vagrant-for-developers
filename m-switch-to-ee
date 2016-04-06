@@ -9,6 +9,16 @@ php_executable=$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")
 # Enable trace printing and exit on the first error
 set -ex
 
+with_sample_data=0
+while [ "$1" != "" ]; do
+    case $1 in
+        -s | --sample-data )    with_sample_data=1
+                                ;;
+        * )                     ;;
+    esac
+    shift
+done
+
 if [ ! -f ${magento_ee_dir}/app/etc/aliases_to_classes_map.json ]; then
     echo "EE codebase is not available"
     exit 0
@@ -44,4 +54,8 @@ if [[ ${host_os} == "Windows" || $(bash "${vagrant_dir}/scripts/get_config_value
     read -p "Wait while Magento2 code is uploaded in PhpStorm and press any key to continue..." -n1 -s
 fi
 
-bash "${vagrant_dir}/m-reinstall"
+if [ ${with_sample_data} = 1 ]; then
+    bash "${vagrant_dir}/m-reinstall" --sample-data
+else
+    bash "${vagrant_dir}/m-reinstall"
+fi
