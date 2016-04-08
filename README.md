@@ -70,7 +70,11 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
    git clone git@github.com:paliarush/magento2-vagrant-for-developers.git vagrant-magento
    ```
  
- 1. Copy [etc/composer/auth.json.dist](etc/composer/auth.json.dist) to `etc/composer/auth.json`
+ 1. Optionally, if you use private repositories on GitHub or download packages from Magento Marketplace
+   
+   - copy [etc/composer/auth.json.dist](etc/composer/auth.json.dist) to `etc/composer/auth.json`
+   - specify your GitHub token by adding `"github.com": "your-github-token"` to `github-oauth` section for GitHub authorization
+   - add Magento Marketplace keys for Marketplace authorization
 
  1. Optionally, copy [etc/config.yaml.dist](etc/config.yaml.dist) as `etc/config.yaml` and make necessary customizations
  

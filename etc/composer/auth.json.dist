@@ -1,4 +1,6 @@
 {
+  "github-oauth": {
+  },
   "http-basic": {
     "repo.magento.com": {
       "username": "your-magento-repo-public-key",
