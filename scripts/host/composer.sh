@@ -23,7 +23,9 @@ fi
 
 # Configure composer credentials
 cd ${current_dir}
-cp ${composer_auth_json} "${PWD}/auth.json"
+if [ -f ${composer_auth_json} ]; then
+    cp ${composer_auth_json} "${PWD}/auth.json"
+fi
 
 host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
 if [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_composer_prefer_source") == 1 ]]; then
@@ -32,4 +34,7 @@ if [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_composer_
 else
     ${php_executable} ${composer_phar} --ignore-platform-reqs "$@"
 fi
-rm "${PWD}/auth.json"
+
+if [ -f "${PWD}/auth.json" ]; then
+    rm "${PWD}/auth.json"
+fi
