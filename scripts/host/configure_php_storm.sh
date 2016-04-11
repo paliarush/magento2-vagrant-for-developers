@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 vagrant_dir=$(cd "$(dirname "$0")/../.."; pwd)
-composer_auth_json="${vagrant_dir}/etc/composer/auth.json"
 
 # Enable trace printing and exit on the first error
 set +x

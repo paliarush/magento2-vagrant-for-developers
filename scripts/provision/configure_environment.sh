@@ -65,7 +65,9 @@ if [ -f ${composer_auth_json} ]; then
     if [ ! -d /home/vagrant/.composer ] ; then
       sudo -H -u vagrant bash -c 'mkdir /home/vagrant/.composer'
     fi
-    cp ${composer_auth_json} /home/vagrant/.composer/auth.json
+    if [ -f ${composer_auth_json} ]; then
+        cp ${composer_auth_json} /home/vagrant/.composer/auth.json
+    fi
 fi
 
 # Declare path to scripts supplied with vagrant and Magento
