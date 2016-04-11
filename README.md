@@ -10,6 +10,7 @@
    * [Installation steps](#installation-steps)
    * [Default credentials and settings](#default-credentials-and-settings)
    * [Getting updates and fixes](#getting-updates-and-fixes)
+   * [Troubleshooting](#troubleshooting)
  * [Day-to-day development scenarios](#day-to-day-development-scenarios)
    * [Reinstall Magento](#reinstall-magento)
    * [Clear magento cache](#clear-magento-cache)
@@ -61,6 +62,8 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
 - ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) [NFS server](https://en.wikipedia.org/wiki/Network_File_System) must be installed and running on \*nix and OSX hosts. Is usually available, so just try to follow [installation steps](#how-to-install) first.
 
 ### Installation steps
+
+:information_source: In case of any issues during installation, please read [troubleshooting section](#troubleshooting)
  
  1. Open terminal and change directory to the one which you want to contain Magento project. ![](docs/images/windows-icon.png) On Windows use Git Bash, which is available after Git installation
 
@@ -78,15 +81,12 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
 
  1. Optionally, copy [etc/config.yaml.dist](etc/config.yaml.dist) as `etc/config.yaml` and make necessary customizations
  
- 1. Initialize project, configure environment, install Magento, configure PHPStorm project:
+ 1. Initialize project (this will configure environment, install Magento, configure PHPStorm project):
  
    ```
    cd vagrant-magento
    bash init_project.sh
    ```
-   
-   :information_source: ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) On OSX and \*nix hosts NFS will be used by default to sync your project files with guest. On some hosts Vagrant cannot configure NFS properly, in this case it is possible to deploy project without NFS by setting `use_nfs` option in [config.yaml](etc/config.yaml.dist) to `0` <br />
-   :information_source: ![](docs/images/windows-icon.png) On Windows hosts you might face `Composer Install Error: ZipArchive::extractTo(): Full extraction path exceed MAXPATHLEN (260)` exception during `composer install`. This can be fixed in 2 ways: decrease path length to the project directory or set `composer_prefer_source` option in [config.yaml](etc/config.yaml.dist) to `1`
 
  1. Use `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`). This is important, because in this case PHP Storm will be configured automatically by [init_project.sh](init_project.sh). If NFS files sync is disabled in [config](etc/config.yaml.dist) and ![](docs/images/windows-icon.png) on Windows hosts [verify deployment configuration in PHP Storm](docs/phpstorm-configuration-windows-hosts.md)
  
@@ -124,6 +124,14 @@ Current vagrant project follows [semantic versioning](http://semver.org/spec/v2.
 For example your current branch is `2.0`, then it will be safe to pull any changes from `origin/2.0`. However branch `3.0` will contain changes backward incompatible with `2.0`.
 Note, that semantic versioning is only used for `x.0` branches (not for `develop`).
 
+### Troubleshooting
+
+ 1. ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) On OSX and \*nix hosts NFS will be used by default to sync your project files with guest. On some hosts Vagrant cannot configure NFS properly, in this case it is possible to deploy project without NFS by setting `use_nfs` option in [config.yaml](etc/config.yaml.dist) to `0` <br />
+ 1. ![](docs/images/windows-icon.png) On Windows hosts you might face `Composer Install Error: ZipArchive::extractTo(): Full extraction path exceed MAXPATHLEN (260)` exception during `composer install`. This can be fixed in 2 ways: decrease path length to the project directory or set `composer_prefer_source` option in [config.yaml](etc/config.yaml.dist) to `1`
+ 1. Make sure that you used `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`)
+ 1. If code is not synchronized properly on Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly), make sure that PhpStorm is running before making any changes in the code. This is important because otherwise PhpStorm will not be able to detect changes and upload them to the guest machine
+ 1. Please make sure that currently installed software, specified in [requirements section](#requirements), meets minimum version requirement
+
 ## Day-to-day development scenarios
     
 ### Reinstall Magento
@@ -155,11 +163,7 @@ bash m-switch-to-ce
 OR
 bash m-switch-to-ee
 ```
-:information_source: ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) On OSX and \*nix hosts without NFS
-you will be asked to wait until uploading process in PhpStorm is finished(PhpStorm should be lunched). To continue the process you need to press any key.
-process is finished. To continue the process you need to press any key.
-:information_source: ![](docs/images/windows-icon.png) On Windows hosts you will be asked to wait until uploading
-process in PhpStorm is finished(PhpStorm should be lunched). To continue the process you need to press any key.
+:information_source: On Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly) you will be asked to wait until code is uploaded to guest machine by PhpStorm (PhpStorm must be lunched). To continue the process press any key.
 
 ### Update composer dependencies
 
@@ -188,7 +192,19 @@ XDebug is already configured to connect to the host machine automatically. So ju
  1. Set XDEBUG_SESSION=1 cookie (e.g. using 'easy Xdebug' extension for Firefox). See [XDebug documentation](http://xdebug.org/docs/remote) for more details
  1. Start listening for PHP Debug connections in PhpStorm on default 9000 port. See how to [integrate XDebug with PhpStorm](https://www.jetbrains.com/phpstorm/help/configuring-xdebug.html#integrationWithProduct)
  1. Set beakpoint or set option in PhpStorm menu 'Run -> Break at first line in PHP scripts'
- 
+
+To debug a CLI script:
+
+ 1. Create [remote debug configuration](https://www.jetbrains.com/help/phpstorm/2016.1/run-debug-configuration-php-remote-debug.html) in PhpStorm, use `PHPSTORM` as IDE key
+ 1. Run created remote debug configuration
+ 1. Run CLI command on the guest as follows (`xdebug.remote_host` value might be different for you):
+
+ ```
+ php -d xdebug.remote_host=192.168.10.1 -d xdebug.idekey=PHPSTORM -d xdebug.remote_connect_back=0 -d xdebug.remote_autostart=1 <path_to_cli_script>
+ ```
+
+To debug Magento Setup script, go to [Magento installation script](scripts/guest/m-reinstall) and find `php ${install_cmd}`. Follow steps above for any CLI script
+
 ### Connecting to MySQL DB
 
 Answer can be found [here](https://github.com/paliarush/magento2-vagrant-for-developers/issues/8)

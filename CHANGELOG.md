@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+ - Removed requirement for public github token due to Composer limitations (issue is fixed on Composer side)
+
 ### Fixed
 
  - Fixed permissions during Magento installation on Windows hosts
