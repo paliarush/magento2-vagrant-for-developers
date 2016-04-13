@@ -13,13 +13,14 @@
    * [Troubleshooting](#troubleshooting)
  * [Day-to-day development scenarios](#day-to-day-development-scenarios)
    * [Reinstall Magento](#reinstall-magento)
-   * [Clear magento cache](#clear-magento-cache)
-   * [Update composer dependencies](#update-composer-dependencies)
+   * [Clear Magento cache](#clear-magento-cache)
+   * [Update Composer dependencies](#update-composer-dependencies)
    * [Switch between CE and EE](#switch-between-ce-and-ee)
    * [Use Magento CLI (bin/magento)](#use-magento-cli-binmagento)
    * [Debugging with XDebug](#debugging-with-xdebug)
    * [Connecting to MySQL DB](#connecting-to-mysql-db)
    * [Multiple Magento instances](#multiple-magento-instances)
+   * [Reset environment](#reset-environment)
 
 ## What You get
 
@@ -64,32 +65,32 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
 ### Installation steps
 
 :information_source: In case of any issues during installation, please read [troubleshooting section](#troubleshooting)
- 
+
  1. Open terminal and change directory to the one which you want to contain Magento project. ![](docs/images/windows-icon.png) On Windows use Git Bash, which is available after Git installation
 
  1. Download project with Vagrant configuration:
- 
+
    ```
    git clone git@github.com:paliarush/magento2-vagrant-for-developers.git vagrant-magento
    ```
- 
+
  1. Optionally, if you use private repositories on GitHub or download packages from Magento Marketplace
-   
+
    - copy [etc/composer/auth.json.dist](etc/composer/auth.json.dist) to `etc/composer/auth.json`
    - specify your GitHub token by adding `"github.com": "your-github-token"` to `github-oauth` section for GitHub authorization
    - add Magento Marketplace keys for Marketplace authorization
 
  1. Optionally, copy [etc/config.yaml.dist](etc/config.yaml.dist) as `etc/config.yaml` and make necessary customizations
- 
+
  1. Initialize project (this will configure environment, install Magento, configure PHPStorm project):
- 
+
    ```
    cd vagrant-magento
    bash init_project.sh
    ```
 
  1. Use `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`). This is important, because in this case PHP Storm will be configured automatically by [init_project.sh](init_project.sh). If NFS files sync is disabled in [config](etc/config.yaml.dist) and ![](docs/images/windows-icon.png) on Windows hosts [verify deployment configuration in PHP Storm](docs/phpstorm-configuration-windows-hosts.md)
- 
+
  1. Configure remote PHP interpreter in PHP Storm. Go to `Settings => Languages & Frameworks => PHP`, add new remote interpreter and select "Deployment configuration" as a source for connection details.
 
 ### Default credentials and settings
@@ -133,7 +134,7 @@ Note, that semantic versioning is only used for `x.0` branches (not for `develop
  1. Please make sure that currently installed software, specified in [requirements section](#requirements), meets minimum version requirement
 
 ## Day-to-day development scenarios
-    
+
 ### Reinstall Magento
 To save some time and get clear Magento installation, you can skip installation of software like web server or php.
 The following command will clear Magento DB, Magento caches and reinstall Magento instance.
@@ -144,7 +145,7 @@ Go to 'vagrant-magento' created earlier and run in command line:
 bash m-reinstall
 ```
 
-### Clear magento cache
+### Clear Magento cache
 
 Go to 'vagrant-magento' created earlier and run in command line:
 
@@ -165,7 +166,7 @@ bash m-switch-to-ee
 ```
 :information_source: On Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly) you will be asked to wait until code is uploaded to guest machine by PhpStorm (PhpStorm must be lunched). To continue the process press any key.
 
-### Update composer dependencies
+### Update Composer dependencies
 
 Go to 'vagrant-magento' created earlier and run in command line:
 
@@ -181,14 +182,14 @@ Go to 'vagrant-magento' created earlier and run in command line:
 
 ```
 bash m-bin-magento <command_name>
-e.g. 
+e.g.
 bash m-bin-magento list
 ```
 
 ### Debugging with XDebug
 
 XDebug is already configured to connect to the host machine automatically. So just:
- 
+
  1. Set XDEBUG_SESSION=1 cookie (e.g. using 'easy Xdebug' extension for Firefox). See [XDebug documentation](http://xdebug.org/docs/remote) for more details
  1. Start listening for PHP Debug connections in PhpStorm on default 9000 port. See how to [integrate XDebug with PhpStorm](https://www.jetbrains.com/phpstorm/help/configuring-xdebug.html#integrationWithProduct)
  1. Set beakpoint or set option in PhpStorm menu 'Run -> Break at first line in PHP scripts'
@@ -213,3 +214,21 @@ Answer can be found [here](https://github.com/paliarush/magento2-vagrant-for-dev
  
 To install several Magento instances based on different code bases, just follow [Installation steps](#installation-steps) to initialize project in another directory on the host.
 Unique IP address, SSH port and domain name will be generated for each new instance if not specified manually in `etc/config.yaml`
+
+### Reset environment
+
+It is possible to reset project environment to default state, which you usually get just after project initialization. The following command will delete vagrant box, vagrant project settings and PhpStorm project settings. After that it will initialize project from scratch. Magento 2 code base (`magento2ce` directory) will stay untouched.
+
+Go to 'vagrant-magento' created earlier and run in command line:
+
+```
+bash init-project.sh -f
+```
+
+You can reset project settings and Magento 2 code base at the same time. Magento 2 code base will be deleted and then cloned from the repositories specified in [etc/config.yaml](etc/config.yaml.dist)
+
+Go to 'vagrant-magento' created earlier and run in command line:
+
+```
+bash init-project.sh -fc
+```
