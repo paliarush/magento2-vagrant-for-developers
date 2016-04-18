@@ -222,7 +222,7 @@ It is possible to reset project environment to default state, which you usually 
 Go to 'vagrant-magento' created earlier and run in command line:
 
 ```
-bash init-project.sh -f
+bash init_project.sh -f
 ```
 
 You can reset project settings and Magento 2 code base at the same time. Magento 2 code base will be deleted and then cloned from the repositories specified in [etc/config.yaml](etc/config.yaml.dist)
@@ -230,5 +230,5 @@ You can reset project settings and Magento 2 code base at the same time. Magento
 Go to 'vagrant-magento' created earlier and run in command line:
 
 ```
-bash init-project.sh -fc
+bash init_project.sh -fc
 ```
