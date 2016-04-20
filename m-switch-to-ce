@@ -30,8 +30,9 @@ if [[ ${host_os} == "Windows" || $(bash "${vagrant_dir}/scripts/get_config_value
     if [ -f ${magento_ce_dir}/app/etc/aliases_to_classes_map.json ]; then
         rm ${magento_ce_dir}/app/etc/aliases_to_classes_map.json
     fi
-    if [ -f ${magento_ce_dir}/app/etc/enterprise/di.xml ]; then
+    if [ -f ${magento_ce_dir}/app/etc/enterprise/di.xml ] && [ ! -L ${magento_ce_dir}/app/etc/enterprise ]; then
         rm ${magento_ce_dir}/app/etc/enterprise/di.xml
+        rmdir ${magento_ce_dir}/app/etc/enterprise
     fi
 fi
 

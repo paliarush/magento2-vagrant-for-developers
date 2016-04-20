@@ -26,12 +26,13 @@ cp ${magento_ee_dir}/composer.lock ${magento_ce_dir}/composer.lock
 
 if [[ ${host_os} == "Windows" || $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then
     # Prevent issues on Windows with incorrect symlinks to files
-    if [ -f ${magento_ee_dir}/app/etc/aliases_to_classes_map.json ]; then
+    if [ -f ${magento_ee_dir}/app/etc/aliases_to_classes_map.json ] && [ -L ${magento_ce_dir}/app/etc/aliases_to_classes_map.json ]; then
         rm ${magento_ce_dir}/app/etc/aliases_to_classes_map.json
         cp ${magento_ee_dir}/app/etc/aliases_to_classes_map.json ${magento_ce_dir}/app/etc/aliases_to_classes_map.json
     fi
-    if [ -f ${magento_ee_dir}/app/etc/enterprise/di.xml ]; then
-        rm ${magento_ce_dir}/app/etc/enterprise/di.xml
+    if [ -f ${magento_ee_dir}/app/etc/enterprise/di.xml ] && [ -L ${magento_ce_dir}/app/etc/enterprise ]; then
+        rm ${magento_ce_dir}/app/etc/enterprise
+        mkdir ${magento_ce_dir}/app/etc/enterprise
         cp ${magento_ee_dir}/app/etc/enterprise/di.xml ${magento_ce_dir}/app/etc/enterprise/di.xml
     fi
 fi
