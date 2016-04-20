@@ -2,6 +2,7 @@
 
 vagrant_dir=$(cd "$(dirname "$0")"; pwd)
 magento_ce_dir="${vagrant_dir}/magento2ce"
+magento_ee_dir="${magento_ce_dir}/magento2ee"
 magento_ce_sample_data_dir="${magento_ce_dir}/magento2ce-sample-data"
 magento_ee_sample_data_dir="${magento_ce_dir}/magento2ee-sample-data"
 php_executable=$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")
@@ -19,6 +20,11 @@ while [ "$1" != "" ]; do
     shift
 done
 
+install_ee=0
+if [ -f ${magento_ce_dir}/app/etc/aliases_to_classes_map.json ]; then
+    install_ee=1
+fi
+
 # As a precondition, disable CE sample data
 if [ -f ${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php ]; then
     ${php_executable} -f ${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php -- --command=unlink --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ce_sample_data_dir}"
@@ -32,6 +38,10 @@ if [ -f ${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php ]; then
     set +x
     echo "EE Sample data disabled"
     set -x
+fi
+
+if [ ${install_ee} = 1 ]; then
+    ${php_executable} -f ${magento_ee_dir}/dev/tools/build-ee.php -- --command=link --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}"
 fi
 
 if [ ${with_sample_data} = 1 ]; then
@@ -50,7 +60,7 @@ if [ ${with_sample_data} = 1 ]; then
         ${php_executable} -f ${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php -- --command=link --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ce_sample_data_dir}"
     fi
 
-    if [ -f ${magento_ce_dir}/app/etc/aliases_to_classes_map.json ]; then
+    if [ ${install_ee} = 1 ]; then
         # Installing EE
         if [ ! -f ${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php ]; then
             # Sample data not available and should be enabled

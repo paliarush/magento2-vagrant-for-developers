@@ -31,6 +31,11 @@ cd ${MAGENTO_ROOT}
 # Clear cache
 m-clear-cache
 
+# Reset Rabbit MQ configuration
+sudo rabbitmqctl stop_app
+sudo rabbitmqctl reset
+sudo rabbitmqctl start_app
+
 # Remove configuration files
 rm -f "${MAGENTO_ROOT}/app/etc/config.php"
 rm -f "${MAGENTO_ROOT}/app/etc/env.php"
