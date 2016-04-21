@@ -2,14 +2,32 @@
 
 echo "Clearing Magento cache..."
 
-rm -f ${MAGENTO_ROOT}/app/etc/paths.php
-#clear var
-cd ${MAGENTO_ROOT} && mv var/.htaccess var_htaccess.back && rm -rf var/* var/.[^.]* && mv var_htaccess.back var/.htaccess
-#clear pub/statics
-cd ${MAGENTO_ROOT}/pub && mv static/.htaccess static_htaccess.back && rm -rf static && mkdir static && mv static_htaccess.back static/.htaccess
-#clear integration tests tmp
-cd ${MAGENTO_ROOT}/dev/tests/integration && mv tmp/.gitignore tmp_gitignore.back && rm -rf tmp && mkdir tmp && mv tmp_gitignore.back tmp/.gitignore
-#clear unit tests tmp
-cd ${MAGENTO_ROOT}/dev/tests/unit && mv tmp/.gitignore tmp_gitignore.back && rm -rf tmp && mkdir tmp && mv tmp_gitignore.back tmp/.gitignore
+rm -f "${MAGENTO_ROOT}/app/etc/paths.php"
+if [[ -d "${MAGENTO_ROOT}/var" ]]; then
+    #clear var
+    cd "${MAGENTO_ROOT}" && mv var/.htaccess var_htaccess.back && rm -rf var/* var/.[^.]*
+    if [[ -f var_htaccess.back ]]; then
+        mv var_htaccess.back var/.htaccess
+    fi
+fi
+if [[ -d "${MAGENTO_ROOT}/pub" ]]; then
+    #clear pub/statics
+    cd "${MAGENTO_ROOT}/pub" && mv static/.htaccess static_htaccess.back && rm -rf static && mkdir static
+    if [[ -f static_htaccess.back ]]; then
+        mv static_htaccess.back static/.htaccess
+    fi
+fi
+if [[ -d "${MAGENTO_ROOT}/dev" ]]; then
+    #clear integration tests tmp
+    cd "${MAGENTO_ROOT}/dev/tests/integration" && mv tmp/.gitignore tmp_gitignore.back && rm -rf tmp && mkdir tmp
+    if [[ -f tmp_gitignore.back ]]; then
+        mv tmp_gitignore.back tmp/.gitignore
+    fi
+    #clear unit tests tmp
+    cd "${MAGENTO_ROOT}/dev/tests/unit" && mv tmp/.gitignore tmp_gitignore.back && rm -rf tmp && mkdir tmp
+    if [[ -f tmp_gitignore.back ]]; then
+        mv tmp_gitignore.back tmp/.gitignore
+    fi
+fi
 
 echo "Magento cache cleared."
