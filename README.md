@@ -19,6 +19,7 @@
    * [Use Magento CLI (bin/magento)](#use-magento-cli-binmagento)
    * [Debugging with XDebug](#debugging-with-xdebug)
    * [Connecting to MySQL DB](#connecting-to-mysql-db)
+   * [Accessing PHP and other config files](#accessing-php-and-other-config-files)
    * [Multiple Magento instances](#multiple-magento-instances)
    * [Reset environment](#reset-environment)
 
@@ -210,14 +211,21 @@ To debug Magento Setup script, go to [Magento installation script](scripts/guest
 
 Answer can be found [here](https://github.com/paliarush/magento2-vagrant-for-developers/issues/8)
 
+### Accessing PHP and other config files
+
+It is possible to view/modify majority of guest machine config files directly from IDE on the host. They will be accessible in [etc/guest](etc/guest) directory only when guest machine is running. The list of accessible configs includes, but not limited to: PHP, Apache, Mysql, Varnish, RabbitMQ, hosts, cron.
+Do not edit any symlinks using PhpStorm because it may break your installation.
+
+After editing configs in IDE it is still required to restart related services manually.
+
 ### Multiple Magento instances
- 
+
 To install several Magento instances based on different code bases, just follow [Installation steps](#installation-steps) to initialize project in another directory on the host.
 Unique IP address, SSH port and domain name will be generated for each new instance if not specified manually in `etc/config.yaml`
 
 ### Reset environment
 
-It is possible to reset project environment to default state, which you usually get just after project initialization. The following command will delete vagrant box, vagrant project settings and PhpStorm project settings. After that it will initialize project from scratch. Magento 2 code base (`magento2ce` directory) will stay untouched.
+It is possible to reset project environment to default state, which you usually get just after project initialization. The following command will delete vagrant box, vagrant project settings and PhpStorm project settings. After that it will initialize project from scratch. Magento 2 code base (`magento2ce` directory) and [etc/config.yaml](etc/config.yaml.dist) will stay untouched, but guest config files (located in [etc/guest](etc/guest)) will be removed.
 
 Go to 'vagrant-magento' created earlier and run in command line:
 

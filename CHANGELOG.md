@@ -20,6 +20,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
  - Added host wrapper script for bin/magento command on guest
+ - Added ability to modify guest config files (PHP, Apache etc) directly from host IDE
 
 ## [v2.0.0] - 2016-02-05
 

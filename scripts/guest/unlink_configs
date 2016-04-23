@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# See link_configs script
+
+# Enable trace printing and exit on the first error
+set -ex
+
+# Revert configs before shutdown or reboot to allow proper services initialization on booting
+
+# Configs located under /etc/*
+configs=( apache2 php mysql varnish rabbitmq init.d crontab cron.d timezone hosts )
+for config in "${configs[@]}"
+do
+    if [ -L /etc/${config} ]; then
+        sudo rm /etc/${config}
+        sudo mv /vagrant/etc/guest/${config} /etc/${config}
+    fi
+done
+
+# Configs located under ~/*
+configs=( .bashrc .composer .profile )
+for config in "${configs[@]}"
+do
+    if [ -L /home/vagrant/${config} ]; then
+        sudo rm /home/vagrant/${config}
+        sudo mv /vagrant/etc/guest/${config} /home/vagrant/${config}
+    fi
+done

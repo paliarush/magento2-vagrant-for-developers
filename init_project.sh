@@ -46,7 +46,10 @@ while getopts 'fc' flag; do
 done
 if [ ${force_project_cleaning} -eq 1 ]; then
     vagrant destroy -f
-    rm -rf ${vagrant_dir}/.idea ${vagrant_dir}/.vagrant
+    mv ${vagrant_dir}/etc/guest/.gitignore ${vagrant_dir}/etc/.gitignore.back
+    rm -rf ${vagrant_dir}/.vagrant ${vagrant_dir}/etc/guest
+    mkdir ${vagrant_dir}/etc/guest
+    mv ${vagrant_dir}/etc/.gitignore.back  ${vagrant_dir}/etc/guest/.gitignore
     if [ ${force_codebase_cleaning} -eq 1 ]; then
         rm -rf ${magento_ce_dir}
     fi
@@ -77,4 +80,7 @@ bash "${vagrant_dir}/scripts/host/composer.sh" install
 cd ${vagrant_dir}
 vagrant up
 
+if [ ${force_project_cleaning} -eq 1 ]; then
+    rm -rf ${vagrant_dir}/.idea/*
+fi
 bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"

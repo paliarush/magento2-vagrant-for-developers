@@ -72,8 +72,13 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         s.args = shell_script_args
     end
 
-    config.vm.provision "export_env_variables", type: "shell", run: "always" do |s|
-        s.path = "scripts/provision/export_env_variables.sh"
+    config.vm.provision "configure_environment_recurring", type: "shell", run: "always" do |s|
+        s.path = "scripts/provision/configure_environment_recurring.sh"
+        s.args = shell_script_args
+    end
+
+    config.vm.provision "export_env_variables_recurring", type: "shell", run: "always" do |s|
+        s.path = "scripts/provision/export_env_variables_recurring.sh"
         s.args = shell_script_args
     end
 
