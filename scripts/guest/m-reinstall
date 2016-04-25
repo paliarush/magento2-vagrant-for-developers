@@ -25,6 +25,7 @@ setupOptions[amqp_host]='localhost'
 setupOptions[amqp_port]='5672'
 setupOptions[amqp_user]='guest'
 setupOptions[amqp_password]='guest'
+setupOptions[amqp_virtualhost]='/'
 
 cd ${MAGENTO_ROOT}
 
@@ -67,6 +68,7 @@ if [ -f "${MAGENTO_ROOT}/app/code/Magento/Amqp/registration.php" ]; then
     --amqp-host=${setupOptions[amqp_host]} \
     --amqp-port=${setupOptions[amqp_port]} \
     --amqp-user=${setupOptions[amqp_user]} \
+    --amqp-virtualhost=${setupOptions[amqp_virtualhost]} \
     --amqp-password=${setupOptions[amqp_password]}"
 fi
 
