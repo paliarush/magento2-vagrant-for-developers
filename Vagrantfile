@@ -39,7 +39,7 @@ host_magento_dir = Dir.pwd + '/magento2ce'
 VAGRANT_API_VERSION = 2
 Vagrant.configure(VAGRANT_API_VERSION) do |config|
     config.vm.box = "paliarush/magento2.ubuntu"
-    config.vm.box_version = "~> 1.0"
+    config.vm.box_version = "~> 1.1"
 
     config.vm.provider "virtualbox" do |vb|
         vb.memory = guest_memory
@@ -54,7 +54,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         config.vm.synced_folder host_magento_dir, guest_magento_dir, type: "nfs", create: true
     else
         guest_magento_dir = '/var/www/magento2ce'
-        config.vm.synced_folder host_magento_dir + '/var/generation', guest_magento_dir + '/var/generation', create: true
+        config.vm.synced_folder host_magento_dir + '/var', guest_magento_dir + '/var', create: true
         config.vm.synced_folder host_magento_dir + '/app/etc', guest_magento_dir + '/app/etc', create: true
     end
 
