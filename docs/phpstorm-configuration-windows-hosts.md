@@ -7,7 +7,7 @@ This solution is applicable to any Vagrant configuration for Magento instance, s
     
     ```
     Vagrant.configure(2) do |config|
-      config.vm.synced_folder '../magento2ce/var/generation', '/var/www/magento2ce/var/generation'
+      config.vm.synced_folder '../magento2ce/var', '/var/www/magento2ce/var'
       config.vm.synced_folder '../magento2ce/app/etc', '/var/www/magento2ce/app/etc'
     end
     ```
