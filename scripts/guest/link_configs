@@ -7,12 +7,14 @@ set -ex
 # Make guest configs visible and editable in the host IDE
 
 # Configs located under /etc/*
-configs=( apache2 php mysql varnish rabbitmq init.d crontab cron.d timezone hosts )
+configs=( apache2 php mysql varnish rabbitmq crontab cron.d timezone hosts profile profile.d )
 for config in "${configs[@]}"
 do
     if [ ! -d /vagrant/etc/guest/${config} ] && [ ! -f /vagrant/etc/guest/${config} ]; then
-        mv /etc/${config} /vagrant/etc/guest/${config}
-        ln -s /vagrant/etc/guest/${config} /etc/${config}
+        if [ -d /etc/${config} ] || [ -f /etc/${config} ]; then
+            mv /etc/${config} /vagrant/etc/guest/${config}
+            ln -s /vagrant/etc/guest/${config} /etc/${config}
+        fi
     fi
 done
 
@@ -21,7 +23,9 @@ configs=( .bashrc .composer .profile )
 for config in "${configs[@]}"
 do
     if [ ! -d /vagrant/etc/guest/${config} ] && [ ! -f /vagrant/etc/guest/${config} ]; then
-        mv /home/vagrant/${config} /vagrant/etc/guest/${config}
-        ln -s /vagrant/etc/guest/${config} /home/vagrant/${config}
+        if [ -d /home/vagrant/${config} ] || [ -f /home/vagrant/${config} ]; then
+            mv /home/vagrant/${config} /vagrant/etc/guest/${config}
+            ln -s /vagrant/etc/guest/${config} /home/vagrant/${config}
+        fi
     fi
 done

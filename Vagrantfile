@@ -34,7 +34,8 @@ guest_memory = config_data['guest']['memory']
 # NFS will be used for *nix and OSX hosts, if not disabled explicitly in config
 use_nfs_for_synced_folders = !OS.is_windows && (config_data['guest']['use_nfs'] == 1)
 
-host_magento_dir = Dir.pwd + '/magento2ce'
+host_vagrant_dir = Dir.pwd + ''
+host_magento_dir = host_vagrant_dir + '/magento2ce'
 
 VAGRANT_API_VERSION = 2
 Vagrant.configure(VAGRANT_API_VERSION) do |config|
@@ -64,7 +65,8 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         magento_host_name,                          #3
         config_data['environment']['use_php7'],     #4
         host_magento_dir,                           #5
-        OS.is_windows ? "1" : "0"                   #6
+        OS.is_windows ? "1" : "0",                  #6
+        host_vagrant_dir                            #7
     ]
 
     config.vm.provision "configure_environment", type: "shell" do |s|

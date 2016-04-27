@@ -80,7 +80,24 @@ bash "${vagrant_dir}/scripts/host/composer.sh" install
 cd ${vagrant_dir}
 vagrant up
 
+set +x
+echo "Configuring PhpStorm..."
 if [ ${force_project_cleaning} -eq 1 ]; then
     rm -rf ${vagrant_dir}/.idea/*
 fi
 bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
+
+bold=$(tput bold)
+regular=$(tput sgr0)
+echo "
+${bold}[Important]${regular}
+    Please use ${bold}${vagrant_dir}${regular} directory as PhpStorm project root, NOT ${bold}${magento_ce_dir}${regular}."
+
+use_nfs=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")
+if [[ ${host_os} == "Windows" || ${use_nfs} == 0 ]]; then
+    echo "
+${bold}[Optional]${regular}
+    To verify that deployment configuration for ${bold}${magento_ce_dir}${regular} in PhpStorm is correct,
+        use instructions provided here: ${bold}https://github.com/paliarush/magento2-vagrant-for-developers/blob/2.0/docs/phpstorm-configuration-windows-hosts.md${regular}.
+    If not using PhpStorm, you can set up synchronization using rsync"
+fi
