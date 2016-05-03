@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
-# See unlink_configs script
+
+function process_configs () {
+    configs_path=$1
+    configs=$2
+    for config in "${configs[@]}"
+    do
+        if [ ! -d /vagrant/etc/guest/${config} ] && [ ! -f /vagrant/etc/guest/${config} ]; then
+            if [ -d ${configs_path}/${config} ] || [ -f ${configs_path}/${config} ]; then
+                sudo rm -rf "${configs_path}/${config}.back"
+                sudo cp -rp ${configs_path}/${config} "${configs_path}/${config}.back"
+                sudo mv ${configs_path}/${config} /vagrant/etc/guest/${config}
+                sudo ln -s /vagrant/etc/guest/${config} ${configs_path}/${config}
+            fi
+        fi
+    done
+}
 
 # Enable trace printing and exit on the first error
 set -ex
@@ -7,25 +22,12 @@ set -ex
 # Make guest configs visible and editable in the host IDE
 
 # Configs located under /etc/*
+config_dir="/etc"
+# See unlink_configs script
 configs=( apache2 php mysql varnish rabbitmq crontab cron.d timezone hosts profile profile.d )
-for config in "${configs[@]}"
-do
-    if [ ! -d /vagrant/etc/guest/${config} ] && [ ! -f /vagrant/etc/guest/${config} ]; then
-        if [ -d /etc/${config} ] || [ -f /etc/${config} ]; then
-            mv /etc/${config} /vagrant/etc/guest/${config}
-            ln -s /vagrant/etc/guest/${config} /etc/${config}
-        fi
-    fi
-done
+process_configs ${config_dir} ${configs}
 
 # Configs located under ~/*
+config_dir="/home/vagrant"
 configs=( .bashrc .composer .profile )
-for config in "${configs[@]}"
-do
-    if [ ! -d /vagrant/etc/guest/${config} ] && [ ! -f /vagrant/etc/guest/${config} ]; then
-        if [ -d /home/vagrant/${config} ] || [ -f /home/vagrant/${config} ]; then
-            mv /home/vagrant/${config} /vagrant/etc/guest/${config}
-            ln -s /vagrant/etc/guest/${config} /home/vagrant/${config}
-        fi
-    fi
-done
+process_configs ${config_dir} ${configs}

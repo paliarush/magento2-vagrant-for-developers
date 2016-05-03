@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
-# See link_configs script
+
+function process_configs () {
+    configs_path=$1
+    configs=$2
+    for config in "${configs[@]}"
+    do
+        if [ -L ${config_dir}/${config} ] && [ -e ${config_dir}/${config} ]; then
+            sudo rm ${config_dir}/${config}
+            sudo mv /vagrant/etc/guest/${config} ${config_dir}/${config}
+        elif [ ! -e ${config_dir}/${config} ] && [ -e "${config_dir}/${config}.back" ]; then
+            sudo rm -rf ${config_dir}/${config}
+            sudo cp -rp "${config_dir}/${config}.back" ${config_dir}/${config}
+        fi
+    done
+}
 
 # Enable trace printing and exit on the first error
 set -ex
@@ -7,21 +21,12 @@ set -ex
 # Revert configs before shutdown or reboot to allow proper services initialization on booting
 
 # Configs located under /etc/*
-configs=( apache2 php mysql varnish rabbitmq init.d crontab cron.d timezone hosts )
-for config in "${configs[@]}"
-do
-    if [ -L /etc/${config} ]; then
-        sudo rm /etc/${config}
-        sudo mv /vagrant/etc/guest/${config} /etc/${config}
-    fi
-done
+config_dir="/etc"
+# See link_configs script
+configs=( apache2 php mysql varnish rabbitmq crontab cron.d timezone hosts profile profile.d )
+process_configs ${config_dir} ${configs}
 
 # Configs located under ~/*
+config_dir="/home/vagrant"
 configs=( .bashrc .composer .profile )
-for config in "${configs[@]}"
-do
-    if [ -L /home/vagrant/${config} ]; then
-        sudo rm /home/vagrant/${config}
-        sudo mv /vagrant/etc/guest/${config} /home/vagrant/${config}
-    fi
-done
+process_configs ${config_dir} ${configs}
