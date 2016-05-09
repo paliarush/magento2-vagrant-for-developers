@@ -78,7 +78,7 @@ php ${install_cmd}
 # php -d xdebug.remote_host=192.168.10.1 -d xdebug.idekey=PHPSTORM -d xdebug.remote_connect_back=0 -d xdebug.remote_autostart=1 ${install_cmd}
 
 # Configure Varnish FPC, if enabled
-sh ${vagrant_dir}/scripts/guest/m-reinstall-scripts/config_varnish
+sh ${vagrant_dir}/scripts/guest/m-reinstall-scripts/configure_varnish
 
 # Enable Magento cron jobs
 echo "* * * * * php ${MAGENTO_ROOT}/bin/magento cron:run &" | crontab -u vagrant -

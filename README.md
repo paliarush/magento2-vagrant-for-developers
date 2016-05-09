@@ -36,7 +36,7 @@ It is easy to [install multiple Magento instances](#multiple-magento-instances) 
 [Project initialization script](init_project.sh) configures complete development environment:
 
  1. Adds some missing software on the host
- 1. Configures all software necessary for Magento 2 using [custom Ubuntu vagrant box](https://atlas.hashicorp.com/paliarush/boxes/magento2.ubuntu) (Apache 2.4, PHP 7.0 (or 5.5.9), MySQL 5.6, Git, Composer, XDebug, Rabbit MQ)
+ 1. Configures all software necessary for Magento 2 using [custom Ubuntu vagrant box](https://atlas.hashicorp.com/paliarush/boxes/magento2.ubuntu) (Apache 2.4, PHP 7.0 (or 5.5.9), MySQL 5.6, Git, Composer, XDebug, Rabbit MQ, Varnish)
  1. Installs Magento 2
  1. Configures PHP Storm project (partially at the moment)
 
