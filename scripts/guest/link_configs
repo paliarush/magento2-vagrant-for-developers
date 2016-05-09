@@ -19,15 +19,19 @@ function process_configs () {
 # Enable trace printing and exit on the first error
 set -ex
 
+# Below configuration is required to allow managing mysql as a service
+if ! cat /etc/apparmor.d/local/usr.sbin.mysqld | grep -q '/vagrant/etc/guest' ; then
+    echo "
+        /vagrant/etc/guest/mysql/*.pem r,
+        /vagrant/etc/guest/mysql/conf.d/ r,
+        /vagrant/etc/guest/mysql/conf.d/* r,
+        /vagrant/etc/guest/mysql/*.cnf r," >> /etc/apparmor.d/local/usr.sbin.mysqld
+fi
+
 # Make guest configs visible and editable in the host IDE
 
 # Configs located under /etc/*
 config_dir="/etc"
 # See unlink_configs script
-configs=( apache2 php mysql varnish rabbitmq crontab cron.d timezone hosts profile profile.d )
-process_configs ${config_dir} ${configs}
-
-# Configs located under ~/*
-config_dir="/home/vagrant"
-configs=( .bashrc .composer .profile )
+configs=( apache2 php mysql varnish rabbitmq )
 process_configs ${config_dir} ${configs}

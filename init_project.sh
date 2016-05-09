@@ -37,10 +37,12 @@ rm -f "${config_path}.back"
 # Clean up the project before initialization if "-f" option was specified. Remove codebase if "-fc" is used.
 force_project_cleaning=0
 force_codebase_cleaning=0
-while getopts 'fc' flag; do
+force_phpstorm_config_cleaning=0
+while getopts 'fcp' flag; do
   case "${flag}" in
     f) force_project_cleaning=1 ;;
     c) force_codebase_cleaning=1 ;;
+    p) force_phpstorm_config_cleaning=1 ;;
     *) error "Unexpected option ${flag}" ;;
   esac
 done
@@ -82,10 +84,12 @@ vagrant up
 
 set +x
 echo "Configuring PhpStorm..."
-if [ ${force_project_cleaning} -eq 1 ]; then
-    rm -rf ${vagrant_dir}/.idea/*
+if [ ${force_project_cleaning} -eq 1 ] && [ ${force_phpstorm_config_cleaning} -eq 1 ]; then
+    rm -rf ${vagrant_dir}/.idea
 fi
-bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
+if [ ! "$(ls -A ${vagrant_dir}/.idea)" ]; then
+    bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
+fi
 
 bold=$(tput bold)
 regular=$(tput sgr0)
