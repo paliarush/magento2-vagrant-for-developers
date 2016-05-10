@@ -213,7 +213,7 @@ Answer can be found [here](https://github.com/paliarush/magento2-vagrant-for-dev
 
 ### Accessing PHP and other config files
 
-It is possible to view/modify majority of guest machine config files directly from IDE on the host. They will be accessible in [etc/guest](etc/guest) directory only when guest machine is running. The list of accessible configs includes, but not limited to: PHP, Apache, Mysql, Varnish, RabbitMQ, hosts, cron.
+It is possible to view/modify majority of guest machine config files directly from IDE on the host. They will be accessible in [etc/guest](etc/guest) directory only when guest machine is running. The list of accessible configs includes: PHP, Apache, Mysql, Varnish, RabbitMQ.
 Do not edit any symlinks using PhpStorm because it may break your installation.
 
 After editing configs in IDE it is still required to restart related services manually.
@@ -239,4 +239,12 @@ Go to 'vagrant-magento' created earlier and run in command line:
 
 ```
 bash init_project.sh -fc
+```
+
+To reset PhpStorm project configuration, in addition to `-f` specify `-p` option:
+
+```
+bash init_project.sh -fp
+OR
+bash init_project.sh -fcp
 ```

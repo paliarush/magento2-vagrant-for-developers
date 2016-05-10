@@ -23,10 +23,5 @@ set -ex
 # Configs located under /etc/*
 config_dir="/etc"
 # See link_configs script
-configs=( apache2 php mysql varnish rabbitmq crontab cron.d timezone hosts profile profile.d )
-process_configs ${config_dir} ${configs}
-
-# Configs located under ~/*
-config_dir="/home/vagrant"
-configs=( .bashrc .composer .profile )
+configs=( apache2 php mysql varnish rabbitmq )
 process_configs ${config_dir} ${configs}

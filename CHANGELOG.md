@@ -23,6 +23,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
  - Added host wrapper script for bin/magento command on guest
  - Added ability to modify guest config files (PHP, Apache etc) directly from host IDE
+ - Added ability to choose if PhpStorm configs should be removed during project reinitialization
 
 ## [v2.0.0] - 2016-02-05
 
@@ -52,18 +53,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
- - Integrated vagrant host manager plugin to allow automatic /etc/hosts update 
- - Added support of EE linked to CE using symlinks on *nix hosts 
+ - Integrated vagrant host manager plugin to allow automatic /etc/hosts update
+ - Added support of EE linked to CE using symlinks on *nix hosts
  - Added ${MAGENTO_ROOT} environment variable, which stores installation path on the guest
  - Added support of Rabbit MQ
- - Added possibility to specify tokens for repo.magento.com composer repository 
+ - Added possibility to specify tokens for repo.magento.com composer repository
  - git is now installed on guest machine
- - Removed 'magento' MySQL user, password of 'root' user removed 
- - Database for integration tests are created by default 
- - Added script for clearing Magento cache from host command line 
+ - Removed 'magento' MySQL user, password of 'root' user removed
+ - Database for integration tests are created by default
+ - Added script for clearing Magento cache from host command line
  - Configured XDebug to allow remote debugging
- - Fixed max_nesting_level issue with XDebug enabled  
+ - Fixed max_nesting_level issue with XDebug enabled
  - Apache is run by 'vagrant' user
- - Enabled Magento cron jobs 
+ - Enabled Magento cron jobs
  - Enabled XDebug by default
  - Created vagrant configuration for Magneto 2 CE developer's environment installation
