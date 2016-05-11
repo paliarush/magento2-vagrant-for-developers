@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
  - Fixed permissions during Magento installation on Windows hosts
  - Fixed issue with Magento compiler on Windows hosts
+ - Fixed "stdin: is not a tty" warning
 
 ### Added
 

@@ -69,6 +69,11 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         host_vagrant_dir                            #7
     ]
 
+    config.vm.provision "fix_no_tty", type: "shell", run: "always" do |s|
+        s.privileged = false
+        s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
+    end
+
     config.vm.provision "configure_environment", type: "shell" do |s|
         s.path = "scripts/provision/configure_environment.sh"
         s.args = shell_script_args
