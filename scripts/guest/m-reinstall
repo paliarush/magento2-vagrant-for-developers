@@ -39,7 +39,7 @@ rm -f "${MAGENTO_ROOT}/app/etc/env.php"
 # Create DB
 db_names=(${setupOptions[db_name]} "magento_integration_tests" )
 for db_name in "${db_names[@]}"; do
-    mysql -uroot -e "drop database if exists ${db_name}; create database ${db_name};"
+    mysql -e "drop database if exists ${db_name}; create database ${db_name};"
 done
 
 # Install Magento application
