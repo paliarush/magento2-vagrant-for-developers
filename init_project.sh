@@ -37,16 +37,21 @@ rm -f "${config_path}.back"
 # Clean up the project before initialization if "-f" option was specified. Remove codebase if "-fc" is used.
 force_project_cleaning=0
 force_codebase_cleaning=0
-while getopts 'fc' flag; do
+force_phpstorm_config_cleaning=0
+while getopts 'fcp' flag; do
   case "${flag}" in
     f) force_project_cleaning=1 ;;
     c) force_codebase_cleaning=1 ;;
+    p) force_phpstorm_config_cleaning=1 ;;
     *) error "Unexpected option ${flag}" ;;
   esac
 done
 if [ ${force_project_cleaning} -eq 1 ]; then
     vagrant destroy -f
-    rm -rf ${vagrant_dir}/.idea ${vagrant_dir}/.vagrant
+    mv ${vagrant_dir}/etc/guest/.gitignore ${vagrant_dir}/etc/.gitignore.back
+    rm -rf ${vagrant_dir}/.vagrant ${vagrant_dir}/etc/guest
+    mkdir ${vagrant_dir}/etc/guest
+    mv ${vagrant_dir}/etc/.gitignore.back  ${vagrant_dir}/etc/guest/.gitignore
     if [ ${force_codebase_cleaning} -eq 1 ]; then
         rm -rf ${magento_ce_dir}
     fi
@@ -77,4 +82,26 @@ bash "${vagrant_dir}/scripts/host/composer.sh" install
 cd ${vagrant_dir}
 vagrant up
 
-bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
+set +x
+echo "Configuring PhpStorm..."
+if [ ${force_project_cleaning} -eq 1 ] && [ ${force_phpstorm_config_cleaning} -eq 1 ]; then
+    rm -rf ${vagrant_dir}/.idea
+fi
+if [ ! "$(ls -A ${vagrant_dir}/.idea)" ]; then
+    bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
+fi
+
+bold=$(tput bold)
+regular=$(tput sgr0)
+echo "
+${bold}[Important]${regular}
+    Please use ${bold}${vagrant_dir}${regular} directory as PhpStorm project root, NOT ${bold}${magento_ce_dir}${regular}."
+
+use_nfs=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")
+if [[ ${host_os} == "Windows" || ${use_nfs} == 0 ]]; then
+    echo "
+${bold}[Optional]${regular}
+    To verify that deployment configuration for ${bold}${magento_ce_dir}${regular} in PhpStorm is correct,
+        use instructions provided here: ${bold}https://github.com/paliarush/magento2-vagrant-for-developers/blob/2.0/docs/phpstorm-configuration-windows-hosts.md${regular}.
+    If not using PhpStorm, you can set up synchronization using rsync"
+fi

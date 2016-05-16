@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+function process_configs () {
+    configs_path=$1
+    configs=$2
+    for config in "${configs[@]}"
+    do
+        if [ ! -d /vagrant/etc/guest/${config} ] && [ ! -f /vagrant/etc/guest/${config} ]; then
+            if [ -d ${configs_path}/${config} ] || [ -f ${configs_path}/${config} ]; then
+                sudo rm -rf "${configs_path}/${config}.back"
+                sudo cp -rp ${configs_path}/${config} "${configs_path}/${config}.back"
+                sudo mv ${configs_path}/${config} /vagrant/etc/guest/${config}
+                sudo ln -s /vagrant/etc/guest/${config} ${configs_path}/${config}
+            fi
+        fi
+    done
+}
+
+# Enable trace printing and exit on the first error
+set -ex
+
+# Below configuration is required to allow managing mysql as a service
+if ! cat /etc/apparmor.d/local/usr.sbin.mysqld | grep -q '/vagrant/etc/guest' ; then
+    echo "
+        /vagrant/etc/guest/mysql/*.pem r,
+        /vagrant/etc/guest/mysql/conf.d/ r,
+        /vagrant/etc/guest/mysql/conf.d/* r,
+        /vagrant/etc/guest/mysql/*.cnf r," >> /etc/apparmor.d/local/usr.sbin.mysqld
+fi
+
+# Make guest configs visible and editable in the host IDE
+
+# Configs located under /etc/*
+config_dir="/etc"
+# See unlink_configs script
+configs=( apache2 php mysql varnish rabbitmq )
+process_configs ${config_dir} ${configs}

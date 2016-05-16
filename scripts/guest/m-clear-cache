@@ -4,14 +4,12 @@ echo "Clearing Magento cache..."
 
 rm -f ${MAGENTO_ROOT}/app/etc/paths.php
 #clear var
-for dir in `ls ${MAGENTO_ROOT}/var` ; do
-    rm -rf ${MAGENTO_ROOT}/var/${dir}/* ;
-done
+cd ${MAGENTO_ROOT} && mv var/.htaccess var_htaccess.back && rm -rf var/* var/.[^.]* && mv var_htaccess.back var/.htaccess
 #clear pub/statics
-cd ${MAGENTO_ROOT}/pub && mv static/.htaccess static_htaccess.back && rm -rf static/* && mv static_htaccess.back static/.htaccess
+cd ${MAGENTO_ROOT}/pub && mv static/.htaccess static_htaccess.back && rm -rf static && mkdir static && mv static_htaccess.back static/.htaccess
 #clear integration tests tmp
-cd ${MAGENTO_ROOT}/dev/tests/integration && mv tmp/.gitignore tmp_gitignore.back && rm -rf tmp/* && mv tmp_gitignore.back tmp/.gitignore
+cd ${MAGENTO_ROOT}/dev/tests/integration && mv tmp/.gitignore tmp_gitignore.back && rm -rf tmp && mkdir tmp && mv tmp_gitignore.back tmp/.gitignore
 #clear unit tests tmp
-cd ${MAGENTO_ROOT}/dev/tests/unit && rm -rf tmp/*
+cd ${MAGENTO_ROOT}/dev/tests/unit && rm -rf tmp && mkdir tmp
 
 echo "Magento cache cleared."

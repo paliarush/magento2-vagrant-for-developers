@@ -25,6 +25,7 @@ setupOptions[amqp_host]='localhost'
 setupOptions[amqp_port]='5672'
 setupOptions[amqp_user]='guest'
 setupOptions[amqp_password]='guest'
+setupOptions[amqp_virtualhost]='/'
 
 cd ${MAGENTO_ROOT}
 
@@ -62,11 +63,12 @@ install_cmd="./bin/magento setup:install \
     --use-rewrites=1"
 
 # Configure Rabbit MQ
-if [ -f "${MAGENTO_ROOT}/app/code/Magento/Amqp/registration.php" ]; then
+if [ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ] && [ -d "${MAGENTO_ROOT}/app/code/Magento/Amqp" ]; then
     install_cmd="${install_cmd} \
     --amqp-host=${setupOptions[amqp_host]} \
     --amqp-port=${setupOptions[amqp_port]} \
     --amqp-user=${setupOptions[amqp_user]} \
+    --amqp-virtualhost=${setupOptions[amqp_virtualhost]} \
     --amqp-password=${setupOptions[amqp_password]}"
 fi
 
@@ -91,15 +93,6 @@ sed -i "s|${MAGENTO_ROOT}|${MAGENTO_ROOT_HOST}|g" "/vagrant/.idea/misc.xml"
 set +x
 echo "
 Magento application was deployed to ${MAGENTO_ROOT} and installed successfully
+
 Access storefront at ${setupOptions[base_url]}
 Access admin panel at ${setupOptions[base_url]}${setupOptions[admin_frontname]}/"
-
-if [[ ${is_windows_host} == 1 || ${use_nfs} == 0 ]]; then
-    echo "
-    [Optional] To finish developer environment set up:
-        1. Please create new PhpStorm project using 'magento2ce' directory on your host
-        (this directory should already contain Magento repository cloned earlier)
-
-        2. Use instructions provided here https://github.com/paliarush/vagrant-magento/blob/2.0/docs/phpstorm-configuration-windows-hosts.md
-        to set up synchronization in PhpStorm (or using rsync) with ${MAGENTO_ROOT} directory"
-fi

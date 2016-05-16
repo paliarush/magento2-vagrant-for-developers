@@ -70,12 +70,6 @@ if [ -f ${composer_auth_json} ]; then
     fi
 fi
 
-# Declare path to scripts supplied with vagrant and Magento
-echo "export PATH=\$PATH:${vagrant_dir}/scripts/guest:${guest_magento_dir}/bin" >> /etc/profile
-echo "export MAGENTO_ROOT=${guest_magento_dir}" >> /etc/profile
-echo "export MAGENTO_ROOT_HOST=${host_magento_dir}" >> /etc/profile
-echo "export IS_WINDOWS_HOST=${is_windows_host}" >> /etc/profile
-
 # Set permissions to allow Magento codebase upload by Vagrant provision script
 if [ ${use_nfs_for_synced_folders} -eq 0 ]; then
     chown -R vagrant:vagrant /var/www
