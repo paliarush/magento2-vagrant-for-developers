@@ -47,7 +47,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
     end
 
     config.vm.synced_folder '.', '/vagrant', disabled: true
-    config.vm.synced_folder './etc', '/vagrant/etc'
+    config.vm.synced_folder './etc', '/vagrant/etc', mount_options: ["dmode=775,fmode=664"]
     config.vm.synced_folder './scripts', '/vagrant/scripts'
     config.vm.synced_folder './.idea', '/vagrant/.idea', create: true
     if use_nfs_for_synced_folders
