@@ -3,6 +3,8 @@
 # Enable trace printing and exit on the first error
 set +x
 
+use_php7=$4
+
 vagrant_dir="/vagrant"
 
 # Remove configs from host in case of force stop of virtual machine before linking restored ones
@@ -26,3 +28,14 @@ fi
 if [ -f ${vagrant_dir}/.idea/deployment.xml ]; then
     sed -i.back "s|magento2ce/var/generation|magento2ce/var|g" "${vagrant_dir}/.idea/deployment.xml"
 fi
+
+# Setup PHP
+if [ ${use_php7} -eq 1 ]; then
+    update-alternatives --set php /usr/bin/php7.0 && a2dismod php5.6 && a2enmod php7.0
+else
+    update-alternatives --set php /usr/bin/php5.6 && a2dismod php7.0 && a2enmod php5.6
+    rm -f /etc/php/5.6/apache2/php.ini
+    ln -s /etc/php/5.6/cli/php.ini /etc/php/5.6/apache2/php.ini
+fi
+service apache2 restart
+#end Setup PHP
