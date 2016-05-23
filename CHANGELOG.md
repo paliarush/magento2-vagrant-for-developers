@@ -13,6 +13,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
  - Removed requirement for public github token due to Composer limitations (issue is fixed on Composer side)
  - Changed requirement for minimum box version from 1.0 to 1.1
+ - Upgraded PHP 5.5.9 to PHP 5.6
+ - Updated switching PHP versions. Now it is applicable after "vagrant reload"
 
 ### Fixed
 

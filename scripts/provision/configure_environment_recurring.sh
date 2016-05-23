@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+function process_php_config () {
+    php_ini_paths=$1
+    for php_ini_path in "${php_ini_paths[@]}"
+    do
+        echo "date.timezone = America/Chicago" >> ${php_ini_path}
+        sed -i "s|;include_path = \".:/usr/share/php\"|include_path = \".:/usr/share/php:${guest_magento_dir}/vendor/phpunit/phpunit\"|g" ${php_ini_path}
+        sed -i "s|display_errors = Off|display_errors = On|g" ${php_ini_path}
+        sed -i "s|display_startup_errors = Off|display_startup_errors = On|g" ${php_ini_path}
+        sed -i "s|error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT|error_reporting = E_ALL|g" ${php_ini_path}
+    done
+}
+
 # Enable trace printing and exit on the first error
 set +x
 
@@ -30,6 +42,17 @@ if [ -f ${vagrant_dir}/.idea/deployment.xml ]; then
 fi
 
 # Setup PHP
+sudo add-apt-repository ppa:ondrej/php
+sudo apt-get update
+apt-get install -y php5.6 php-xdebug php5.6-xml php5.6-mcrypt php5.6-curl php5.6-cli php5.6-mysql php5.6-gd php5.6-intl php5.6-bcmath php5.6-mbstring php5.6-soap php5.6-zip libapache2-mod-php5.6
+echo '
+xdebug.max_nesting_level=200
+xdebug.remote_enable=1
+xdebug.remote_connect_back=1' >> /etc/php/5.6/mods-available/xdebug.ini
+
+php_ini_paths=( /etc/php/7.0/cli/php.ini /etc/php/5.6/cli/php.ini )
+process_php_config ${php_ini_paths}
+
 if [ ${use_php7} -eq 1 ]; then
     update-alternatives --set php /usr/bin/php7.0 && a2dismod php5.6 && a2enmod php7.0
 else
