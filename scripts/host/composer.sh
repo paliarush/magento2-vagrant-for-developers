@@ -22,9 +22,14 @@ if [ ! -f ${composer_phar} ]; then
 fi
 
 # Configure composer credentials
+auth_json_already_exists=0
+if [ -f "${current_dir}/auth.json" ]; then
+    auth_json_already_exists=1
+fi
+
 cd ${current_dir}
-if [ -f ${composer_auth_json} ]; then
-    cp ${composer_auth_json} "${PWD}/auth.json"
+if [ ! ${auth_json_already_exists} = 1 ] && [ -f ${composer_auth_json} ]; then
+    cp ${composer_auth_json} "${current_dir}/auth.json"
 fi
 
 host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
@@ -35,6 +40,6 @@ else
     ${php_executable} ${composer_phar} --ignore-platform-reqs "$@"
 fi
 
-if [ -f "${PWD}/auth.json" ]; then
-    rm "${PWD}/auth.json"
+if [ ! ${auth_json_already_exists} = 1 ] && [ -f "${current_dir}/auth.json" ]; then
+    rm "${current_dir}/auth.json"
 fi
