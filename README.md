@@ -21,6 +21,7 @@
    * [Connecting to MySQL DB](#connecting-to-mysql-db)
    * [Accessing PHP and other config files](#accessing-php-and-other-config-files)
    * [Switch between PHP 5.6 and 7.0](#switch-between-php-56-and-70)
+   * [Activating Varnish](#activating-varnish)
    * [Multiple Magento instances](#multiple-magento-instances)
    * [Reset environment](#reset-environment)
 
@@ -223,6 +224,13 @@ After editing configs in IDE it is still required to restart related services ma
 
 Set "use_php7: 1" for PHP7 and "use_php7: 0" for PHP5.6 in [config.yaml](etc/config.yaml.dist).
 PHP version will be applied after "vagrant reload".
+
+### Activating Varnish
+
+Set "use_varnish: 1" to use varnish along apache in [config.yaml](etc/config.yaml.dist).
+Running m-reinstall script will apply your preference.
+It will use default file etc/magento2_default_varnish.vcl.dist generated from a Magento instance.
+Varnish Version: 3.0.5
 
 ### Multiple Magento instances
 
