@@ -167,6 +167,11 @@ bash m-switch-to-ee
 ```
 :information_source: On Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly) you will be asked to wait until code is uploaded to guest machine by PhpStorm (PhpStorm must be lunched). To continue the process press any key.
 
+### Switch between PHP 5.6 and 7
+
+Set "use_php7: 1" for PHP7 and "use_php7: 0" for PHP5.6 in [config.yaml](etc/config.yaml.dist).
+PHP version will be applied after "vagrant reload".
+
 ### Update Composer dependencies
 
 Go to 'vagrant-magento' created earlier and run in command line:
