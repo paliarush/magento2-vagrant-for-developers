@@ -14,7 +14,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
  - Removed requirement for public github token due to Composer limitations (issue is fixed on Composer side)
  - Changed requirement for minimum box version from 1.0 to 1.1
  - Upgraded PHP 5.5.9 to PHP 5.6
- - Updated switching PHP versions. Now it is applicable after "vagrant reload"
 
 ### Fixed
 
@@ -27,6 +26,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
  - Added host wrapper script for bin/magento command on guest
  - Added ability to modify guest config files (PHP, Apache etc) directly from host IDE
  - Added ability to choose if PhpStorm configs should be removed during project reinitialization
+ - Added ability to switch PHP version without destroying the project ("vagrant reload" is required)
 
 ## [v2.0.0] - 2016-02-05
 
