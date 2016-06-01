@@ -20,6 +20,7 @@
    * [Debugging with XDebug](#debugging-with-xdebug)
    * [Connecting to MySQL DB](#connecting-to-mysql-db)
    * [Accessing PHP and other config files](#accessing-php-and-other-config-files)
+   * [Switch between PHP 5.6 and 7.0](#switch-between-php-56-and-70)
    * [Multiple Magento instances](#multiple-magento-instances)
    * [Reset environment](#reset-environment)
 
@@ -167,11 +168,6 @@ bash m-switch-to-ee
 ```
 :information_source: On Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly) you will be asked to wait until code is uploaded to guest machine by PhpStorm (PhpStorm must be lunched). To continue the process press any key.
 
-### Switch between PHP 5.6 and 7
-
-Set "use_php7: 1" for PHP7 and "use_php7: 0" for PHP5.6 in [config.yaml](etc/config.yaml.dist).
-PHP version will be applied after "vagrant reload".
-
 ### Update Composer dependencies
 
 Go to 'vagrant-magento' created earlier and run in command line:
@@ -222,6 +218,11 @@ It is possible to view/modify majority of guest machine config files directly fr
 Do not edit any symlinks using PhpStorm because it may break your installation.
 
 After editing configs in IDE it is still required to restart related services manually.
+
+### Switch between PHP 5.6 and 7.0
+
+Set "use_php7: 1" for PHP7 and "use_php7: 0" for PHP5.6 in [config.yaml](etc/config.yaml.dist).
+PHP version will be applied after "vagrant reload".
 
 ### Multiple Magento instances
 
