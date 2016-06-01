@@ -10,6 +10,6 @@ cd ${MAGENTO_ROOT}/pub && mv static/.htaccess static_htaccess.back && rm -rf sta
 #clear integration tests tmp
 cd ${MAGENTO_ROOT}/dev/tests/integration && mv tmp/.gitignore tmp_gitignore.back && rm -rf tmp && mkdir tmp && mv tmp_gitignore.back tmp/.gitignore
 #clear unit tests tmp
-cd ${MAGENTO_ROOT}/dev/tests/unit && rm -rf tmp && mkdir tmp
+cd ${MAGENTO_ROOT}/dev/tests/unit && mv tmp/.gitignore tmp_gitignore.back && rm -rf tmp && mkdir tmp && mv tmp_gitignore.back tmp/.gitignore
 
 echo "Magento cache cleared."

@@ -47,7 +47,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
     end
 
     config.vm.synced_folder '.', '/vagrant', disabled: true
-    config.vm.synced_folder './etc', '/vagrant/etc'
+    config.vm.synced_folder './etc', '/vagrant/etc', mount_options: ["dmode=775,fmode=664"]
     config.vm.synced_folder './scripts', '/vagrant/scripts'
     config.vm.synced_folder './.idea', '/vagrant/.idea', create: true
     if use_nfs_for_synced_folders
@@ -68,6 +68,11 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         OS.is_windows ? "1" : "0",                  #6
         host_vagrant_dir                            #7
     ]
+
+    config.vm.provision "fix_no_tty", type: "shell", run: "always" do |s|
+        s.privileged = false
+        s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
+    end
 
     config.vm.provision "configure_environment", type: "shell" do |s|
         s.path = "scripts/provision/configure_environment.sh"

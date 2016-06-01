@@ -38,33 +38,6 @@ else
     cp ${default_vcl_config}  /etc/varnish/default.vcl
 fi
 
-# Setup PHP
-if [ ${use_php7} -eq 1 ]; then
-    sed -i "s|;include_path = \".:/usr/share/php\"|include_path = \".:/usr/share/php:${guest_magento_dir}/vendor/phpunit/phpunit\"|g" /etc/php/7.0/cli/php.ini
-    sed -i "s|display_errors = Off|display_errors = On|g" /etc/php/7.0/cli/php.ini
-    sed -i "s|display_startup_errors = Off|display_startup_errors = On|g" /etc/php/7.0/cli/php.ini
-    sed -i "s|error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT|error_reporting = E_ALL|g" /etc/php/7.0/cli/php.ini
-else
-    # Uninstall PHP 7 pre-installed in the box
-    apt-get remove -y php*
-
-    # Install PHP 5
-    apt-get install -y php5 php5-mhash php5-mcrypt php5-curl php5-cli php5-mysql php5-gd php5-intl php5-xsl php5-xdebug curl
-    if [ ! -f /etc/php5/apache2/conf.d/20-mcrypt.ini ]; then
-        ln -s /etc/php5/mods-available/mcrypt.ini /etc/php5/apache2/conf.d/20-mcrypt.ini
-    fi
-    if [ ! -f /etc/php5/cli/conf.d/20-mcrypt.ini ]; then
-        ln -s /etc/php5/mods-available/mcrypt.ini /etc/php5/cli/conf.d/20-mcrypt.ini
-    fi
-    echo "date.timezone = America/Chicago" >> /etc/php5/cli/php.ini
-
-    # Configure XDebug to allow remote connections from the host
-    echo 'xdebug.max_nesting_level=200
-    xdebug.remote_enable=1
-    xdebug.remote_connect_back=1' >> /etc/php5/cli/conf.d/20-xdebug.ini
-fi
-service apache2 restart
-
 # Configure composer
 composer_auth_json="${vagrant_dir}/etc/composer/auth.json"
 if [ -f ${composer_auth_json} ]; then

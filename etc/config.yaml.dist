@@ -9,7 +9,7 @@ guest:
   ip_address: "192.168.10.2"
   forwarded_ssh_port: 3000
 environment:
-  # If set to 0, PHP 5 will be installed
+  # If set to 0, PHP 5 will be installed. [Changeable: vagrant reload]
   use_php7: 1
   composer_prefer_source: 0
   use_varnish: 0
