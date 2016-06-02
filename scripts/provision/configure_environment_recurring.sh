@@ -29,7 +29,6 @@ function init_php56 () {
 set +x
 
 use_php7=$4
-
 vagrant_dir="/vagrant"
 
 # Remove configs from host in case of force stop of virtual machine before linking restored ones
@@ -74,3 +73,16 @@ else
 fi
 service apache2 restart
 #end Setup PHP
+
+# Enable email logging
+if [ ${use_php7} -eq 1 ]; then
+    php_ini_file="/etc/php/7.0/cli/php.ini"
+else
+    php_ini_file="/etc/php/5.6/cli/php.ini"
+fi
+pattern=";sendmail_path"
+php_config_content="$(cat ${php_ini_file})"
+if [[ ${php_config_content} =~ ${pattern} ]]; then
+    sed -i "s|;sendmail_path =|sendmail_path = \"/vagrant/scripts/guest/log_email ${vagrant_dir}/log/email\"|g" ${php_ini_file}
+    service apache2 restart
+fi

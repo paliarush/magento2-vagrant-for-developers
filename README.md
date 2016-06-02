@@ -19,6 +19,7 @@
    * [Use Magento CLI (bin/magento)](#use-magento-cli-binmagento)
    * [Debugging with XDebug](#debugging-with-xdebug)
    * [Connecting to MySQL DB](#connecting-to-mysql-db)
+   * [View emails sent by Magento](#view-emails-sent-by-magento)
    * [Accessing PHP and other config files](#accessing-php-and-other-config-files)
    * [Switch between PHP 5.6 and 7.0](#switch-between-php-56-and-70)
    * [Multiple Magento instances](#multiple-magento-instances)
@@ -134,6 +135,7 @@ Note, that semantic versioning is only used for `x.0` branches (not for `develop
  1. Make sure that you used `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`)
  1. If code is not synchronized properly on Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly), make sure that PhpStorm is running before making any changes in the code. This is important because otherwise PhpStorm will not be able to detect changes and upload them to the guest machine
  1. Please make sure that currently installed software, specified in [requirements section](#requirements), meets minimum version requirement
+ 1. If MySQL fails to start and Magento reinstallation fails with `ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (13)`, try to run login to virtual machine using `vagrant ssh` and then run `sudo dpkg-reconfigure mysql-server-5.6`, then `sudo service mysql restart.`
 
 ## Day-to-day development scenarios
 
@@ -211,6 +213,10 @@ To debug Magento Setup script, go to [Magento installation script](scripts/guest
 ### Connecting to MySQL DB
 
 Answer can be found [here](https://github.com/paliarush/magento2-vagrant-for-developers/issues/8)
+
+### View emails sent by Magento
+
+All emails are saved to 'vagrant-magento/log/email' in HTML format.
 
 ### Accessing PHP and other config files
 
