@@ -54,6 +54,18 @@ if [ -f ${vagrant_dir}/.idea/deployment.xml ]; then
     sed -i.back "s|magento2ce/var/generation|magento2ce/var|g" "${vagrant_dir}/.idea/deployment.xml"
 fi
 
+# Copy varnish vcl file
+custom_vcl_config="${vagrant_dir}/etc/magento2_default_varnish.vcl"
+default_vcl_config="${vagrant_dir}/etc/magento2_default_varnish.vcl.dist"
+if [ -f ${custom_vcl_config} ]; then
+    cp ${custom_vcl_config}  /etc/varnish/default.vcl
+else
+    cp ${default_vcl_config}  /etc/varnish/default.vcl
+fi
+
+# Configure Varnish FPC, if enabled
+bash ${vagrant_dir}/scripts/guest/configure_varnish -f
+
 # Setup PHP
 php_ini_paths=( /etc/php/7.0/cli/php.ini /etc/php/5.6/cli/php.ini )
 process_php_config ${php_ini_paths}

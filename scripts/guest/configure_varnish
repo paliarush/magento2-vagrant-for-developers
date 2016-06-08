@@ -3,6 +3,14 @@
 # Enable trace printing and exit on the first error
 set -ex
 
+# Get args
+while getopts 'f' flag; do
+  case "${flag}" in
+    f) force_restart_services=1 ;;
+    *) error "Unexpected option ${flag}" ;;
+  esac
+done
+
 # Init environment variables
 vagrant_dir="/vagrant"
 
@@ -29,6 +37,7 @@ if [ $use_varnish -eq 1 ]; then
     mysql -D magento -e "INSERT INTO core_config_data
         ( scope, scope_id, path, value ) VALUES
         ( 'default', '0', 'system/full_page_cache/caching_application', '2' )
+         ON DUPLICATE KEY UPDATE value = 2
     ;"
 else
 
@@ -45,9 +54,20 @@ else
         sudo sed -ie "s/Listen 8080/Listen 80/" /etc/apache2/ports.conf
         restart_services=1
     fi
+
+    # Update Magento database to not use varnish FPC
+    mysql -D magento -e "INSERT INTO core_config_data
+        ( scope, scope_id, path, value ) VALUES
+        ( 'default', '0', 'system/full_page_cache/caching_application', '1' )
+         ON DUPLICATE KEY UPDATE value = 1
+    ;"
 fi
 
 # Check if need restart services
+if [[ $force_restart_services == 1 ]]; then
+    echo "Force restarting Apache and Varnish"
+    restart_services=1
+fi
 if [ $restart_services -eq 1 ]; then
     if [ "$(ps -ax | pgrep varnish)" ]; then
         sudo pkill varnishd

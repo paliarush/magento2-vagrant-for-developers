@@ -228,7 +228,7 @@ PHP version will be applied after "vagrant reload".
 ### Activating Varnish
 
 Set "use_varnish: 1" to use varnish along apache in [config.yaml](etc/config.yaml.dist).
-Running m-reinstall script will apply your preference.
+Running vagrant reload will apply your preference. Or by using m-varnish script.
 It will use default file etc/magento2_default_varnish.vcl.dist generated from a Magento instance.
 Varnish Version: 3.0.5
 

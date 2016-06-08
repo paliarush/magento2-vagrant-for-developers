@@ -29,15 +29,6 @@ a2ensite magento2.conf
 # Disable default virtual host
 sudo a2dissite 000-default
 
-# Copy varnish vcl file
-custom_vcl_config="${vagrant_dir}/etc/magento2_default_varnish.vcl"
-default_vcl_config="${vagrant_dir}/etc/magento2_default_varnish.vcl.dist"
-if [ -f ${custom_vcl_config} ]; then
-    cp ${custom_vcl_config}  /etc/varnish/default.vcl
-else
-    cp ${default_vcl_config}  /etc/varnish/default.vcl
-fi
-
 # Configure composer
 composer_auth_json="${vagrant_dir}/etc/composer/auth.json"
 if [ -f ${composer_auth_json} ]; then
