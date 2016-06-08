@@ -237,7 +237,7 @@ Unique IP address, SSH port and domain name will be generated for each new insta
 
 ### Reset environment
 
-It is possible to reset project environment to default state, which you usually get just after project initialization. The following command will delete vagrant box, vagrant project settings and PhpStorm project settings. After that it will initialize project from scratch. Magento 2 code base (`magento2ce` directory) and [etc/config.yaml](etc/config.yaml.dist) will stay untouched, but guest config files (located in [etc/guest](etc/guest)) will be removed.
+It is possible to reset project environment to default state, which you usually get just after project initialization. The following command will delete vagrant box and vagrant project settings. After that it will initialize project from scratch. Magento 2 code base (`magento2ce` directory) and [etc/config.yaml](etc/config.yaml.dist) and PhpStorm settings will stay untouched, but guest config files (located in [etc/guest](etc/guest)) will be cleared.
 
 Go to 'vagrant-magento' created earlier and run in command line:
 
@@ -245,9 +245,7 @@ Go to 'vagrant-magento' created earlier and run in command line:
 bash init_project.sh -f
 ```
 
-You can reset project settings and Magento 2 code base at the same time. Magento 2 code base will be deleted and then cloned from the repositories specified in [etc/config.yaml](etc/config.yaml.dist)
-
-Go to 'vagrant-magento' created earlier and run in command line:
+It is possible to reset Magento 2 code base at the same time. Magento 2 code base will be deleted and then cloned from the repositories specified in [etc/config.yaml](etc/config.yaml.dist)
 
 ```
 bash init_project.sh -fc
@@ -257,6 +255,10 @@ To reset PhpStorm project configuration, in addition to `-f` specify `-p` option
 
 ```
 bash init_project.sh -fp
-OR
+```
+
+Ultimate project reset can be achieved by combining all available flags:
+
+```
 bash init_project.sh -fcp
 ```

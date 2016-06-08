@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 email_log_dir=$1
-if [ ! -d ${email_log_dir} ]; then
-    mkdir -p ${email_log_dir}
+if [[ ! -d ${email_log_dir} ]]; then
+    mkdir -p "${email_log_dir}"
 fi
 
 # Construct email file path

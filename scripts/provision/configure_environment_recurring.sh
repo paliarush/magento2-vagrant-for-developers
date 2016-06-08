@@ -38,7 +38,7 @@ bash "${vagrant_dir}/scripts/guest/link_configs"
 # Make sure configs are restored on system halt and during reboot
 rm -f /etc/init.d/unlink-configs
 cp "${vagrant_dir}/scripts/guest/unlink_configs" /etc/init.d/unlink-configs
-if [ ! -f /etc/rc0.d/K04-unlink-configs ]; then
+if [[ ! -f /etc/rc0.d/K04-unlink-configs ]]; then
     ln -s /etc/init.d/unlink-configs /etc/rc0.d/K04-unlink-configs
     ln -s /etc/init.d/unlink-configs /etc/rc1.d/S04-unlink-configs
     ln -s /etc/init.d/unlink-configs /etc/rc2.d/S04-unlink-configs
@@ -57,14 +57,14 @@ fi
 php_ini_paths=( /etc/php/7.0/cli/php.ini /etc/php/5.6/cli/php.ini )
 process_php_config ${php_ini_paths}
 
-if [ ${use_php7} -eq 1 ]; then
+if [[ ${use_php7} -eq 1 ]]; then
     update-alternatives --set php /usr/bin/php7.0
-    if [ -d "/etc/php/5.6" ]; then
+    if [[ -d "/etc/php/5.6" ]]; then
         a2dismod php5.6
     fi
     a2enmod php7.0
 else
-    if [ ! -d "/etc/php/5.6" ]; then
+    if [[ ! -d "/etc/php/5.6" ]]; then
         init_php56
     fi
     update-alternatives --set php /usr/bin/php5.6 && a2dismod php7.0 && a2enmod php5.6
@@ -75,7 +75,7 @@ service apache2 restart
 #end Setup PHP
 
 # Enable email logging
-if [ ${use_php7} -eq 1 ]; then
+if [[ ${use_php7} -eq 1 ]]; then
     php_ini_file="/etc/php/7.0/cli/php.ini"
 else
     php_ini_file="/etc/php/5.6/cli/php.ini"

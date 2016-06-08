@@ -5,8 +5,8 @@ function process_configs () {
     configs=$2
     for config in "${configs[@]}"
     do
-        if [ ! -d /vagrant/etc/guest/${config} ] && [ ! -f /vagrant/etc/guest/${config} ]; then
-            if [ -d ${configs_path}/${config} ] || [ -f ${configs_path}/${config} ]; then
+        if [[ ! -d /vagrant/etc/guest/${config} ]] && [[ ! -f /vagrant/etc/guest/${config} ]]; then
+            if [[ -d ${configs_path}/${config} ]] || [[ -f ${configs_path}/${config} ]]; then
                 sudo rm -rf "${configs_path}/${config}.back"
                 sudo cp -rp ${configs_path}/${config} "${configs_path}/${config}.back"
                 sudo mv ${configs_path}/${config} /vagrant/etc/guest/${config}
