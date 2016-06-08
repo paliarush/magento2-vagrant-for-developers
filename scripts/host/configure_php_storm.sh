@@ -38,7 +38,7 @@ rm -f "${vagrant_dir}/.idea/.name.back"
 mv "${vagrant_dir}/.idea/host_name.iml" "${vagrant_dir}/.idea/${magento_host_name}.iml"
 
 repository_url_ee=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee")
-if [ -z ${repository_url_ee} ]; then
+if [[ -z ${repository_url_ee} ]]; then
     mv "${vagrant_dir}/.idea/vcs.ce.xml" "${vagrant_dir}/.idea/vcs.xml"
     rm "${vagrant_dir}/.idea/vcs.ee.xml"
 else

@@ -52,6 +52,7 @@ if [[ ${force_project_cleaning} -eq 1 ]]; then
     rm -rf "${vagrant_dir}/.vagrant" "${vagrant_dir}/etc/guest"
     mkdir "${vagrant_dir}/etc/guest"
     mv "${vagrant_dir}/etc/.gitignore.back" "${vagrant_dir}/etc/guest/.gitignore"
+    cd "${vagrant_dir}/log" && mv email/.gitignore email_gitignore.back && rm -rf email && mkdir email && mv email_gitignore.back email/.gitignore
     if [[ ${force_codebase_cleaning} -eq 1 ]]; then
         rm -rf "${magento_ce_dir}"
     fi

@@ -31,11 +31,11 @@ sudo a2dissite 000-default
 
 # Configure composer
 composer_auth_json="${vagrant_dir}/etc/composer/auth.json"
-if [ -f ${composer_auth_json} ]; then
+if [[ -f ${composer_auth_json} ]]; then
     set +x
     echo "Installing composer OAuth tokens from ${composer_auth_json}..."
     set -x
-    if [ ! -d /home/vagrant/.composer ] ; then
+    if [[ ! -d /home/vagrant/.composer ]] ; then
       sudo -H -u vagrant bash -c 'mkdir /home/vagrant/.composer'
     fi
     if [[ -f ${composer_auth_json} ]]; then
@@ -44,7 +44,7 @@ if [ -f ${composer_auth_json} ]; then
 fi
 
 # Set permissions to allow Magento codebase upload by Vagrant provision script
-if [ ${use_nfs_for_synced_folders} -eq 0 ]; then
+if [[ ${use_nfs_for_synced_folders} -eq 0 ]]; then
     chown -R vagrant:vagrant /var/www
     chmod -R 755 /var/www
 fi

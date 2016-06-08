@@ -5,10 +5,10 @@ function process_configs () {
     configs=$2
     for config in "${configs[@]}"
     do
-        if [ -L ${config_dir}/${config} ] && [ -e ${config_dir}/${config} ]; then
+        if [[ -L ${config_dir}/${config} ]] && [[ -e ${config_dir}/${config} ]]; then
             sudo rm ${config_dir}/${config}
             sudo mv /vagrant/etc/guest/${config} ${config_dir}/${config}
-        elif [ ! -e ${config_dir}/${config} ] && [ -e "${config_dir}/${config}.back" ]; then
+        elif [[ ! -e ${config_dir}/${config} ]] && [[ -e "${config_dir}/${config}.back" ]]; then
             sudo rm -rf ${config_dir}/${config}
             sudo cp -rp "${config_dir}/${config}.back" ${config_dir}/${config}
         fi

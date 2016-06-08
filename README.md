@@ -19,6 +19,7 @@
    * [Use Magento CLI (bin/magento)](#use-magento-cli-binmagento)
    * [Debugging with XDebug](#debugging-with-xdebug)
    * [Connecting to MySQL DB](#connecting-to-mysql-db)
+   * [View emails sent by Magento](#view-emails-sent-by-magento)
    * [Accessing PHP and other config files](#accessing-php-and-other-config-files)
    * [Switch between PHP 5.6 and 7.0](#switch-between-php-56-and-70)
    * [Multiple Magento instances](#multiple-magento-instances)
@@ -134,6 +135,7 @@ Note, that semantic versioning is only used for `x.0` branches (not for `develop
  1. Make sure that you used `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`)
  1. If code is not synchronized properly on Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly), make sure that PhpStorm is running before making any changes in the code. This is important because otherwise PhpStorm will not be able to detect changes and upload them to the guest machine
  1. Please make sure that currently installed software, specified in [requirements section](#requirements), meets minimum version requirement
+ 1. If MySQL fails to start and Magento reinstallation fails with `ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (13)`, try to run login to virtual machine using `vagrant ssh` and then run `sudo dpkg-reconfigure mysql-server-5.6`, then `sudo service mysql restart.`
 
 ## Day-to-day development scenarios
 
@@ -212,6 +214,10 @@ To debug Magento Setup script, go to [Magento installation script](scripts/guest
 
 Answer can be found [here](https://github.com/paliarush/magento2-vagrant-for-developers/issues/8)
 
+### View emails sent by Magento
+
+All emails are saved to 'vagrant-magento/log/email' in HTML format.
+
 ### Accessing PHP and other config files
 
 It is possible to view/modify majority of guest machine config files directly from IDE on the host. They will be accessible in [etc/guest](etc/guest) directory only when guest machine is running. The list of accessible configs includes: PHP, Apache, Mysql, Varnish, RabbitMQ.
@@ -231,7 +237,7 @@ Unique IP address, SSH port and domain name will be generated for each new insta
 
 ### Reset environment
 
-It is possible to reset project environment to default state, which you usually get just after project initialization. The following command will delete vagrant box, vagrant project settings and PhpStorm project settings. After that it will initialize project from scratch. Magento 2 code base (`magento2ce` directory) and [etc/config.yaml](etc/config.yaml.dist) will stay untouched, but guest config files (located in [etc/guest](etc/guest)) will be removed.
+It is possible to reset project environment to default state, which you usually get just after project initialization. The following command will delete vagrant box and vagrant project settings. After that it will initialize project from scratch. Magento 2 code base (`magento2ce` directory) and [etc/config.yaml](etc/config.yaml.dist) and PhpStorm settings will stay untouched, but guest config files (located in [etc/guest](etc/guest)) will be cleared.
 
 Go to 'vagrant-magento' created earlier and run in command line:
 
@@ -239,9 +245,7 @@ Go to 'vagrant-magento' created earlier and run in command line:
 bash init_project.sh -f
 ```
 
-You can reset project settings and Magento 2 code base at the same time. Magento 2 code base will be deleted and then cloned from the repositories specified in [etc/config.yaml](etc/config.yaml.dist)
-
-Go to 'vagrant-magento' created earlier and run in command line:
+It is possible to reset Magento 2 code base at the same time. Magento 2 code base will be deleted and then cloned from the repositories specified in [etc/config.yaml](etc/config.yaml.dist)
 
 ```
 bash init_project.sh -fc
@@ -251,6 +255,10 @@ To reset PhpStorm project configuration, in addition to `-f` specify `-p` option
 
 ```
 bash init_project.sh -fp
-OR
+```
+
+Ultimate project reset can be achieved by combining all available flags:
+
+```
 bash init_project.sh -fcp
 ```
