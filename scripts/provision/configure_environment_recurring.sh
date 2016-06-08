@@ -33,12 +33,12 @@ use_php7=$4
 vagrant_dir="/vagrant"
 
 # Remove configs from host in case of force stop of virtual machine before linking restored ones
-cd ${vagrant_dir}/etc && mv guest/.gitignore guest_gitignore.back && rm -rf guest && mkdir guest && mv guest_gitignore.back guest/.gitignore
-bash ${vagrant_dir}/scripts/guest/link_configs
+cd "${vagrant_dir}/etc" && mv guest/.gitignore guest_gitignore.back && rm -rf guest && mkdir guest && mv guest_gitignore.back guest/.gitignore
+bash "${vagrant_dir}/scripts/guest/link_configs"
 
 # Make sure configs are restored on system halt and during reboot
 rm -f /etc/init.d/unlink-configs
-cp ${vagrant_dir}/scripts/guest/unlink_configs /etc/init.d/unlink-configs
+cp "${vagrant_dir}/scripts/guest/unlink_configs" /etc/init.d/unlink-configs
 if [ ! -f /etc/rc0.d/K04-unlink-configs ]; then
     ln -s /etc/init.d/unlink-configs /etc/rc0.d/K04-unlink-configs
     ln -s /etc/init.d/unlink-configs /etc/rc1.d/S04-unlink-configs

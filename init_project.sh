@@ -25,7 +25,7 @@ fi
 
 # Generate random IP address and host name to prevent collisions, if not specified explicitly in local config
 if [ ! -f "${vagrant_dir}/etc/config.yaml" ]; then
-    cp "${config_path}.dist" ${config_path}
+    cp "${config_path}.dist" "${config_path}"
 fi
 random_ip=$(( ( RANDOM % 240 )  + 12 ))
 forwarded_ssh_port=$(( random_ip + 3000 ))
@@ -48,12 +48,12 @@ while getopts 'fcp' flag; do
 done
 if [ ${force_project_cleaning} -eq 1 ]; then
     vagrant destroy -f
-    mv ${vagrant_dir}/etc/guest/.gitignore ${vagrant_dir}/etc/.gitignore.back
-    rm -rf ${vagrant_dir}/.vagrant ${vagrant_dir}/etc/guest
-    mkdir ${vagrant_dir}/etc/guest
-    mv ${vagrant_dir}/etc/.gitignore.back  ${vagrant_dir}/etc/guest/.gitignore
     if [ ${force_codebase_cleaning} -eq 1 ]; then
-        rm -rf ${magento_ce_dir}
+    mv "${vagrant_dir}/etc/guest/.gitignore" "${vagrant_dir}/etc/.gitignore.back"
+    rm -rf "${vagrant_dir}/.vagrant" "${vagrant_dir}/etc/guest"
+    mkdir "${vagrant_dir}/etc/guest"
+    mv "${vagrant_dir}/etc/.gitignore.back" "${vagrant_dir}/etc/guest/.gitignore"
+        rm -rf "${magento_ce_dir}"
     fi
 fi
 
@@ -65,27 +65,27 @@ if [ ! -d ${magento_ce_dir} ]; then
     fi
     # Check out CE repository
     repository_url_ce=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce")
-    git clone ${repository_url_ce} ${magento_ce_dir}
+    git clone ${repository_url_ce} "${magento_ce_dir}"
     # Check out EE repository
     # By default EE repository is not specified and EE project is not checked out
     repository_url_ee=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee")
     if [ -n "${repository_url_ee}" ]; then
-        git clone ${repository_url_ee} ${magento_ee_dir}
+        git clone ${repository_url_ee} "${magento_ee_dir}"
     fi
 fi
 
 # Update Magento dependencies via Composer
-cd ${magento_ce_dir}
+cd "${magento_ce_dir}"
 bash "${vagrant_dir}/scripts/host/composer.sh" install
 
 # Create vagrant project
-cd ${vagrant_dir}
+cd "${vagrant_dir}"
 vagrant up
 
 set +x
 echo "Configuring PhpStorm..."
 if [ ${force_project_cleaning} -eq 1 ] && [ ${force_phpstorm_config_cleaning} -eq 1 ]; then
-    rm -rf ${vagrant_dir}/.idea
+    rm -rf "${vagrant_dir}/.idea"
 fi
 if [ ! "$(ls -A ${vagrant_dir}/.idea)" ]; then
     bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
