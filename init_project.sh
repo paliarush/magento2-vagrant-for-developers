@@ -24,7 +24,7 @@ if ! echo ${vagrant_plugin_list} | grep -q 'vagrant-host-shell' ; then
 fi
 
 # Generate random IP address and host name to prevent collisions, if not specified explicitly in local config
-if [ ! -f "${vagrant_dir}/etc/config.yaml" ]; then
+if [[ ! -f "${vagrant_dir}/etc/config.yaml" ]]; then
     cp "${config_path}.dist" "${config_path}"
 fi
 random_ip=$(( ( RANDOM % 240 )  + 12 ))
@@ -46,18 +46,18 @@ while getopts 'fcp' flag; do
     *) error "Unexpected option ${flag}" ;;
   esac
 done
-if [ ${force_project_cleaning} -eq 1 ]; then
+if [[ ${force_project_cleaning} -eq 1 ]]; then
     vagrant destroy -f
-    if [ ${force_codebase_cleaning} -eq 1 ]; then
     mv "${vagrant_dir}/etc/guest/.gitignore" "${vagrant_dir}/etc/.gitignore.back"
     rm -rf "${vagrant_dir}/.vagrant" "${vagrant_dir}/etc/guest"
     mkdir "${vagrant_dir}/etc/guest"
     mv "${vagrant_dir}/etc/.gitignore.back" "${vagrant_dir}/etc/guest/.gitignore"
+    if [[ ${force_codebase_cleaning} -eq 1 ]]; then
         rm -rf "${magento_ce_dir}"
     fi
 fi
 
-if [ ! -d ${magento_ce_dir} ]; then
+if [[ ! -d ${magento_ce_dir} ]]; then
     if [[ ${host_os} == "Windows" ]]; then
         git config --global core.autocrlf false
         git config --global core.eol LF
@@ -69,7 +69,7 @@ if [ ! -d ${magento_ce_dir} ]; then
     # Check out EE repository
     # By default EE repository is not specified and EE project is not checked out
     repository_url_ee=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee")
-    if [ -n "${repository_url_ee}" ]; then
+    if [[ -n "${repository_url_ee}" ]]; then
         git clone ${repository_url_ee} "${magento_ee_dir}"
     fi
 fi
@@ -84,10 +84,10 @@ vagrant up
 
 set +x
 echo "Configuring PhpStorm..."
-if [ ${force_project_cleaning} -eq 1 ] && [ ${force_phpstorm_config_cleaning} -eq 1 ]; then
+if [[ ${force_project_cleaning} -eq 1 ]] && [[ ${force_phpstorm_config_cleaning} -eq 1 ]]; then
     rm -rf "${vagrant_dir}/.idea"
 fi
-if [ ! "$(ls -A ${vagrant_dir}/.idea)" ]; then
+if [[ ! "$(ls -A "${vagrant_dir}/.idea")" ]]; then
     bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
 fi
 

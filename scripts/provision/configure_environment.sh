@@ -15,7 +15,7 @@ vagrant_dir="/vagrant"
 # Enable Magento virtual host
 custom_virtual_host_config="${vagrant_dir}/etc/magento2_virtual_host.conf"
 default_virtual_host_config="${vagrant_dir}/etc/magento2_virtual_host.conf.dist"
-if [ -f ${custom_virtual_host_config} ]; then
+if [[ -f ${custom_virtual_host_config} ]]; then
     virtual_host_config=${custom_virtual_host_config}
 else
     virtual_host_config=${default_virtual_host_config}
@@ -38,7 +38,7 @@ if [ -f ${composer_auth_json} ]; then
     if [ ! -d /home/vagrant/.composer ] ; then
       sudo -H -u vagrant bash -c 'mkdir /home/vagrant/.composer'
     fi
-    if [ -f ${composer_auth_json} ]; then
+    if [[ -f ${composer_auth_json} ]]; then
         cp "${composer_auth_json}" "/home/vagrant/.composer/auth.json"
     fi
 fi

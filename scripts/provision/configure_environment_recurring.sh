@@ -5,7 +5,7 @@ function process_php_config () {
 
     for php_ini_path in "${php_ini_paths[@]}"
     do
-        if [ -f ${php_ini_path} ]; then
+        if [[ -f ${php_ini_path} ]]; then
             echo "date.timezone = America/Chicago" >> ${php_ini_path}
             sed -i "s|;include_path = \".:/usr/share/php\"|include_path = \".:/usr/share/php:${guest_magento_dir}/vendor/phpunit/phpunit\"|g" ${php_ini_path}
             sed -i "s|display_errors = Off|display_errors = On|g" ${php_ini_path}
@@ -50,7 +50,7 @@ if [ ! -f /etc/rc0.d/K04-unlink-configs ]; then
 fi
 
 # Upgrade existing environment
-if [ -f ${vagrant_dir}/.idea/deployment.xml ]; then
+if [[ -f ${vagrant_dir}/.idea/deployment.xml ]]; then
     sed -i.back "s|magento2ce/var/generation|magento2ce/var|g" "${vagrant_dir}/.idea/deployment.xml"
 fi
 
