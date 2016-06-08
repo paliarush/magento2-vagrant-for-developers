@@ -5,7 +5,7 @@ vagrant_dir=$(cd "$(dirname "$0")/../.."; pwd)
 # Enable trace printing and exit on the first error
 set +x
 
-cd ${vagrant_dir}
+cd "${vagrant_dir}"
 ssh_port=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_forwarded_ssh_port")
 magento_host_name=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_host_name")
 
@@ -32,8 +32,8 @@ sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/deploym
 sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/deployment.xml"
 sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/.name"
 sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/modules.xml"
-rm -rf ${vagrant_dir}/.idea/*.back
-rm -f ${vagrant_dir}/.idea/.name.back
+rm -rf "${vagrant_dir}/.idea/*.back"
+rm -f "${vagrant_dir}/.idea/.name.back"
 
 mv "${vagrant_dir}/.idea/host_name.iml" "${vagrant_dir}/.idea/${magento_host_name}.iml"
 
