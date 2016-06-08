@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+email_log_dir=$1
+if [[ ! -d ${email_log_dir} ]]; then
+    mkdir -p "${email_log_dir}"
+fi
+
+# Construct email file path
+current_time=$( date +"%Y-%m-%d_%H-%M-%S" )
+# Add random suffix to file name just in case there several emails sent in one second
+random_suffix=$(( RANDOM % 100 ))
+email_file_path="${email_log_dir}/${current_time}_${random_suffix}"
+
+raw_email_output=$(cat)
+
+# Add email topic to file name
+pattern="Subject: (.*)\sX-PHP-Originating-Script:"
+if [[ "${raw_email_output}" =~ ${pattern} ]]; then
+    email_topic=${BASH_REMATCH[1]}
+    email_file_path="${email_file_path}_${email_topic}"
+fi
+email_file_path="${email_file_path}.html"
+
+# Output content
+echo ${raw_email_output} > "${email_file_path}"
+
+# Process raw content of an email to make it a valid HTML
+sed -i "s|.*<\!DOCTYPE|<\!DOCTYPE|g" "${email_file_path}"
+sed -i "s|=3D|=|g" "${email_file_path}"
+sed -i "s|=0A||g" "${email_file_path}"
+sed -i "s|= ||g" "${email_file_path}"
