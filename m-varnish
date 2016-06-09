@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -ex
-
 # Get args
 while getopts 'fh:c:' flag; do
   case "${flag}" in
@@ -12,13 +10,13 @@ while getopts 'fh:c:' flag; do
   esac
 done
 
-if [ $help ]; then
+if [[ $help ]]; then
     echo "Usage: ./m-varnish -c enable/disable (-f to force restart services)"
     exit 0
 fi
 
 # Check if user created config.yaml file
-if [ ! -f ./etc/config.yaml ]; then
+if [[ ! -f ./etc/config.yaml ]]; then
     echo "Please make sure you have create a config.yaml file copy from etc/config.yaml.dist"
     exit 0
 fi
@@ -35,7 +33,9 @@ fi
 vagrant_dir=$(cd "$(dirname "$0")"; pwd)
 cd ${vagrant_dir}
 if [[ $force_restart_services == 1 ]]; then
-    vagrant ssh -c "sudo bash /vagrant/scripts/guest/configure_varnish -f"
+    vagrant ssh -c "m-configure_varnish -f"
 else
-    vagrant ssh -c "sudo bash /vagrant/scripts/guest/configure_varnish"
+    vagrant ssh -c "m-configure_varnish"
 fi
+
+echo "Done."

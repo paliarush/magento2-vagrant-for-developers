@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# Enable trace printing and exit on the first error
 set -ex
 
 # Get args
@@ -17,18 +16,18 @@ vagrant_dir="/vagrant"
 # Configure Varnish if enabled in config
 restart_services=0
 use_varnish=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_use_varnish")
-if [ $use_varnish -eq 1 ]; then
+if [[ $use_varnish == 1 ]]; then
 
     # Configure apache files to be ready for varnish
-    if [ -z "$(grep "VirtualHost\s\*:8080" /etc/apache2/sites-enabled/magento2.conf)" ]; then
+    if [[ -z "$(grep "VirtualHost\s\*:8080" /etc/apache2/sites-enabled/magento2.conf)" ]]; then
         sudo sed -ie "s/<VirtualHost .*/<VirtualHost \*:8080>/" /etc/apache2/sites-enabled/magento2.conf
         restart_services=1
     fi
-    if [ -z "$(grep "VirtualHost\s\*:8080" /etc/apache2/sites-available/magento2.conf)" ]; then
+    if [[ -z "$(grep "VirtualHost\s\*:8080" /etc/apache2/sites-available/magento2.conf)" ]]; then
         sudo sed -ie "s/<VirtualHost .*/<VirtualHost \*:8080>/" /etc/apache2/sites-available/magento2.conf
         restart_services=1
     fi
-    if [ -z "$(grep "Listen\s8080" /etc/apache2/ports.conf)" ]; then
+    if [[ -z "$(grep "Listen\s8080" /etc/apache2/ports.conf)" ]]; then
         sudo sed -ie "s/Listen 80/Listen 8080/" /etc/apache2/ports.conf
         restart_services=1
     fi
@@ -42,15 +41,15 @@ if [ $use_varnish -eq 1 ]; then
 else
 
     # Configure apache files to run without varnish
-    if [ -z "$(grep "VirtualHost\s\*:80\b" /etc/apache2/sites-enabled/magento2.conf)" ]; then
+    if [[ -z "$(grep "VirtualHost\s\*:80\b" /etc/apache2/sites-enabled/magento2.conf)" ]]; then
         sudo sed -ie "s/<VirtualHost .*/<VirtualHost \*:80>/" /etc/apache2/sites-enabled/magento2.conf
         restart_services=1
     fi
-    if [ -z "$(grep "VirtualHost\s\*:80\b" /etc/apache2/sites-available/magento2.conf)" ]; then
+    if [[ -z "$(grep "VirtualHost\s\*:80\b" /etc/apache2/sites-available/magento2.conf)" ]]; then
         sudo sed -ie "s/<VirtualHost .*/<VirtualHost \*:80>/" /etc/apache2/sites-available/magento2.conf
         restart_services=1
     fi
-    if [ -z "$(grep "Listen\s80\b" /etc/apache2/ports.conf)" ]; then
+    if [[ -z "$(grep "Listen\s80\b" /etc/apache2/ports.conf)" ]]; then
         sudo sed -ie "s/Listen 8080/Listen 80/" /etc/apache2/ports.conf
         restart_services=1
     fi
@@ -68,15 +67,13 @@ if [[ $force_restart_services == 1 ]]; then
     echo "Force restarting Apache and Varnish"
     restart_services=1
 fi
-if [ $restart_services -eq 1 ]; then
-    if [ "$(ps -ax | pgrep varnish)" ]; then
+if [[ $restart_services == 1 ]]; then
+    if [[ "$(ps -ax | pgrep varnish)" ]]; then
         sudo pkill varnishd
     fi
-    if [ "$(ps -ax | pgrep apache2)" ]; then
-        sudo apache2ctl stop
-    fi
-    sudo apache2ctl start
-    if [ $use_varnish -eq 1 ]; then
+    sudo service apache2 restart
+    if [[ $use_varnish == 1 ]]; then
         sudo varnishd -f /etc/varnish/default.vcl
     fi
+    bash "${vagrant_dir}/scripts/guest/m-clear-cache"
 fi
