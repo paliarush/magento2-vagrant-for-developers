@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -ex
-
 # Get args
 while getopts 'f' flag; do
   case "${flag}" in

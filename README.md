@@ -238,6 +238,8 @@ Running vagrant reload will apply your preference. Or by using m-varnish script.
 It will use default file etc/magento2_default_varnish.vcl.dist generated from a Magento instance.
 Varnish Version: 3.0.5
 
+Note: command m-varnish with arguments disable or enable is also available in guest or host to enable or disable varnish without reloading machine.
+
 ### Multiple Magento instances
 
 To install several Magento instances based on different code bases, just follow [Installation steps](#installation-steps) to initialize project in another directory on the host.

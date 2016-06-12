@@ -67,7 +67,7 @@ else
 fi
 
 # Configure Varnish FPC, if enabled
-bash ${vagrant_dir}/scripts/guest/m-configure_varnish -f
+configure_varnish -f
 
 # Setup PHP
 php_ini_paths=( /etc/php/7.0/cli/php.ini /etc/php/5.6/cli/php.ini )
