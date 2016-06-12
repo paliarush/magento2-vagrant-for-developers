@@ -75,6 +75,11 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
     end
 
+    config.vm.provision "upgrade_environment_recurring", type: "shell", run: "always" do |s|
+        s.path = "scripts/provision/upgrade_environment_recurring.sh"
+        s.args = shell_script_args
+    end
+
     config.vm.provision "configure_environment", type: "shell" do |s|
         s.path = "scripts/provision/configure_environment.sh"
         s.args = shell_script_args
