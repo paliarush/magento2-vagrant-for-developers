@@ -19,13 +19,21 @@ function process_php_config () {
 }
 
 function init_php56 () {
-        sudo add-apt-repository ppa:ondrej/php
-        sudo apt-get update
-        sudo apt-get install -y php5.6 php-xdebug php5.6-xml php5.6-mcrypt php5.6-curl php5.6-cli php5.6-mysql php5.6-gd php5.6-intl php5.6-bcmath php5.6-mbstring php5.6-soap php5.6-zip libapache2-mod-php5.6
+        add-apt-repository ppa:ondrej/php
+        apt-get update
+        apt-get install -y php5.6 php-xdebug php5.6-xml php5.6-mcrypt php5.6-curl php5.6-cli php5.6-mysql php5.6-gd php5.6-intl php5.6-bcmath php5.6-mbstring php5.6-soap php5.6-zip libapache2-mod-php5.6
         echo '
         xdebug.max_nesting_level=200
         xdebug.remote_enable=1
         xdebug.remote_connect_back=1' >> /etc/php/5.6/mods-available/xdebug.ini
+}
+
+function isServiceAvailable() {
+    if service --status-all | grep -Fq ${1}; then
+        echo 1
+    else
+        echo 0
+    fi
 }
 
 # Enable trace printing and exit on the first error
@@ -77,6 +85,17 @@ else
 fi
 service apache2 restart
 #end Setup PHP
+
+# Set up elastic search
+is_elastic_search_installed="$(isServiceAvailable elasticsearch)"
+if [[ ${is_elastic_search_installed} -eq 0 ]]; then
+    apt-get update
+    apt-get install -y openjdk-7-jre
+    wget https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.2.deb
+    dpkg -i elasticsearch-1.7.2.deb
+    update-rc.d elasticsearch defaults
+fi
+# End set up elastic search
 
 # Enable email logging
 if [[ ${use_php7} -eq 1 ]]; then

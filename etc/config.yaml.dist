@@ -12,6 +12,8 @@ environment:
   # If set to 0, PHP 5 will be installed. [Changeable: vagrant reload]
   use_php7: 1
   composer_prefer_source: 0
+  # Possible values: mysql, elasticsearch. Current option will enforce search engine change on every magento reinstall
+  search_engine: "mysql"
 magento:
   host_name: "magento2.vagrant2"
   admin_frontname: "admin"

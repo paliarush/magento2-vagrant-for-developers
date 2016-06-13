@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Enable trace printing and exit on the first error
+set -ex
+
+vagrant_dir="/vagrant"
+
+# TODO: Make it possible to pass arguments from the outside
+
+# Configure search engine
+search_engine=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_search_engine")
+if [[ ${search_engine} == "elasticsearch" ]]; then
+    update_magento_config 'catalog/search/engine' 'elasticsearch'
+    update_magento_config 'catalog/search/elasticsearch_server_hostname' 'localhost'
+    update_magento_config 'catalog/search/elasticsearch_server_port' '9200'
+    update_magento_config 'catalog/search/elasticsearch_index_prefix' 'magento2'
+    update_magento_config 'catalog/search/elasticsearch_enable_auth' '0'
+    update_magento_config 'catalog/search/elasticsearch_server_timeout' '15'
+elif [[ ${search_engine} == "mysql" ]]; then
+    update_magento_config 'catalog/search/engine' 'mysql'
+fi
+# End configure search engine
+
+m-clear-cache

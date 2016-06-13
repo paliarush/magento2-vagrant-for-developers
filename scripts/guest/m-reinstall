@@ -88,6 +88,9 @@ if [[ ${is_windows_host} == 1 || ${use_nfs} == 0 ]]; then
     chown -R vagrant:vagrant ${MAGENTO_ROOT}
 fi
 
+# Configure search engine according to config.yaml
+m-search-engine
+
 # Generate XSD references for PHP Storm
 php bin/magento dev:urn-catalog:generate /vagrant/.idea/misc.xml
 sed -i "s|${MAGENTO_ROOT}|${MAGENTO_ROOT_HOST}|g" "/vagrant/.idea/misc.xml"
