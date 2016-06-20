@@ -1,9 +1,20 @@
 #!/usr/bin/env bash
 
+function isServiceAvailable() {
+    if service --status-all | grep -Fq ${1}; then
+        echo 1
+    else
+        echo 0
+    fi
+}
+
 # Enable trace printing and exit on the first error
 set -ex
 
 use_php7=$4
+
+# Delete obsolete repository
+sudo rm -f /etc/apt/sources.list.d/ondrej-php-7_0-trusty.list
 
 # Upgrade for vagrant box paliarush/magento2.ubuntu v1.1.0
 if [[ ${use_php7} -eq 1 ]]; then
@@ -31,4 +42,11 @@ if [[ ${use_php7} -eq 1 ]]; then
         # Restart Apache
         service apache2 restart
     fi
+fi
+
+# Install varnish if not installed
+is_varnish_installed="$(isServiceAvailable varnish)"
+if [[ ${is_varnish_installed} -eq 0 ]]; then
+    apt-get update
+    apt-get install -y varnish
 fi

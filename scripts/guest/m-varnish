@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]]; then
+    echo "Usage: ./m-varnish enable/disable"
+    exit 0
+fi
+
+# Check if user created config.yaml file
+if [[ ! -f /vagrant/etc/config.yaml ]]; then
+    echo "Please make sure you have create a config.yaml file copy from etc/config.yaml.dist"
+    exit 1
+fi
+
+if [[ -z "$(grep "use_varnish:" /vagrant/etc/config.yaml)" ]]; then
+    sed -i '/environment:/a \ \ use_varnish: 0' /vagrant/etc/config.yaml
+fi
+
+if [[ $1 == "enable" ]]; then
+    sed -ie "s/use_varnish:.*/use_varnish: 1/" /vagrant/etc/config.yaml
+elif [[ $1 == "disable" ]]; then
+    sed -ie "s/use_varnish:.*/use_varnish: 0/" /vagrant/etc/config.yaml
+else
+    echo "Usage: ./m-varnish enable/disable"
+    exit 1
+fi
+
+configure_varnish
+
+echo "Done."
