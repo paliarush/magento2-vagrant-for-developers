@@ -31,6 +31,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
  - Added ability to choose if PhpStorm configs should be removed during project reinitialization
  - Added ability to switch PHP version without destroying the project ("vagrant reload" is required)
  - Added ability to do force switch to CE or EE (even if already switched to target edition)
+ - Added ability to use Varnish full page caching automatically. (Using "vagrant reload" or m-varnish script)
 
 ## [v2.0.0] - 2016-02-05
 

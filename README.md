@@ -22,6 +22,7 @@
    * [View emails sent by Magento](#view-emails-sent-by-magento)
    * [Accessing PHP and other config files](#accessing-php-and-other-config-files)
    * [Switch between PHP 5.6 and 7.0](#switch-between-php-56-and-70)
+   * [Activating Varnish](#activating-varnish)
    * [Multiple Magento instances](#multiple-magento-instances)
    * [Reset environment](#reset-environment)
 
@@ -38,7 +39,7 @@ It is easy to [install multiple Magento instances](#multiple-magento-instances) 
 [Project initialization script](init_project.sh) configures complete development environment:
 
  1. Adds some missing software on the host
- 1. Configures all software necessary for Magento 2 using [custom Ubuntu vagrant box](https://atlas.hashicorp.com/paliarush/boxes/magento2.ubuntu) (Apache 2.4, PHP 7.0 (or 5.5.9), MySQL 5.6, Git, Composer, XDebug, Rabbit MQ)
+ 1. Configures all software necessary for Magento 2 using [custom Ubuntu vagrant box](https://atlas.hashicorp.com/paliarush/boxes/magento2.ubuntu) (Apache 2.4, PHP 7.0 (or 5.5.9), MySQL 5.6, Git, Composer, XDebug, Rabbit MQ, Varnish)
  1. Installs Magento 2
  1. Configures PHP Storm project (partially at the moment)
 
@@ -232,6 +233,15 @@ After editing configs in IDE it is still required to restart related services ma
 
 Set "use_php7: 1" for PHP7 and "use_php7: 0" for PHP5.6 in [config.yaml](etc/config.yaml.dist).
 PHP version will be applied after "vagrant reload".
+
+### Activating Varnish
+
+Set "use_varnish: 1" to use varnish along apache in [config.yaml](etc/config.yaml.dist).
+Running vagrant reload will apply your preference. Or by using m-varnish script.
+It will use default file etc/magento2_default_varnish.vcl.dist generated from a Magento instance.
+Varnish Version: 3.0.5
+
+Note: command m-varnish with arguments disable or enable is also available in guest or host to enable or disable varnish without reloading machine.
 
 ### Multiple Magento instances
 
