@@ -168,6 +168,9 @@ bash m-switch-to-ce
 OR
 bash m-switch-to-ee
 ```
+
+Force switch can be done using `-f` flag even if already switched to the target edition. May be helpful to relink EE modules after switching between branches.
+
 :information_source: On Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly) you will be asked to wait until code is uploaded to guest machine by PhpStorm (PhpStorm must be lunched). To continue the process press any key.
 
 ### Update Composer dependencies

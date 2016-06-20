@@ -63,7 +63,7 @@ install_cmd="./bin/magento setup:install \
     --use-rewrites=1"
 
 # Configure Rabbit MQ
-if [[ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ]] && [[ -d "${MAGENTO_ROOT}/app/code/Magento/Amqp" ]]; then
+if [[ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ]]; then
     install_cmd="${install_cmd} \
     --amqp-host=${setupOptions[amqp_host]} \
     --amqp-port=${setupOptions[amqp_port]} \

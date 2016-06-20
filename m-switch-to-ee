@@ -10,12 +10,22 @@ php_executable=$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")
 set -ex
 
 if [[ ! -f ${magento_ee_dir}/app/etc/aliases_to_classes_map.json ]]; then
+    set +x
     echo "EE codebase is not available"
     exit 0
 fi
 
-if [[ -f ${magento_ce_dir}/app/etc/aliases_to_classes_map.json ]]; then
-    echo "Already switched to EE"
+force_switch=0
+while getopts 'f' flag; do
+  case "${flag}" in
+    f) force_switch=1 ;;
+    *) error "Unexpected option ${flag}" ;;
+  esac
+done
+
+if [[ -f ${magento_ce_dir}/app/etc/aliases_to_classes_map.json ]] && [[ ${force_switch} -eq 0 ]]; then
+    set +x
+    echo "Already switched to EE. Use 'm-switch-to-ce -f' to switch anyway."
     exit 0
 fi
 

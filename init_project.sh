@@ -83,6 +83,12 @@ bash "${vagrant_dir}/scripts/host/composer.sh" install
 cd "${vagrant_dir}"
 vagrant up
 
+if [[ -n "${repository_url_ee}" ]]; then
+    bash "${vagrant_dir}/m-switch-to-ee" -f
+else
+    bash "${vagrant_dir}/m-switch-to-ce" -f
+fi
+
 set +x
 echo "Configuring PhpStorm..."
 if [[ ${force_project_cleaning} -eq 1 ]] && [[ ${force_phpstorm_config_cleaning} -eq 1 ]]; then
