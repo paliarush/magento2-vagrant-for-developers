@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+function isServiceAvailable() {
+    if service --status-all | grep -Fq ${1}; then
+        echo 1
+    else
+        echo 0
+    fi
+}
+
 # Enable trace printing and exit on the first error
 set -ex
 
@@ -31,4 +39,11 @@ if [[ ${use_php7} -eq 1 ]]; then
         # Restart Apache
         service apache2 restart
     fi
+fi
+
+# Install varnish if not installed
+is_varnish_installed="$(isServiceAvailable varnish)"
+if [[ ${is_varnish_installed} -eq 0 ]]; then
+    apt-get update
+    apt-get install -y varnish
 fi
