@@ -13,6 +13,9 @@ set -ex
 
 use_php7=$4
 
+# Delete obsolete repository
+sudo rm -f /etc/apt/sources.list.d/ondrej-php-7_0-trusty.list
+
 # Upgrade for vagrant box paliarush/magento2.ubuntu v1.1.0
 if [[ ${use_php7} -eq 1 ]]; then
     if /usr/bin/php7.0 -v | grep -q '7.0.5' ; then
