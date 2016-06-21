@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
  - Removed requirement for public github token due to Composer limitations (issue is fixed on Composer side)
  - Changed requirement for minimum box version from 1.0 to 1.1
  - Upgraded PHP 5.5.9 to PHP 5.6
+ - When [init_project.sh](init_project.sh) is executed, EE will be installed by default, if EE repository is specified in [etc/config.yaml.dist](etc/config.yaml.dist)
 
 ### Fixed
 
@@ -29,6 +30,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
  - Added ability to modify guest config files (PHP, Apache etc) directly from host IDE
  - Added ability to choose if PhpStorm configs should be removed during project reinitialization
  - Added ability to switch PHP version without destroying the project ("vagrant reload" is required)
+ - Added ability to do force switch to CE or EE (even if already switched to target edition)
  - Added ability to use Varnish full page caching automatically. (Using "vagrant reload" or m-varnish script)
 
 ## [v2.0.0] - 2016-02-05
