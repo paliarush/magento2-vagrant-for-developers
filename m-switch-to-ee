@@ -34,7 +34,7 @@ ${php_executable} -f ${magento_ee_dir}/dev/tools/build-ee.php -- --command=link 
 cp ${magento_ee_dir}/composer.json ${magento_ce_dir}/composer.json
 cp ${magento_ee_dir}/composer.lock ${magento_ce_dir}/composer.lock
 
-if [[ ${host_os} == "Windows" || $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then
+if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then
     # Prevent issues on Windows with incorrect symlinks to files
     if [[ -f ${magento_ee_dir}/app/etc/aliases_to_classes_map.json ]] && [[ -L ${magento_ce_dir}/app/etc/aliases_to_classes_map.json ]]; then
         rm ${magento_ce_dir}/app/etc/aliases_to_classes_map.json
@@ -51,7 +51,7 @@ bash "${vagrant_dir}/m-clear-cache"
 bash -c "${vagrant_dir}/m-composer install"
 
 echo "Magento installation..."
-if [[ ${host_os} == "Windows" || $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then
+if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then
     read -p "Wait while Magento2 code is uploaded in PhpStorm and press any key to continue..." -n1 -s
 fi
 

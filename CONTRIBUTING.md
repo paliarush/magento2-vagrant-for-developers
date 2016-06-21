@@ -1,1 +1,1 @@
-Everyone is welcome to contribute improvements and fixes to this project. There are no specific requirements, just create a pull request with proposed modifications.
+Everyone is welcome to contribute improvements and fixes to this project. There are no specific requirements, just create a pull request with proposed modifications and try to run [tests](https://github.com/paliarush/magento2-vagrant-for-developers-tests) on your local environment.
