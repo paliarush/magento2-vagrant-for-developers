@@ -85,8 +85,8 @@ else
         init_php56
     fi
     update-alternatives --set php /usr/bin/php5.6 && a2dismod php7.0 && a2enmod php5.6
-    rm -f /etc/php/5.6/apache2/php.ini
-    ln -s /etc/php/5.6/cli/php.ini /etc/php/5.6/apache2/php.ini
+    rm -rf /etc/php/5.6/apache2
+    ln -s /etc/php/5.6/cli /etc/php/5.6/apache2
     sed -i "s|xdebug.remote_connect_back=1|xdebug.remote_host=192.168.10.1|g" /etc/php/5.6/mods-available/xdebug.ini
 fi
 service apache2 restart
