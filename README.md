@@ -118,7 +118,7 @@ Upon a successful installation, you'll see the location and URL of the newly-ins
   - ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) On Mac and \*nix hosts: the same as on host
 - MySQL DB host: `localhost` (not accessible remotely)
 - MySQL DB name: `magento`, `magento_integration_tests`
-- MySQL DB user/password: just use `mysql` with no user and password (`root/password` will be used by default)
+- MySQL DB user/password: `root:<no password>`. In CLI just use `mysql` with no user and password (`root:<no password>` will be used by default)
 
 **Codebase on host**
 - CE codebase: `vagrant_project_root/magento2ce`
