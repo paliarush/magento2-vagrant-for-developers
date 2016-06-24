@@ -66,9 +66,6 @@ else
     cp ${default_vcl_config}  /etc/varnish/default.vcl
 fi
 
-# Configure Varnish FPC, if enabled
-bash "${vagrant_dir}/scripts/guest/configure_varnish" -f
-
 # Setup PHP
 php_ini_paths=( /etc/php/7.0/cli/php.ini /etc/php/5.6/cli/php.ini )
 process_php_config ${php_ini_paths}
@@ -80,6 +77,9 @@ if [[ ${use_php7} -eq 1 ]]; then
     fi
     sed -i "s|xdebug.remote_connect_back=1|xdebug.remote_host=192.168.10.1|g" /etc/php/7.0/cli/conf.d/20-xdebug.ini
     a2enmod php7.0
+    # TODO: Fix for a bug, should be removed in 3.0
+    sed -i "/zend_extension=.*so/d" /etc/php/7.0/cli/conf.d/20-xdebug.ini
+    echo "zend_extension=xdebug.so" >> /etc/php/7.0/cli/conf.d/20-xdebug.ini
 else
     if [[ ! -d "/etc/php/5.6" ]]; then
         init_php56
