@@ -53,7 +53,7 @@ if [[ ! -f /etc/rc0.d/K04-unlink-configs ]]; then
 fi
 
 # Upgrade existing environment
-if [[ -f ${vagrant_dir}/.idea/deployment.xml ]]; then
+if [[ -f "${vagrant_dir}/.idea/deployment.xml" ]]; then
     sed -i.back "s|magento2ce/var/generation|magento2ce/var|g" "${vagrant_dir}/.idea/deployment.xml"
 fi
 

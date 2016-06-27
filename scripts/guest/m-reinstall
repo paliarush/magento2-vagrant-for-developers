@@ -81,7 +81,7 @@ fi
 sudo chmod +x bin/magento
 php ${install_cmd}
 # Comment out the line above and uncomment the one below to debug Magento Setup script
-# php -d xdebug.remote_host=192.168.10.1 -d xdebug.idekey=PHPSTORM -d xdebug.remote_connect_back=0 -d xdebug.remote_autostart=1 ${install_cmd}
+# php -d xdebug.remote_autostart=1 ${install_cmd}
 
 # Configure Varnish FPC, if enabled
 bash "${vagrant_dir}/scripts/guest/configure_varnish" -f

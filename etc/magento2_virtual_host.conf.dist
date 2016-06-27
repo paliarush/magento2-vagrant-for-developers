@@ -1,7 +1,7 @@
 <VirtualHost *:80>
-    DocumentRoot <guest_magento_dir>
+    DocumentRoot "<guest_magento_dir>"
     ServerName <host>
-    <Directory <guest_magento_dir>>
+    <Directory "<guest_magento_dir>">
         Options Indexes FollowSymLinks
         AllowOverride All
         Require all granted
