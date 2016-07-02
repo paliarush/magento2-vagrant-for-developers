@@ -201,7 +201,7 @@ To debug a CLI script:
  1. Run CLI command on the guest as follows (`xdebug.remote_host` value might be different for you):
 
  ```
- php -d xdebug.remote_host=192.168.10.1 -d xdebug.idekey=PHPSTORM -d xdebug.remote_connect_back=0 -d xdebug.remote_autostart=1 <path_to_cli_script>
+ php -d xdebug.remote_autostart=1 <path_to_cli_script>
  ```
 
 To debug Magento Setup script, go to [Magento installation script](scripts/guest/m-reinstall) and find `php ${install_cmd}`. Follow steps above for any CLI script

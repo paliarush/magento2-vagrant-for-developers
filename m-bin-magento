@@ -6,5 +6,5 @@ vagrant_dir=$(cd "$(dirname "$0")"; pwd)
 set -ex
 
 arguments=$@
-cd ${vagrant_dir}
+cd "${vagrant_dir}"
 vagrant ssh -c "\$MAGENTO_ROOT/bin/magento $arguments"

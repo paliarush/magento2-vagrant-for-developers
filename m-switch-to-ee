@@ -25,7 +25,7 @@ done
 
 if [[ -f ${magento_ce_dir}/app/etc/aliases_to_classes_map.json ]] && [[ ${force_switch} -eq 0 ]]; then
     set +x
-    echo "Already switched to EE. Use 'm-switch-to-ce -f' to switch anyway."
+    echo "Already switched to EE. Use 'm-switch-to-ee -f' to switch anyway."
     exit 0
 fi
 
@@ -48,7 +48,7 @@ if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config
 fi
 
 bash "${vagrant_dir}/m-clear-cache"
-bash -c "${vagrant_dir}/m-composer install"
+bash "${vagrant_dir}/m-composer" install
 
 echo "Magento installation..."
 if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then

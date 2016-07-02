@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 vagrant_dir=$(cd "$(dirname "$0")"; pwd)
-cd ${vagrant_dir}
+cd "${vagrant_dir}"
 vagrant ssh -c "m-varnish ${@}"
