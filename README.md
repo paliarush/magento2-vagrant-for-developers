@@ -10,7 +10,6 @@
    * [Installation steps](#installation-steps)
    * [Default credentials and settings](#default-credentials-and-settings)
    * [Getting updates and fixes](#getting-updates-and-fixes)
-   * [Troubleshooting](#troubleshooting)
  * [Day-to-day development scenarios](#day-to-day-development-scenarios)
    * [Reinstall Magento](#reinstall-magento)
    * [Clear Magento cache](#clear-magento-cache)
@@ -21,9 +20,12 @@
    * [Connecting to MySQL DB](#connecting-to-mysql-db)
    * [View emails sent by Magento](#view-emails-sent-by-magento)
    * [Accessing PHP and other config files](#accessing-php-and-other-config-files)
-   * [Switch between PHP 5.6 and 7.0](#switch-between-php-56-and-70)
    * [Multiple Magento instances](#multiple-magento-instances)
+ * [Environment configuration](#environment-configuration)
+   * [Switch between PHP 5.6 and 7.0](#switch-between-php-56-and-70)
+   * [Activating Varnish](#activating-varnish)
    * [Reset environment](#reset-environment)
+ * [FAQ](#faq)
 
 ## What You get
 
@@ -38,7 +40,7 @@ It is easy to [install multiple Magento instances](#multiple-magento-instances) 
 [Project initialization script](init_project.sh) configures complete development environment:
 
  1. Adds some missing software on the host
- 1. Configures all software necessary for Magento 2 using [custom Ubuntu vagrant box](https://atlas.hashicorp.com/paliarush/boxes/magento2.ubuntu) (Apache 2.4, PHP 7.0 (or 5.5.9), MySQL 5.6, Git, Composer, XDebug, Rabbit MQ)
+ 1. Configures all software necessary for Magento 2 using [custom Ubuntu vagrant box](https://atlas.hashicorp.com/paliarush/boxes/magento2.ubuntu) (Apache 2.4, PHP 7.0 (or 5.6), MySQL 5.6, Git, Composer, XDebug, Rabbit MQ, Varnish)
  1. Installs Magento 2
  1. Configures PHP Storm project (partially at the moment)
 
@@ -67,7 +69,7 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
 
 ### Installation steps
 
-:information_source: In case of any issues during installation, please read [troubleshooting section](#troubleshooting)
+:information_source: In case of any issues during installation, please read [FAQ section](#faq)
 
  1. Open terminal and change directory to the one which you want to contain Magento project. ![](docs/images/windows-icon.png) On Windows use Git Bash, which is available after Git installation
 
@@ -116,7 +118,7 @@ Upon a successful installation, you'll see the location and URL of the newly-ins
   - ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) On Mac and \*nix hosts: the same as on host
 - MySQL DB host: `localhost` (not accessible remotely)
 - MySQL DB name: `magento`, `magento_integration_tests`
-- MySQL DB user/password: just use `mysql` with no user and password (`root/password` will be used by default)
+- MySQL DB user/password: `root:<no password>`. In CLI just use `mysql` with no user and password (`root:<no password>` will be used by default)
 
 **Codebase on host**
 - CE codebase: `vagrant_project_root/magento2ce`
@@ -127,15 +129,6 @@ Upon a successful installation, you'll see the location and URL of the newly-ins
 Current vagrant project follows [semantic versioning](http://semver.org/spec/v2.0.0.html) so feel free to pull the latest features and fixes, they will not break your project.
 For example your current branch is `2.0`, then it will be safe to pull any changes from `origin/2.0`. However branch `3.0` will contain changes backward incompatible with `2.0`.
 Note, that semantic versioning is only used for `x.0` branches (not for `develop`).
-
-### Troubleshooting
-
- 1. ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) On OSX and \*nix hosts NFS will be used by default to sync your project files with guest. On some hosts Vagrant cannot configure NFS properly, in this case it is possible to deploy project without NFS by setting `use_nfs` option in [config.yaml](etc/config.yaml.dist) to `0` <br />
- 1. ![](docs/images/windows-icon.png) On Windows hosts you might face `Composer Install Error: ZipArchive::extractTo(): Full extraction path exceed MAXPATHLEN (260)` exception during `composer install`. This can be fixed in 2 ways: decrease path length to the project directory or set `composer_prefer_source` option in [config.yaml](etc/config.yaml.dist) to `1`
- 1. Make sure that you used `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`)
- 1. If code is not synchronized properly on Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly), make sure that PhpStorm is running before making any changes in the code. This is important because otherwise PhpStorm will not be able to detect changes and upload them to the guest machine
- 1. Please make sure that currently installed software, specified in [requirements section](#requirements), meets minimum version requirement
- 1. If MySQL fails to start and Magento reinstallation fails with `ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (13)`, try to run login to virtual machine using `vagrant ssh` and then run `sudo dpkg-reconfigure mysql-server-5.6`, then `sudo service mysql restart.`
 
 ## Day-to-day development scenarios
 
@@ -168,7 +161,10 @@ bash m-switch-to-ce
 OR
 bash m-switch-to-ee
 ```
-:information_source: On Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly) you will be asked to wait until code is uploaded to guest machine by PhpStorm (PhpStorm must be lunched). To continue the process press any key.
+
+Force switch can be done using `-f` flag even if already switched to the target edition. May be helpful to relink EE modules after switching between branches.
+
+:information_source: On Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly) you will be asked to wait until code is uploaded to guest machine by PhpStorm (PhpStorm must be launched). To continue the process press any key.
 
 ### Update Composer dependencies
 
@@ -205,7 +201,7 @@ To debug a CLI script:
  1. Run CLI command on the guest as follows (`xdebug.remote_host` value might be different for you):
 
  ```
- php -d xdebug.remote_host=192.168.10.1 -d xdebug.idekey=PHPSTORM -d xdebug.remote_connect_back=0 -d xdebug.remote_autostart=1 <path_to_cli_script>
+ php -d xdebug.remote_autostart=1 <path_to_cli_script>
  ```
 
 To debug Magento Setup script, go to [Magento installation script](scripts/guest/m-reinstall) and find `php ${install_cmd}`. Follow steps above for any CLI script
@@ -225,15 +221,26 @@ Do not edit any symlinks using PhpStorm because it may break your installation.
 
 After editing configs in IDE it is still required to restart related services manually.
 
+### Multiple Magento instances
+
+To install several Magento instances based on different code bases, just follow [Installation steps](#installation-steps) to initialize project in another directory on the host.
+Unique IP address, SSH port and domain name will be generated for each new instance if not specified manually in `etc/config.yaml`
+
+## Environment configuration
+
 ### Switch between PHP 5.6 and 7.0
 
 Set "use_php7: 1" for PHP7 and "use_php7: 0" for PHP5.6 in [config.yaml](etc/config.yaml.dist).
 PHP version will be applied after "vagrant reload".
 
-### Multiple Magento instances
+### Activating Varnish
 
-To install several Magento instances based on different code bases, just follow [Installation steps](#installation-steps) to initialize project in another directory on the host.
-Unique IP address, SSH port and domain name will be generated for each new instance if not specified manually in `etc/config.yaml`
+Set "use_varnish: 1" to use varnish along apache in [config.yaml](etc/config.yaml.dist).
+Running vagrant reload will apply your preference. Or by using m-varnish script.
+It will use default file etc/magento2_default_varnish.vcl.dist generated from a Magento instance.
+Varnish Version: 3.0.5
+
+Note: command m-varnish with arguments disable or enable is also available in guest or host to enable or disable varnish without reloading machine.
 
 ### Reset environment
 
@@ -262,3 +269,14 @@ Ultimate project reset can be achieved by combining all available flags:
 ```
 bash init_project.sh -fcp
 ```
+
+### FAQ
+
+ 1. Is Windows 10 supported? Yes, but you may face the same issue as described [here](https://github.com/paliarush/magento2-vagrant-for-developers/issues/36)
+ 1. ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) On OSX and \*nix hosts NFS will be used by default to sync your project files with guest. On some hosts Vagrant cannot configure NFS properly, in this case it is possible to deploy project without NFS by setting `use_nfs` option in [config.yaml](etc/config.yaml.dist) to `0` <br />
+ 1. ![](docs/images/windows-icon.png) On Windows hosts you might face `Composer Install Error: ZipArchive::extractTo(): Full extraction path exceed MAXPATHLEN (260)` exception during `composer install`. This can be fixed in 2 ways: decrease path length to the project directory or set `composer_prefer_source` option in [config.yaml](etc/config.yaml.dist) to `1`
+ 1. Make sure that you used `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`)
+ 1. If project opened in PhpStorm looks broken, close PhpStorm  and remove `vagrant-magento/.idea`. After opening project in PhpStorm again everything should look good
+ 1. If code is not synchronized properly on Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly), make sure that PhpStorm is running before making any changes in the code. This is important because otherwise PhpStorm will not be able to detect changes and upload them to the guest machine
+ 1. Please make sure that currently installed software, specified in [requirements section](#requirements), meets minimum version requirement
+ 1. If MySQL fails to start and Magento reinstallation fails with `ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (13)`, try to run login to virtual machine using `vagrant ssh` and then run `sudo dpkg-reconfigure mysql-server-5.6`, then `sudo service mysql restart.`

@@ -5,6 +5,9 @@ magento_ce_dir="${vagrant_dir}/magento2ce"
 magento_ee_dir="${magento_ce_dir}/magento2ee"
 config_path="${vagrant_dir}/etc/config.yaml"
 host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
+use_nfs=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")
+repository_url_ce=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce")
+repository_url_ee=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee")
 
 # Enable trace printing and exit on the first error
 set -ex
@@ -65,11 +68,9 @@ if [[ ! -d ${magento_ce_dir} ]]; then
         git config --global diff.renamelimit 5000
     fi
     # Check out CE repository
-    repository_url_ce=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce")
     git clone ${repository_url_ce} "${magento_ce_dir}"
     # Check out EE repository
     # By default EE repository is not specified and EE project is not checked out
-    repository_url_ee=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee")
     if [[ -n "${repository_url_ee}" ]]; then
         git clone ${repository_url_ee} "${magento_ee_dir}"
     fi
@@ -82,6 +83,17 @@ bash "${vagrant_dir}/scripts/host/composer.sh" install
 # Create vagrant project
 cd "${vagrant_dir}"
 vagrant up
+
+if [[ ${host_os} == "Windows" ]] || [[ ${use_nfs} == 0 ]]; then
+    # Automatic switch to EE during project initialization cannot be supported on Windows
+    bash "${vagrant_dir}/m-reinstall"
+else
+    if [[ -n "${repository_url_ee}" ]]; then
+        bash "${vagrant_dir}/m-switch-to-ee" -f
+    else
+        bash "${vagrant_dir}/m-switch-to-ce" -f
+    fi
+fi
 
 set +x
 echo "Configuring PhpStorm..."
@@ -98,8 +110,7 @@ echo "
 ${bold}[Important]${regular}
     Please use ${bold}${vagrant_dir}${regular} directory as PhpStorm project root, NOT ${bold}${magento_ce_dir}${regular}."
 
-use_nfs=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")
-if [[ ${host_os} == "Windows" || ${use_nfs} == 0 ]]; then
+if [[ ${host_os} == "Windows" ]] || [[ ${use_nfs} == 0 ]]; then
     echo "
 ${bold}[Optional]${regular}
     To verify that deployment configuration for ${bold}${magento_ce_dir}${regular} in PhpStorm is correct,

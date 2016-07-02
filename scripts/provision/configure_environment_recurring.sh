@@ -25,7 +25,7 @@ function init_php56 () {
         echo '
         xdebug.max_nesting_level=200
         xdebug.remote_enable=1
-        xdebug.remote_connect_back=1' >> /etc/php/5.6/mods-available/xdebug.ini
+        xdebug.remote_host=192.168.10.1' >> /etc/php/5.6/mods-available/xdebug.ini
 }
 
 function isServiceAvailable() {
@@ -61,8 +61,17 @@ if [[ ! -f /etc/rc0.d/K04-unlink-configs ]]; then
 fi
 
 # Upgrade existing environment
-if [[ -f ${vagrant_dir}/.idea/deployment.xml ]]; then
+if [[ -f "${vagrant_dir}/.idea/deployment.xml" ]]; then
     sed -i.back "s|magento2ce/var/generation|magento2ce/var|g" "${vagrant_dir}/.idea/deployment.xml"
+fi
+
+# Copy varnish vcl file
+custom_vcl_config="${vagrant_dir}/etc/magento2_default_varnish.vcl"
+default_vcl_config="${vagrant_dir}/etc/magento2_default_varnish.vcl.dist"
+if [ -f ${custom_vcl_config} ]; then
+    cp ${custom_vcl_config}  /etc/varnish/default.vcl
+else
+    cp ${default_vcl_config}  /etc/varnish/default.vcl
 fi
 
 # Setup PHP
@@ -74,14 +83,19 @@ if [[ ${use_php7} -eq 1 ]]; then
     if [[ -d "/etc/php/5.6" ]]; then
         a2dismod php5.6
     fi
+    sed -i "s|xdebug.remote_connect_back=1|xdebug.remote_host=192.168.10.1|g" /etc/php/7.0/cli/conf.d/20-xdebug.ini
     a2enmod php7.0
+    # TODO: Fix for a bug, should be removed in 3.0
+    sed -i "/zend_extension=.*so/d" /etc/php/7.0/cli/conf.d/20-xdebug.ini
+    echo "zend_extension=xdebug.so" >> /etc/php/7.0/cli/conf.d/20-xdebug.ini
 else
     if [[ ! -d "/etc/php/5.6" ]]; then
         init_php56
     fi
     update-alternatives --set php /usr/bin/php5.6 && a2dismod php7.0 && a2enmod php5.6
-    rm -f /etc/php/5.6/apache2/php.ini
-    ln -s /etc/php/5.6/cli/php.ini /etc/php/5.6/apache2/php.ini
+    rm -rf /etc/php/5.6/apache2
+    ln -s /etc/php/5.6/cli /etc/php/5.6/apache2
+    sed -i "s|xdebug.remote_connect_back=1|xdebug.remote_host=192.168.10.1|g" /etc/php/5.6/mods-available/xdebug.ini
 fi
 service apache2 restart
 #end Setup PHP

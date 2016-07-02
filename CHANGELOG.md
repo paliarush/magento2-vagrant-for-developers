@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
  * [\[Unreleased\]](#unreleased)
+ * [\[v2.1.0\] - 2016-06-22](#v210---2016-06-22)
  * [\[v2.0.0\] - 2016-02-05](#v200---2016-02-05)
  * [\[v1.0.0\] - 2016-01-11](#v100---2016-01-11)
 
@@ -11,9 +12,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+### Fixed
+ - It is now possible to use spaces in path to vagrant project on Windows. On OSX and Linux hosts it works in non-NFS mode, in NFS mode it does not work because of [bug in vagrant](mitchellh/vagrant#7540)
+
+### Added
+
+## [v2.1.0] - 2016-06-22
+
+### Changed
+
  - Removed requirement for public github token due to Composer limitations (issue is fixed on Composer side)
  - Changed requirement for minimum box version from 1.0 to 1.1
  - Upgraded PHP 5.5.9 to PHP 5.6
+ - When [init_project.sh](init_project.sh) is executed, EE will be installed by default, if EE repository is specified in [etc/config.yaml.dist](etc/config.yaml.dist). Not supported on Windows hosts
 
 ### Fixed
 
@@ -29,6 +40,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
  - Added ability to modify guest config files (PHP, Apache etc) directly from host IDE
  - Added ability to choose if PhpStorm configs should be removed during project reinitialization
  - Added ability to switch PHP version without destroying the project ("vagrant reload" is required)
+ - Added ability to do force switch to CE or EE (even if already switched to target edition)
+ - Added ability to use Varnish full page caching automatically. (Using "vagrant reload" or m-varnish script)
 
 ## [v2.0.0] - 2016-02-05
 

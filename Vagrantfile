@@ -53,7 +53,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
     config.vm.synced_folder './.idea', '/vagrant/.idea', create: true
     if use_nfs_for_synced_folders
         guest_magento_dir = host_magento_dir
-        config.vm.synced_folder host_magento_dir, guest_magento_dir, type: "nfs", create: true
+        config.vm.synced_folder host_magento_dir, guest_magento_dir, create: true
     else
         guest_magento_dir = '/var/www/magento2ce'
         config.vm.synced_folder host_magento_dir + '/var', guest_magento_dir + '/var', create: true
@@ -100,8 +100,6 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
         config.vm.provision "guest_uncompress_magento_code", type: "shell", inline: "mkdir -p /var/www && tar xf /vagrant/scripts/host/magento2ce.tar -C /var/www &>/dev/null"
         config.vm.provision "guest_remove_compressed_code", type: "shell", inline: "rm -f /vagrant/scripts/host/magento2ce.tar"
     end
-
-    config.vm.provision "install_magento", type: "shell", inline: "m-reinstall"
 
     # Host manager plugin configuration
     config.hostmanager.enabled = true
