@@ -84,6 +84,14 @@ bash "${vagrant_dir}/scripts/host/composer.sh" install
 cd "${vagrant_dir}"
 vagrant up
 
+echo "Configuring PhpStorm..."
+if [[ ${force_project_cleaning} -eq 1 ]] && [[ ${force_phpstorm_config_cleaning} -eq 1 ]]; then
+    rm -rf "${vagrant_dir}/.idea"
+fi
+if [[ ! -f "${vagrant_dir}/.idea/deployment.xml" ]]; then
+    bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
+fi
+
 if [[ ${host_os} == "Windows" ]] || [[ ${use_nfs} == 0 ]]; then
     # Automatic switch to EE during project initialization cannot be supported on Windows
     bash "${vagrant_dir}/m-reinstall"
@@ -96,14 +104,6 @@ else
 fi
 
 set +x
-echo "Configuring PhpStorm..."
-if [[ ${force_project_cleaning} -eq 1 ]] && [[ ${force_phpstorm_config_cleaning} -eq 1 ]]; then
-    rm -rf "${vagrant_dir}/.idea"
-fi
-if [[ ! "$(ls -A "${vagrant_dir}/.idea")" ]]; then
-    bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
-fi
-
 bold=$(tput bold)
 regular=$(tput sgr0)
 echo "
