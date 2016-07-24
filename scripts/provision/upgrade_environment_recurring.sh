@@ -50,3 +50,6 @@ if [[ ${is_varnish_installed} -eq 0 ]]; then
     apt-get update
     apt-get install -y varnish
 fi
+
+# Fix issue with MySQL being down after VM power off
+service mysql restart
