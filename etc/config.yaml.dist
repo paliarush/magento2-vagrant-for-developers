@@ -1,5 +1,5 @@
 repository_url:
-  # [To apply changes: init-project -c]
+  # [To apply changes: init-project -fc]
   ce: "git@github.com:magento/magento2.git"
   ee: ""
 guest:
