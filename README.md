@@ -246,6 +246,8 @@ Use the following commands to enable/disable varnish without reinstalling Magent
 
 ### Activating ElasticSearch
 
+:information_source: Available in Magento EE only.
+
 Set `search_engine: "elasticsearch"` in [config.yaml](etc/config.yaml.dist) to use ElasticSearch as current search engine or `search_engine: "mysql"` to use MySQL. Changes will be applied on `m-reinstall`.
 
 Use the following commands to switch between search engines without reinstalling Magento: `m-search-engine elasticsearch` or `m-search-engine mysql`.

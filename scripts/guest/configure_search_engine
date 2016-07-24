@@ -10,21 +10,26 @@ if [[ -z "$(grep "search_engine:" /vagrant/etc/config.yaml)" ]]; then
     sed -i '/environment:/a \ \ search_engine: "mysql"' /vagrant/etc/config.yaml
 fi
 
-# Configure search engine
-search_engine=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_search_engine")
-if [[ ${search_engine} == "elasticsearch" ]]; then
-    update_magento_config 'catalog/search/engine' 'elasticsearch'
-    update_magento_config 'catalog/search/elasticsearch_server_hostname' 'localhost'
-    update_magento_config 'catalog/search/elasticsearch_server_port' '9200'
-    update_magento_config 'catalog/search/elasticsearch_index_prefix' 'magento2'
-    update_magento_config 'catalog/search/elasticsearch_enable_auth' '0'
-    update_magento_config 'catalog/search/elasticsearch_server_timeout' '15'
-elif [[ ${search_engine} == "mysql" ]]; then
-    update_magento_config 'catalog/search/engine' 'mysql'
+if [[ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ]]; then
+    # Configure search engine
+    search_engine=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_search_engine")
+    if [[ ${search_engine} == "elasticsearch" ]]; then
+        update_magento_config 'catalog/search/engine' 'elasticsearch'
+        update_magento_config 'catalog/search/elasticsearch_server_hostname' 'localhost'
+        update_magento_config 'catalog/search/elasticsearch_server_port' '9200'
+        update_magento_config 'catalog/search/elasticsearch_index_prefix' 'magento2'
+        update_magento_config 'catalog/search/elasticsearch_enable_auth' '0'
+        update_magento_config 'catalog/search/elasticsearch_server_timeout' '15'
+    elif [[ ${search_engine} == "mysql" ]]; then
+        update_magento_config 'catalog/search/engine' 'mysql'
+    fi
+    # End configure search engine
+
+    m-clear-cache
+
+    set +x
+    echo "Search engine configured."
+else
+    set +x
+    echo "Search engine configuration was NOT changed (custom search engine is not available in Magento CE)."
 fi
-# End configure search engine
-
-m-clear-cache
-
-set +x
-echo "Search engine configured."
