@@ -11,6 +11,7 @@ function process_php_config () {
             sed -i "s|display_errors = Off|display_errors = On|g" ${php_ini_path}
             sed -i "s|display_startup_errors = Off|display_startup_errors = On|g" ${php_ini_path}
             sed -i "s|error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT|error_reporting = E_ALL|g" ${php_ini_path}
+            sed -i "s|;always_populate_raw_post_data = -1|always_populate_raw_post_data = -1|g" ${php_ini_path}
 
             # TODO: Fix for a bug, should be removed in 3.0
             sed -i "s|:/vendor/phpunit/phpunit|:${guest_magento_dir}/vendor/phpunit/phpunit|g" ${php_ini_path}
