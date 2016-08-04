@@ -24,6 +24,8 @@ environment:
   # [To apply changes: m-reinstall]
   search_engine: "mysql"
 magento:
+  # [To apply changes: m-switch-to-ce -f OR m-switch-to-ee -f]
+  install_sample_data: 0
   # [To apply changes: init-project -f]
   host_name: "magento2.vagrant2"
   # [To apply changes: m-reinstall]
