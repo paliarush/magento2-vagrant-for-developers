@@ -11,6 +11,10 @@ done
 # Init environment variables
 vagrant_dir="/vagrant"
 
+if [[ -z "$(grep "use_varnish:" /vagrant/etc/config.yaml)" ]]; then
+    sed -i '/environment:/a \ \ use_varnish: 0' /vagrant/etc/config.yaml
+fi
+
 # Configure Varnish if enabled in config
 restart_services=0
 use_varnish=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_use_varnish")

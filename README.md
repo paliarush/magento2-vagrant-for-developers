@@ -24,6 +24,7 @@
  * [Environment configuration](#environment-configuration)
    * [Switch between PHP 5.6 and 7.0](#switch-between-php-56-and-70)
    * [Activating Varnish](#activating-varnish)
+   * [Activating ElasticSearch](#activating-elasticsearch)
    * [Reset environment](#reset-environment)
  * [FAQ](#faq)
 
@@ -130,6 +131,8 @@ Current vagrant project follows [semantic versioning](http://semver.org/spec/v2.
 For example your current branch is `2.0`, then it will be safe to pull any changes from `origin/2.0`. However branch `3.0` will contain changes backward incompatible with `2.0`.
 Note, that semantic versioning is only used for `x.0` branches (not for `develop`).
 
+:information_source: To apply changes run `vagrant reload`.
+
 ## Day-to-day development scenarios
 
 ### Reinstall Magento
@@ -235,12 +238,19 @@ PHP version will be applied after "vagrant reload".
 
 ### Activating Varnish
 
-Set "use_varnish: 1" to use varnish along apache in [config.yaml](etc/config.yaml.dist).
-Running vagrant reload will apply your preference. Or by using m-varnish script.
+Set `use_varnish: 1` to use varnish along apache in [config.yaml](etc/config.yaml.dist). Changes will be applied on `m-reinstall`.
 It will use default file etc/magento2_default_varnish.vcl.dist generated from a Magento instance.
 Varnish Version: 3.0.5
 
-Note: command m-varnish with arguments disable or enable is also available in guest or host to enable or disable varnish without reloading machine.
+Use the following commands to enable/disable varnish without reinstalling Magento: `m-varnish disable` or `m-varnish enable`.
+
+### Activating ElasticSearch
+
+:information_source: Available in Magento EE only.
+
+Set `search_engine: "elasticsearch"` in [config.yaml](etc/config.yaml.dist) to use ElasticSearch as current search engine or `search_engine: "mysql"` to use MySQL. Changes will be applied on `m-reinstall`.
+
+Use the following commands to switch between search engines without reinstalling Magento: `m-search-engine elasticsearch` or `m-search-engine mysql`.
 
 ### Reset environment
 

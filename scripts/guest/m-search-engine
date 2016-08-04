@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+vagrant_dir="/vagrant"
+
+if [[ $1 == "help" ]]; then
+    echo "Usage: ./m-search-engine mysql/elasticsearch"
+    exit 0
+fi
+
+# Check if user created config.yaml file
+if [[ ! -f /vagrant/etc/config.yaml ]]; then
+    echo "Please make sure you have create a config.yaml file copy from etc/config.yaml.dist"
+    exit 1
+fi
+
+if [[ -z "$(grep "search_engine:" /vagrant/etc/config.yaml)" ]]; then
+    sed -i '/environment:/a \ \ search_engine: "mysql"' /vagrant/etc/config.yaml
+fi
+
+if [[ $1 == "mysql" ]]; then
+    sed -ie 's/search_engine:.*/search_engine: "mysql"/' /vagrant/etc/config.yaml
+elif [[ $1 == "elasticsearch" ]]; then
+    sed -ie 's/search_engine:.*/search_engine: "elasticsearch"/' /vagrant/etc/config.yaml
+else
+    echo "Usage: ./m-search-engine mysql/elasticsearch"
+    exit 1
+fi
+
+configure_search_engine

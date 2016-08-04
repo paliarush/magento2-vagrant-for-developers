@@ -18,6 +18,9 @@ environment:
   composer_prefer_source: 0
   # [To apply changes: m-reinstall]
   use_varnish: 0
+  # Possible values: mysql, elasticsearch
+  # [To apply changes: m-reinstall]
+  search_engine: "mysql"
 magento:
   # [To apply changes: init-project -f]
   host_name: "magento2.vagrant2"

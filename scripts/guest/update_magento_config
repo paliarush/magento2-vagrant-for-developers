@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Enable trace printing and exit on the first error
+set -ex
+
+config_path=$1
+config_value=$2
+
+mysql -D magento -e "INSERT INTO core_config_data
+    ( scope, scope_id, path, value ) VALUES
+    ( 'default', '0', '${config_path}', '${config_value}' )
+     ON DUPLICATE KEY UPDATE value = '${config_value}'
+;"
