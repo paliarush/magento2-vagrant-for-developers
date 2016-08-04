@@ -9,7 +9,7 @@
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/magento2ce/app/etc" />
-            <excludedPath local="true" path="$PROJECT_DIR$/magento2ce/var/generation" />
+            <excludedPath local="true" path="$PROJECT_DIR$/magento2ce/var" />
           </excludedPaths>
         </serverdata>
       </paths>

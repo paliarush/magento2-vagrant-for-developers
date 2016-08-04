@@ -78,5 +78,5 @@ if [ ${with_sample_data} = 1 ]; then
     fi
 fi
 
-cd ${vagrant_dir}
+cd "${vagrant_dir}"
 vagrant ssh -c "m-reinstall"

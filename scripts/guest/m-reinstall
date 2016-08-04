@@ -6,6 +6,8 @@ set -ex
 get_config_value="/vagrant/scripts/get_config_value.sh"
 magento_host_name=$(bash ${get_config_value} "magento_host_name")
 vagrant_dir="/vagrant"
+use_nfs=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")
+is_windows_host=${IS_WINDOWS_HOST}
 
 declare -A setupOptions
 setupOptions[admin_frontname]=$(bash ${get_config_value} "magento_admin_frontname")
@@ -25,6 +27,11 @@ setupOptions[amqp_host]='localhost'
 setupOptions[amqp_port]='5672'
 setupOptions[amqp_user]='guest'
 setupOptions[amqp_password]='guest'
+setupOptions[amqp_virtualhost]='/'
+
+if [[ ${is_windows_host} == 1 ]] || [[ ${use_nfs} == 0 ]]; then
+    sudo chown -R vagrant:vagrant ${MAGENTO_ROOT}
+fi
 
 cd ${MAGENTO_ROOT}
 
@@ -67,27 +74,34 @@ install_cmd="./bin/magento setup:install \
     --use-rewrites=1"
 
 # Configure Rabbit MQ
-if [ -f "${MAGENTO_ROOT}/app/code/Magento/Amqp/registration.php" ]; then
+if [[ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ]]; then
     install_cmd="${install_cmd} \
     --amqp-host=${setupOptions[amqp_host]} \
     --amqp-port=${setupOptions[amqp_port]} \
     --amqp-user=${setupOptions[amqp_user]} \
+    --amqp-virtualhost=${setupOptions[amqp_virtualhost]} \
     --amqp-password=${setupOptions[amqp_password]}"
 fi
 
-chmod +x bin/magento
+sudo chmod +x bin/magento
 php ${install_cmd}
-# Comment out the line above and uncomment the one below to debug setup script, make sure to verify remote_host value
-# php -d xdebug.remote_host=192.168.10.1 -d xdebug.idekey=PHPSTORM -d xdebug.remote_connect_back=0 -d xdebug.remote_autostart=1 ${install_cmd}
+# Comment out the line above and uncomment the one below to debug Magento Setup script
+# php -d xdebug.remote_autostart=1 ${install_cmd}
+
+# Configure Varnish FPC, if enabled
+bash "${vagrant_dir}/scripts/guest/configure_varnish" -f
 
 # Enable Magento cron jobs
-echo "* * * * * php ${MAGENTO_ROOT}/bin/magento cron:run &" | crontab -u vagrant -
+echo "* * * * * php ${MAGENTO_ROOT}/bin/magento cron:run &
+* * * * * php ${MAGENTO_ROOT}/update/cron.php &
+* * * * * php ${MAGENTO_ROOT}/bin/magento setup:cron:run &" | crontab -u vagrant -
 
-use_nfs=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")
-is_windows_host=${IS_WINDOWS_HOST}
-if [[ ${is_windows_host} == 1 || ${use_nfs} == 0 ]]; then
-    chown -R vagrant:vagrant ${MAGENTO_ROOT}
+if [[ ${is_windows_host} == 1 ]] || [[ ${use_nfs} == 0 ]]; then
+    sudo chown -R vagrant:vagrant ${MAGENTO_ROOT}
 fi
+
+# Configure search engine according to config.yaml
+bash "${vagrant_dir}/scripts/guest/configure_search_engine"
 
 # Generate XSD references for PHP Storm
 php bin/magento dev:urn-catalog:generate /vagrant/.idea/misc.xml
@@ -96,15 +110,6 @@ sed -i "s|${MAGENTO_ROOT}|${MAGENTO_ROOT_HOST}|g" "/vagrant/.idea/misc.xml"
 set +x
 echo "
 Magento application was deployed to ${MAGENTO_ROOT} and installed successfully
+
 Access storefront at ${setupOptions[base_url]}
 Access admin panel at ${setupOptions[base_url]}${setupOptions[admin_frontname]}/"
-
-if [[ ${is_windows_host} == 1 || ${use_nfs} == 0 ]]; then
-    echo "
-    [Optional] To finish developer environment set up:
-        1. Please create new PhpStorm project using 'magento2ce' directory on your host
-        (this directory should already contain Magento repository cloned earlier)
-
-        2. Use instructions provided here https://github.com/paliarush/vagrant-magento/blob/2.0/docs/phpstorm-configuration-windows-hosts.md
-        to set up synchronization in PhpStorm (or using rsync) with ${MAGENTO_ROOT} directory"
-fi

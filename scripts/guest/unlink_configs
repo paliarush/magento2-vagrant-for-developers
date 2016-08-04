@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+function process_configs () {
+    configs_path=$1
+    configs=$2
+    for config in "${configs[@]}"
+    do
+        if [[ -L ${config_dir}/${config} ]] && [[ -e ${config_dir}/${config} ]]; then
+            sudo rm ${config_dir}/${config}
+            sudo mv /vagrant/etc/guest/${config} ${config_dir}/${config}
+        elif [[ ! -e ${config_dir}/${config} ]] && [[ -e "${config_dir}/${config}.back" ]]; then
+            sudo rm -rf ${config_dir}/${config}
+            sudo cp -rp "${config_dir}/${config}.back" ${config_dir}/${config}
+        fi
+    done
+}
+
+# Enable trace printing and exit on the first error
+set -ex
+
+# Revert configs before shutdown or reboot to allow proper services initialization on booting
+
+# Configs located under /etc/*
+config_dir="/etc"
+# See link_configs script
+configs=( apache2 php mysql varnish rabbitmq )
+process_configs ${config_dir} ${configs}
