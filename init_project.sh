@@ -2,7 +2,9 @@
 
 vagrant_dir=$PWD
 magento_ce_dir="${vagrant_dir}/magento2ce"
+magento_ce_sample_data_dir="${magento_ce_dir}/magento2ce-sample-data"
 magento_ee_dir="${magento_ce_dir}/magento2ee"
+magento_ee_sample_data_dir="${magento_ce_dir}/magento2ee-sample-data"
 config_path="${vagrant_dir}/etc/config.yaml"
 host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
 use_nfs=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")
@@ -69,10 +71,19 @@ if [[ ! -d ${magento_ce_dir} ]]; then
     fi
     # Check out CE repository
     git clone ${repository_url_ce} "${magento_ce_dir}"
+    # Check out CE sample data repository
+    repository_url_ce_sample_data=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce_sample_data")
+    git clone ${repository_url_ce_sample_data} ${magento_ce_sample_data_dir}
     # Check out EE repository
     # By default EE repository is not specified and EE project is not checked out
     if [[ -n "${repository_url_ee}" ]]; then
         git clone ${repository_url_ee} "${magento_ee_dir}"
+    fi
+    # Check out EE sample data repository
+    # By default EE sample data repository is not specified and EE project is not checked out
+    repository_url_ee_sample_data=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee_sample_data")
+    if [ -n "${repository_url_ee_sample_data}" ]; then
+        git clone ${repository_url_ee_sample_data} ${magento_ee_sample_data_dir}
     fi
 fi
 

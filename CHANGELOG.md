@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+ - Added sample data support
  - Added ElasticSearch support
 
 ## [v2.1.0] - 2016-06-22
