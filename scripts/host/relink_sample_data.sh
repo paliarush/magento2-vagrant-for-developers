@@ -32,11 +32,11 @@ if [[ -f "${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php" ]]; the
     set -x
 fi
 
-if [[ ${install_ee} = 1 ]]; then
+if [[ ${install_ee} -eq 1 ]]; then
     "${php_executable}" -f "${magento_ee_dir}/dev/tools/build-ee.php" -- --command=link --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}"
 fi
 
-if [[ ${install_sample_data} = 1 ]]; then
+if [[ ${install_sample_data} -eq 1 ]]; then
     # Installing CE or EE, in both cases CE sample data should be linked
     if [[ ! -f "${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php" ]]; then
         # Sample data not available and should be enabled
@@ -52,7 +52,7 @@ if [[ ${install_sample_data} = 1 ]]; then
         "${php_executable}" -f "${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=link --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ce_sample_data_dir}"
     fi
 
-    if [[ ${install_ee} = 1 ]]; then
+    if [[ ${install_ee} -eq 1 ]]; then
         # Installing EE
         if [[ ! -f "${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php" ]]; then
             # Sample data not available and should be enabled

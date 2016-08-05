@@ -1,8 +1,12 @@
 repository_url:
   # [To apply changes: init-project -fc]
+  # git@github.com:magento/magento2ce.git OR custom one
   ce: "git@github.com:magento/magento2.git"
+  # git@github.com:magento/magento2ee.git OR custom one
   ee: ""
+  # can be replaced with custom repository
   ce_sample_data: "git@github.com:magento/magento2-sample-data.git"
+  # git@github.com:magento/magento2-sample-data-ee.git OR custom one
   ee_sample_data: ""
 guest:
   # [To apply changes: init-project -f]

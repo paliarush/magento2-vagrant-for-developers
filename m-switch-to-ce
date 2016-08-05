@@ -17,7 +17,7 @@ while getopts 'f' flag; do
   esac
 done
 
-if [[ ! -f ${magento_ee_dir}/app/etc/aliases_to_classes_map.json ]]; then
+if [[ ! -f ${magento_ee_dir}/app/etc/enterprise/di.xml ]]; then
     if [[ ${force_switch} -eq 0 ]]; then
         set +x
         echo "EE codebase is not available. Use 'm-switch-to-ce -f' to switch anyway."
@@ -25,7 +25,7 @@ if [[ ! -f ${magento_ee_dir}/app/etc/aliases_to_classes_map.json ]]; then
         exit 0
     fi
 else
-    if [[ ! -f ${magento_ce_dir}/app/etc/aliases_to_classes_map.json ]] && [[ ${force_switch} -eq 0 ]]; then
+    if [[ ! -f ${magento_ce_dir}/app/etc/enterprise/di.xml ]] && [[ ${force_switch} -eq 0 ]]; then
         set +x
         echo "Already switched to CE. Use 'm-switch-to-ce -f' to switch anyway."
         exit 0

@@ -13,14 +13,15 @@
  * [Day-to-day development scenarios](#day-to-day-development-scenarios)
    * [Reinstall Magento](#reinstall-magento)
    * [Clear Magento cache](#clear-magento-cache)
-   * [Update Composer dependencies](#update-composer-dependencies)
    * [Switch between CE and EE](#switch-between-ce-and-ee)
+   * [Sample data installation](#sample-data-installation)
    * [Use Magento CLI (bin/magento)](#use-magento-cli-binmagento)
    * [Debugging with XDebug](#debugging-with-xdebug)
    * [Connecting to MySQL DB](#connecting-to-mysql-db)
    * [View emails sent by Magento](#view-emails-sent-by-magento)
    * [Accessing PHP and other config files](#accessing-php-and-other-config-files)
    * [Multiple Magento instances](#multiple-magento-instances)
+   * [Update Composer dependencies](#update-composer-dependencies)
  * [Environment configuration](#environment-configuration)
    * [Switch between PHP 5.6 and 7.0](#switch-between-php-56-and-70)
    * [Activating Varnish](#activating-varnish)
@@ -169,15 +170,12 @@ Force switch can be done using `-f` flag even if already switched to the target 
 
 :information_source: On Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly) you will be asked to wait until code is uploaded to guest machine by PhpStorm (PhpStorm must be launched). To continue the process press any key.
 
-### Update Composer dependencies
+### Sample data installation
 
-Go to 'vagrant-magento' created earlier and run in command line:
+Make sure that `ce_sample_data` and `ee_sample_data` are defined in [config.yaml](etc/config.yaml.dist) and point CE and optionally EE sample data repositories.
+During initial project setup or during `bash init_project.sh -fc` (with `-fc` project will be re-created from scratch), sample data repositories willl be checked out to `vagrant_project_root/magento2ce/magento2ce-sample-data` and `vagrant_project_root/magento2ce/magento2ee-sample-data`.
 
-```
-bash m-composer install
-OR
-bash m-composer update
-```
+To install Magento with sample data set `install_sample_data` in [config.yaml](etc/config.yaml.dist) to `1` and run `bash m-switch-to-ce -f` or `bash m-switch-to-ee -f`, depending on the edition to be installed. To disable sample data, set this option to `0` and force-switch to necessary edition (using the same commands).
 
 ### Use Magento CLI (bin/magento)
 
@@ -228,6 +226,16 @@ After editing configs in IDE it is still required to restart related services ma
 
 To install several Magento instances based on different code bases, just follow [Installation steps](#installation-steps) to initialize project in another directory on the host.
 Unique IP address, SSH port and domain name will be generated for each new instance if not specified manually in `etc/config.yaml`
+
+### Update Composer dependencies
+
+Go to 'vagrant-magento' created earlier and run in command line:
+
+```
+bash m-composer install
+OR
+bash m-composer update
+```
 
 ## Environment configuration
 
