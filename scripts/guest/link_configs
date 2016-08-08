@@ -16,9 +16,6 @@ function process_configs () {
     done
 }
 
-# Enable trace printing and exit on the first error
-set -ex
-
 # Below configuration is required to allow managing mysql as a service
 if ! cat /etc/apparmor.d/local/usr.sbin.mysqld | grep -q '/vagrant/etc/guest' ; then
     echo "

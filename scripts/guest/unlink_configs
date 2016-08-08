@@ -15,9 +15,6 @@ function process_configs () {
     done
 }
 
-# Enable trace printing and exit on the first error
-set -ex
-
 # Revert configs before shutdown or reboot to allow proper services initialization on booting
 
 # Configs located under /etc/*

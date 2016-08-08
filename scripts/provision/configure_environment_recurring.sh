@@ -37,9 +37,6 @@ function isServiceAvailable() {
     fi
 }
 
-# Enable trace printing and exit on the first error
-set +x
-
 guest_magento_dir=$2
 use_php7=$4
 vagrant_dir="/vagrant"

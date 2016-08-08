@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# Enable trace printing and exit on the first error
 set -e
 
 guest_magento_dir=$2

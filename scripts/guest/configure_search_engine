@@ -3,9 +3,6 @@
 # Init environment variables
 vagrant_dir="/vagrant"
 
-# Enable trace printing and exit on the first error
-set -ex
-
 if [[ -z "$(grep "search_engine:" /vagrant/etc/config.yaml)" ]]; then
     sed -i '/environment:/a \ \ search_engine: "mysql"' /vagrant/etc/config.yaml
 fi
@@ -27,9 +24,7 @@ if [[ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ]]; then
 
     m-clear-cache
 
-    set +x
     echo "Search engine configured."
 else
-    set +x
     echo "Search engine configuration was NOT changed (custom search engine is not available in Magento CE)."
 fi

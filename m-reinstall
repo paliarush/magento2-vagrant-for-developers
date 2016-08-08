@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "$0")"; pwd)
-
-# Enable trace printing and exit on the first error
-set -ex
+vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)
 
 cd "${vagrant_dir}"
 vagrant ssh -c "m-reinstall"

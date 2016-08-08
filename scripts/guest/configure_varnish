@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/colors.sh"
+source "${vagrant_dir}/scripts/functions.sh"
+
 # Get args
 while getopts 'f' flag; do
   case "${flag}" in
     f) force_restart_services=1 ;;
-    *) error "Unexpected option ${flag}" ;;
+    *) error "Unexpected option" && exit 0;;
   esac
 done
-
-# Init environment variables
-vagrant_dir="/vagrant"
 
 if [[ -z "$(grep "use_varnish:" /vagrant/etc/config.yaml)" ]]; then
     sed -i '/environment:/a \ \ use_varnish: 0' /vagrant/etc/config.yaml

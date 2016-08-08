@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Enable trace printing and exit on the first error
-set -ex
-
 get_config_value="/vagrant/scripts/get_config_value.sh"
 magento_host_name=$(bash ${get_config_value} "magento_host_name")
 vagrant_dir="/vagrant"
@@ -102,7 +99,6 @@ bash "${vagrant_dir}/scripts/guest/configure_search_engine"
 php bin/magento dev:urn-catalog:generate /vagrant/.idea/misc.xml
 sed -i "s|${MAGENTO_ROOT}|${MAGENTO_ROOT_HOST}|g" "/vagrant/.idea/misc.xml"
 
-set +x
 echo "
 Magento application was deployed to ${MAGENTO_ROOT} and installed successfully
 

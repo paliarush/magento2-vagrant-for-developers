@@ -1,36 +1,33 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "$0")"; pwd)
+vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)
+
+source "${vagrant_dir}/scripts/colors.sh"
+source "${vagrant_dir}/scripts/functions.sh"
+
 magento_ce_dir="${vagrant_dir}/magento2ce"
 magento_ee_dir="${magento_ce_dir}/magento2ee"
 host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
 php_executable=$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")
 
-# Enable trace printing and exit on the first error
-set -ex
-
 force_switch=0
 while getopts 'f' flag; do
   case "${flag}" in
     f) force_switch=1 ;;
-    *) error "Unexpected option ${flag}" ;;
+    *) error "Unexpected option" && exit 0;;
   esac
 done
 
 if [[ ! -f ${magento_ee_dir}/app/etc/enterprise/di.xml ]]; then
-    if [[ ${force_switch} -eq 0 ]]; then
-        set +x
-        echo "EE codebase is not available. Use 'm-switch-to-ee -f' to switch anyway."
-        set -x
-        exit 0
-    fi
+    error "EE codebase is not available."
+    exit 0
 else
     if [[ -f ${magento_ce_dir}/app/etc/enterprise/di.xml ]] && [[ ${force_switch} -eq 0 ]]; then
-        set +x
-        echo "Already switched to EE. Use 'm-switch-to-ee -f' to switch anyway."
+        warning "Already switched to EE. Use 'm-switch-to-ee -f' to switch anyway."
         exit 0
     fi
 
+    info "Linking EE repository"
     ${php_executable} -f ${magento_ee_dir}/dev/tools/build-ee.php -- --command=link --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}"
 
     cp ${magento_ee_dir}/composer.json ${magento_ce_dir}/composer.json
@@ -55,9 +52,9 @@ bash "${vagrant_dir}/scripts/host/relink_sample_data.sh"
 bash "${vagrant_dir}/m-clear-cache"
 bash "${vagrant_dir}/m-composer" install
 
-echo "Magento installation..."
 if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then
-    read -p "Wait while Magento2 code is uploaded in PhpStorm and press any key to continue..." -n1 -s
+    read -p "$(warning "[Action Required] Wait while Magento2 code is uploaded in PhpStorm and press any key to continue...")" -n1 -s
 fi
 
+info "Installing Magento"
 bash "${vagrant_dir}/m-reinstall"

@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Enable trace printing and exit on the first error
-set -ex
-
 config_path=$1
 config_value=$2
 

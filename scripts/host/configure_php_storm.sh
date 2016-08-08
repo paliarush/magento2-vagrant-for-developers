@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "$0")/../.."; pwd)
+vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
 
-# Enable trace printing and exit on the first error
-set +x
 
 cd "${vagrant_dir}"
 ssh_port=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_forwarded_ssh_port")

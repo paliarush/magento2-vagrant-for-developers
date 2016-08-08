@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "$0")/../.."; pwd)
+vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
 host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
-
-# Enable trace printing and exit on the first error
-set -ex
 
 if [[ ${host_os} == "Windows" ]]; then
     curl http://windows.php.net/downloads/releases/archives/php-5.6.9-nts-Win32-VC11-x86.zip -o "${vagrant_dir}/lib/php.zip"
@@ -18,12 +15,8 @@ fi
 
 php_executable=$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")
 if ! ${php_executable} -v | grep -q 'Copyright' ; then
-    set +x
     echo "Automatic PHP installation is not available for your host OS. Please install any version of PHP to allow Magento dependencies management using Composer. Check out http://php.net/manual/en/install.php"
     exit 255
-    set -x
 else
-    set +x
     echo "PHP installed successfully."
-    set -x
 fi

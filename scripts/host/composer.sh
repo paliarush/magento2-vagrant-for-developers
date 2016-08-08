@@ -2,14 +2,15 @@
 
 # This script allows to use credentials specified in etc/composer/auth.json without declaring them globally
 
+vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
+
+source "${vagrant_dir}/scripts/colors.sh"
+source "${vagrant_dir}/scripts/functions.sh"
+
 current_dir=${PWD}
-vagrant_dir=$(cd "$(dirname "$0")/../.."; pwd)
 composer_auth_json="${vagrant_dir}/etc/composer/auth.json"
 composer_dir="${vagrant_dir}/scripts/host"
 composer_phar="${composer_dir}/composer.phar"
-
-# Enable trace printing and exit on the first error
-set -ex
 
 bash "${vagrant_dir}/scripts/host/check_requirements.sh"
 
@@ -35,9 +36,11 @@ fi
 host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
 if [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_composer_prefer_source") == 1 ]]; then
     # prefer-source is slow but guarantees that there will be no issues related to max path length on Windows
-    ${php_executable} "${composer_phar}" --ignore-platform-reqs --prefer-source "$@"
+    infoLevel2 "composer --ignore-platform-reqs --prefer-source "$@""
+    ${php_executable} "${composer_phar}" --ignore-platform-reqs --prefer-source "$@" 2> >(logError) > >(log)
 else
-    ${php_executable} "${composer_phar}" --ignore-platform-reqs "$@"
+    infoLevel2 "composer --ignore-platform-reqs "$@""
+    ${php_executable} "${composer_phar}" --ignore-platform-reqs "$@" 2> >(logError) > >(log)
 fi
 
 if [[ ! ${auth_json_already_exists} = 1 ]] && [[ -f "${current_dir}/auth.json" ]]; then

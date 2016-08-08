@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Enable trace printing and exit on the first error
-set -ex
-
 use_nfs_for_synced_folders=$1
 guest_magento_dir=$2
 magento_host_name=$3
@@ -32,9 +29,7 @@ sudo a2dissite 000-default
 # Configure composer
 composer_auth_json="${vagrant_dir}/etc/composer/auth.json"
 if [[ -f ${composer_auth_json} ]]; then
-    set +x
     echo "Installing composer OAuth tokens from ${composer_auth_json}..."
-    set -x
     if [[ ! -d /home/vagrant/.composer ]] ; then
       sudo -H -u vagrant bash -c 'mkdir /home/vagrant/.composer'
     fi

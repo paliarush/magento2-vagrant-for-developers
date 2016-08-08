@@ -8,9 +8,6 @@ function isServiceAvailable() {
     fi
 }
 
-# Enable trace printing and exit on the first error
-set -ex
-
 use_php7=$4
 
 # Delete obsolete repository
