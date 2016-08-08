@@ -31,9 +31,8 @@ else
         exit 0
     fi
 
-    ${php_executable} -f ${magento_ee_dir}/dev/tools/build-ee.php -- --command=link --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}"
+    ${php_executable} -f ${magento_ee_dir}/dev/tools/build-ee.php -- --command=link --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}" --exclude=true
 
-    cp ${magento_ee_dir}/composer.json ${magento_ce_dir}/composer.json
     cp ${magento_ee_dir}/composer.lock ${magento_ce_dir}/composer.lock
 
     if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then
@@ -54,6 +53,9 @@ bash "${vagrant_dir}/scripts/host/relink_sample_data.sh"
 
 bash "${vagrant_dir}/m-clear-cache"
 bash "${vagrant_dir}/m-composer" install
+
+cd ${magento_ce_dir}
+git checkout composer.lock
 
 echo "Magento installation..."
 if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then
