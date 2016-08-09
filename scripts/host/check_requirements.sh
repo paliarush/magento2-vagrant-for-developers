@@ -8,6 +8,6 @@ source "${vagrant_dir}/scripts/functions.sh"
 php_executable=$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")
 
 if ! ${php_executable} -v | grep -q 'Copyright' ; then
-    info "Installing PHP"
+    status "Installing PHP"
     bash "${vagrant_dir}/scripts/host/install_php.sh"
 fi

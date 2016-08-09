@@ -2,6 +2,8 @@
 
 vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)
 
+source "${vagrant_dir}/scripts/functions.sh"
+
 arguments=$@
 cd "${vagrant_dir}"
-vagrant ssh -c "\$MAGENTO_ROOT/bin/magento $arguments"
+vagrant ssh -c "\$MAGENTO_ROOT/bin/magento $arguments" 2> >(logError)

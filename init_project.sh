@@ -15,10 +15,10 @@ use_nfs=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")
 repository_url_ce=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce")
 repository_url_ee=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee")
 
-info "Checking requirements"
+status "Checking requirements"
 bash "${vagrant_dir}/scripts/host/check_requirements.sh"
 
-info "Installing missing vagrant plugins"
+status "Installing missing vagrant plugins"
 vagrant_plugin_list=$(vagrant plugin list)
 if ! echo ${vagrant_plugin_list} | grep -q 'vagrant-hostmanager' ; then
     vagrant plugin install vagrant-hostmanager
@@ -31,10 +31,10 @@ if ! echo ${vagrant_plugin_list} | grep -q 'vagrant-host-shell' ; then
 fi
 
 if [[ ! -f "${vagrant_dir}/etc/config.yaml" ]]; then
-    info "Initializing etc/config.yaml using defaults from etc/config.yaml.dist"
+    status "Initializing etc/config.yaml using defaults from etc/config.yaml.dist"
     cp "${config_path}.dist" "${config_path}"
 fi
-info "Generating random IP address, and host name to prevent collisions (if no custom values specified)"
+status "Generating random IP address, and host name to prevent collisions (if no custom values specified)"
 random_ip=$(( ( RANDOM % 240 )  + 12 ))
 forwarded_ssh_port=$(( random_ip + 3000 ))
 sed -i.back "s|ip_address: \"192.168.10.2\"|ip_address: \"192.168.10.${random_ip}\"|g" "${config_path}"
@@ -51,88 +51,86 @@ while getopts 'fcp' flag; do
     f) force_project_cleaning=1 ;;
     c) force_codebase_cleaning=1 ;;
     p) force_phpstorm_config_cleaning=1 ;;
-    *) error "Unexpected option" && exit 0;;
+    *) error "Unexpected option" && exit 1;;
   esac
 done
 if [[ ${force_project_cleaning} -eq 1 ]]; then
-    info "Cleaning up the project before initialization since '-f' option was used"
-    vagrant destroy -f
+    status "Cleaning up the project before initialization since '-f' option was used"
+    vagrant destroy -f 2> >(logError) > >(log)
     mv "${vagrant_dir}/etc/guest/.gitignore" "${vagrant_dir}/etc/.gitignore.back"
     rm -rf "${vagrant_dir}/.vagrant" "${vagrant_dir}/etc/guest"
     mkdir "${vagrant_dir}/etc/guest"
     mv "${vagrant_dir}/etc/.gitignore.back" "${vagrant_dir}/etc/guest/.gitignore"
     cd "${vagrant_dir}/log" && mv email/.gitignore email_gitignore.back && rm -rf email && mkdir email && mv email_gitignore.back email/.gitignore
     if [[ ${force_codebase_cleaning} -eq 1 ]]; then
-        info "Removing current Magento codebase before initialization since '-c' option was used"
+        status "Removing current Magento codebase before initialization since '-c' option was used"
         rm -rf "${magento_ce_dir}"
     fi
 fi
 
 if [[ ! -d ${magento_ce_dir} ]]; then
     if [[ ${host_os} == "Windows" ]]; then
-        info "Configuring git for Windows host"
+        status "Configuring git for Windows host"
         git config --global core.autocrlf false
         git config --global core.eol LF
         git config --global diff.renamelimit 5000
     fi
-    info "Checking out CE repository"
-    git clone ${repository_url_ce} "${magento_ce_dir}"
-    info "Checking out CE sample data repository"
+    status "Checking out CE repository"
+    git clone ${repository_url_ce} "${magento_ce_dir}" 2> >(logError) > >(log)
+    status "Checking out CE sample data repository"
     repository_url_ce_sample_data=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce_sample_data")
-    git clone ${repository_url_ce_sample_data} ${magento_ce_sample_data_dir}
+    git clone ${repository_url_ce_sample_data} "${magento_ce_sample_data_dir}" 2> >(logError) > >(log)
     # By default EE repository is not specified and EE project is not checked out
     if [[ -n "${repository_url_ee}" ]]; then
-        info "Checking out EE repository"
-        git clone ${repository_url_ee} "${magento_ee_dir}"
+        status "Checking out EE repository"
+        git clone ${repository_url_ee} "${magento_ee_dir}" 2> >(logError) > >(log)
     fi
     # By default EE sample data repository is not specified and EE project is not checked out
     repository_url_ee_sample_data=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee_sample_data")
     if [ -n "${repository_url_ee_sample_data}" ]; then
-        info "Checking out EE sample data repository"
-        git clone ${repository_url_ee_sample_data} ${magento_ee_sample_data_dir}
+        status "Checking out EE sample data repository"
+        git clone ${repository_url_ee_sample_data} "${magento_ee_sample_data_dir}" 2> >(logError) > >(log)
     fi
 fi
 
-info "Installing Magento dependencies via Composer"
+status "Installing Magento dependencies via Composer"
 cd "${magento_ce_dir}"
-bash "${vagrant_dir}/scripts/host/composer.sh" install
+bash "${vagrant_dir}/scripts/host/composer.sh" install 2> >(logError)
 
-info "Initializing vagrant box"
+status "Initializing vagrant box"
 cd "${vagrant_dir}"
 vagrant up 2> >(logError) > >(log)
 
 if [[ ${force_project_cleaning} -eq 1 ]] && [[ ${force_phpstorm_config_cleaning} -eq 1 ]]; then
-    info "Resetting PhpStorm configuration since '-p' option was used"
+    status "Resetting PhpStorm configuration since '-p' option was used"
     rm -rf "${vagrant_dir}/.idea"
 fi
 if [[ ! -f "${vagrant_dir}/.idea/deployment.xml" ]]; then
-    info "Configuring PhpStorm"
-    bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
+    status "Configuring PhpStorm"
+    bash "${vagrant_dir}/scripts/host/configure_php_storm.sh" 2> >(logError)
 fi
 
 if [[ ${host_os} == "Windows" ]] || [[ ${use_nfs} == 0 ]]; then
     # Automatic switch to EE during project initialization cannot be supported on Windows
-    info "Installing Magento CE"
+    status "Installing Magento CE"
     bash "${vagrant_dir}/m-reinstall" 2> >(logError) > >(log)
 else
     if [[ -n "${repository_url_ee}" ]]; then
-        info "Installing Magento EE"
+        status "Installing Magento EE"
         bash "${vagrant_dir}/m-switch-to-ee" -f 2> >(logError) > >(log)
     else
-        info "Installing Magento CE"
+        status "Installing Magento CE"
         bash "${vagrant_dir}/m-switch-to-ce" -f 2> >(logError) > >(log)
     fi
 fi
 
 success "Project initialization succesfully completed"
 
-echo "
-${bold}[Important]${regular}
+info "${bold}[Important]${regular}
     Please use ${bold}${vagrant_dir}${regular} directory as PhpStorm project root, NOT ${bold}${magento_ce_dir}${regular}."
 
 if [[ ${host_os} == "Windows" ]] || [[ ${use_nfs} == 0 ]]; then
-    echo "
-${bold}[Optional]${regular}
+    info "${bold}[Optional]${regular}
     To verify that deployment configuration for ${bold}${magento_ce_dir}${regular} in PhpStorm is correct,
         use instructions provided here: ${bold}https://github.com/paliarush/magento2-vagrant-for-developers/blob/2.0/docs/phpstorm-configuration-windows-hosts.md${regular}.
     If not using PhpStorm, you can set up synchronization using rsync"

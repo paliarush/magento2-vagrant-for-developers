@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-echo "Clearing Magento cache..."
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/functions.sh"
+
+status "Clearing Magento cache"
 
 rm -f "${MAGENTO_ROOT}/app/etc/paths.php"
 if [[ -d "${MAGENTO_ROOT}/var" ]]; then
@@ -30,4 +34,4 @@ if [[ -d "${MAGENTO_ROOT}/dev" ]]; then
     fi
 fi
 
-echo "Magento cache cleared."
+success "Cache cleared"

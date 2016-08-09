@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
+
+source "${vagrant_dir}/scripts/functions.sh"
+
 magento_ce_dir="${vagrant_dir}/magento2ce"
 magento_ee_dir="${magento_ce_dir}/magento2ee"
 magento_ce_sample_data_dir="${magento_ce_dir}/magento2ce-sample-data"

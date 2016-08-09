@@ -2,14 +2,16 @@
 
 vagrant_dir="/vagrant"
 
+source "${vagrant_dir}/scripts/functions.sh"
+
 if [[ $1 == "help" ]]; then
-    echo "Usage: ./m-search-engine mysql/elasticsearch"
+    status "Usage: ./m-search-engine mysql/elasticsearch"
     exit 0
 fi
 
 # Check if user created config.yaml file
 if [[ ! -f /vagrant/etc/config.yaml ]]; then
-    echo "Please make sure you have create a config.yaml file copy from etc/config.yaml.dist"
+    error "Please make sure you have create a config.yaml file copy from etc/config.yaml.dist"
     exit 1
 fi
 
@@ -18,12 +20,14 @@ if [[ -z "$(grep "search_engine:" /vagrant/etc/config.yaml)" ]]; then
 fi
 
 if [[ $1 == "mysql" ]]; then
+    status "Enabling MySQL search engine"
     sed -ie 's/search_engine:.*/search_engine: "mysql"/' /vagrant/etc/config.yaml
 elif [[ $1 == "elasticsearch" ]]; then
+    status "Enabling ElasticSearch search engine"
     sed -ie 's/search_engine:.*/search_engine: "elasticsearch"/' /vagrant/etc/config.yaml
 else
-    echo "Usage: ./m-search-engine mysql/elasticsearch"
+    error "Usage: ./m-search-engine mysql/elasticsearch"
     exit 1
 fi
 
-configure_search_engine
+configure_search_engine 2> >(logError)

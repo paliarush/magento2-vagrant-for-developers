@@ -3,14 +3,16 @@
 # Init environment variables
 vagrant_dir="/vagrant"
 
+source "${vagrant_dir}/scripts/functions.sh"
+
 if [[ -z "$(grep "search_engine:" /vagrant/etc/config.yaml)" ]]; then
     sed -i '/environment:/a \ \ search_engine: "mysql"' /vagrant/etc/config.yaml
 fi
 
 if [[ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ]]; then
-    # Configure search engine
     search_engine=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_search_engine")
     if [[ ${search_engine} == "elasticsearch" ]]; then
+        status "Configuring ElasticSearch search engine"
         update_magento_config 'catalog/search/engine' 'elasticsearch'
         update_magento_config 'catalog/search/elasticsearch_server_hostname' 'localhost'
         update_magento_config 'catalog/search/elasticsearch_server_port' '9200'
@@ -18,13 +20,11 @@ if [[ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ]]; then
         update_magento_config 'catalog/search/elasticsearch_enable_auth' '0'
         update_magento_config 'catalog/search/elasticsearch_server_timeout' '15'
     elif [[ ${search_engine} == "mysql" ]]; then
+        status "Configuring MySQL search engine"
         update_magento_config 'catalog/search/engine' 'mysql'
     fi
-    # End configure search engine
 
-    m-clear-cache
-
-    echo "Search engine configured."
+    m-clear-cache 2> >(logError)
 else
-    echo "Search engine configuration was NOT changed (custom search engine is not available in Magento CE)."
+    status "Search engine configuration was NOT changed (custom search engine is not available in Magento CE)."
 fi
