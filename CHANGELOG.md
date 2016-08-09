@@ -12,8 +12,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+ - After EE is linked, EE versions of composer.lock and composer.json are replaced back with CE versions (thus are not marked by git as modified)
+
 ### Fixed
 
+ - Fixed issue with some files marked as unversioned in git after EE linking
  - It is now possible to use spaces in path to vagrant project on Windows. On OSX and Linux hosts it works in non-NFS mode, in NFS mode it does not work because of [bug in vagrant](mitchellh/vagrant#7540)
  - Fixed issue with MySQL being down after VM power off
 

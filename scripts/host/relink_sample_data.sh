@@ -19,21 +19,21 @@ fi
 
 # As a precondition, disable CE sample data
 if [[ -f "${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php" ]]; then
-    ${php_executable} -f "${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=unlink --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ce_sample_data_dir}"
+    ${php_executable} -f "${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=unlink --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ce_sample_data_dir}" --exclude=true
     set +x
     echo "CE Sample data disabled"
     set -x
 fi
 # As a precondition, disable EE sample data
 if [[ -f "${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php" ]]; then
-    "${php_executable}" -f "${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=unlink --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ee_sample_data_dir}"
+    "${php_executable}" -f "${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=unlink --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ee_sample_data_dir}" --exclude=true
     set +x
     echo "EE Sample data disabled"
     set -x
 fi
 
 if [[ ${install_ee} -eq 1 ]]; then
-    "${php_executable}" -f "${magento_ee_dir}/dev/tools/build-ee.php" -- --command=link --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}"
+    "${php_executable}" -f "${magento_ee_dir}/dev/tools/build-ee.php" -- --command=link --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}" --exclude=true
 fi
 
 if [[ ${install_sample_data} -eq 1 ]]; then
@@ -49,7 +49,7 @@ if [[ ${install_sample_data} -eq 1 ]]; then
         set +x
         echo "CE Sample data enabled"
         set -x
-        "${php_executable}" -f "${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=link --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ce_sample_data_dir}"
+        "${php_executable}" -f "${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=link --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ce_sample_data_dir}" --exclude=true
     fi
 
     if [[ ${install_ee} -eq 1 ]]; then
@@ -65,7 +65,7 @@ if [[ ${install_sample_data} -eq 1 ]]; then
             set +x
             echo "EE Sample data enabled"
             set -x
-            "${php_executable}" -f "${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=link --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ee_sample_data_dir}"
+            "${php_executable}" -f "${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=link --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ee_sample_data_dir}" --exclude=true
         fi
     fi
 fi

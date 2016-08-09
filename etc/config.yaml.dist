@@ -1,5 +1,5 @@
 repository_url:
-  # [To apply changes: init-project -fc]
+  # [To apply changes: init_project.sh -fc]
   # git@github.com:magento/magento2ce.git OR custom one
   ce: "git@github.com:magento/magento2.git"
   # git@github.com:magento/magento2ee.git OR custom one
@@ -9,7 +9,7 @@ repository_url:
   # git@github.com:magento/magento2-sample-data-ee.git OR custom one
   ee_sample_data: ""
 guest:
-  # [To apply changes: init-project -f]
+  # [To apply changes: init_project.sh -f]
   # NFS will be used for folder synchronization on *nix and OSX hosts by default.
   use_nfs: 1
   # Default is 2Gb, around 3Gb is necessary to run functional tests.
@@ -30,7 +30,7 @@ environment:
 magento:
   # [To apply changes: m-switch-to-ce -f OR m-switch-to-ee -f]
   install_sample_data: 0
-  # [To apply changes: init-project -f]
+  # [To apply changes: init_project.sh -f]
   host_name: "magento2.vagrant2"
   # [To apply changes: m-reinstall]
   admin_frontname: "admin"
