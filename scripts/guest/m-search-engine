@@ -30,4 +30,4 @@ else
     exit 1
 fi
 
-configure_search_engine 2> >(logError)
+configure_search_engine

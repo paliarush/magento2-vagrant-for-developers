@@ -30,4 +30,4 @@ else
     exit 1
 fi
 
-configure_varnish 2> >(logError)
+configure_varnish

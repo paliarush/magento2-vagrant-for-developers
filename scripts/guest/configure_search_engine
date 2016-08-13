@@ -24,7 +24,7 @@ if [[ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ]]; then
         update_magento_config 'catalog/search/engine' 'mysql'
     fi
 
-    m-clear-cache 2> >(logError)
+    m-clear-cache
 else
     status "Search engine configuration was NOT changed (custom search engine is not available in Magento CE)."
 fi

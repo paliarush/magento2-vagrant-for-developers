@@ -18,6 +18,9 @@ parse_yaml() {
 }
 
 vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)
+
+source "${vagrant_dir}/scripts/functions.sh"
+
 variable_name=$1
 
 # Read configs

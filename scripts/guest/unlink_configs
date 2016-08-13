@@ -15,6 +15,10 @@ function process_configs () {
     done
 }
 
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/functions.sh"
+
 # Revert configs before shutdown or reboot to allow proper services initialization on booting
 
 # Configs located under /etc/*

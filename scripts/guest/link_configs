@@ -16,6 +16,10 @@ function process_configs () {
     done
 }
 
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/functions.sh"
+
 # Below configuration is required to allow managing mysql as a service
 if ! cat /etc/apparmor.d/local/usr.sbin.mysqld | grep -q '/vagrant/etc/guest' ; then
     echo "

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
+
+source "${vagrant_dir}/scripts/functions.sh"
+
 host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
 
 if [[ ${host_os} == "Windows" ]]; then

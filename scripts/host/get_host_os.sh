@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
+
+source "${vagrant_dir}/scripts/functions.sh"
+
 if [[ "$(uname)" == "Darwin" ]]; then
     echo "OSX"
 elif [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then

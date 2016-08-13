@@ -5,4 +5,4 @@ vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)
 source "${vagrant_dir}/scripts/functions.sh"
 
 cd "${vagrant_dir}"
-vagrant ssh -c "m-clear-cache" 2> >(logError)
+vagrant ssh -c "/vagrant/scripts/guest/m-clear-cache" 2> >(logError) > >(log)

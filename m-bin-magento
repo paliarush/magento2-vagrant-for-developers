@@ -6,4 +6,4 @@ source "${vagrant_dir}/scripts/functions.sh"
 
 arguments=$@
 cd "${vagrant_dir}"
-vagrant ssh -c "\$MAGENTO_ROOT/bin/magento $arguments" 2> >(logError)
+vagrant ssh -c "\$MAGENTO_ROOT/bin/magento $arguments" 2> >(logError) > >(log)

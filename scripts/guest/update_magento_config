@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/functions.sh"
+
 config_path=$1
 config_value=$2
 

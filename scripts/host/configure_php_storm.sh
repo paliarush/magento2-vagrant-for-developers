@@ -2,6 +2,7 @@
 
 vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
 
+source "${vagrant_dir}/scripts/functions.sh"
 
 cd "${vagrant_dir}"
 ssh_port=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_forwarded_ssh_port")

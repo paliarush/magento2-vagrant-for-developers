@@ -2,7 +2,6 @@
 
 vagrant_dir="/vagrant"
 
-source "${vagrant_dir}/scripts/colors.sh"
 source "${vagrant_dir}/scripts/functions.sh"
 
 get_config_value="/vagrant/scripts/get_config_value.sh"
@@ -34,10 +33,12 @@ if [[ ${is_windows_host} == 1 ]] || [[ ${use_nfs} == 0 ]]; then
     sudo chown -R vagrant:vagrant ${MAGENTO_ROOT}
 fi
 
+status "Installing Magento"
+
 cd ${MAGENTO_ROOT}
 
 status "Clearing cache"
-m-clear-cache 2> >(logError) > >(log)
+bash m-clear-cache
 
 status "Removing Magento configuration files (env.php and config.php)"
 rm -f "${MAGENTO_ROOT}/app/etc/config.php"
@@ -45,7 +46,7 @@ rm -f "${MAGENTO_ROOT}/app/etc/env.php"
 
 db_names=(${setupOptions[db_name]} "magento_integration_tests" )
 for db_name in "${db_names[@]}"; do
-    status "Drop and create ${db_name} DB"
+    status "Dropping and creating ${db_name} DB"
     mysql -e "drop database if exists ${db_name}; create database ${db_name};"
 done
 
@@ -80,14 +81,13 @@ if [[ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ]]; then
 fi
 
 sudo chmod +x bin/magento
-status "Installing Magento"
-statusLevel2 "${install_cmd}"
+status "${install_cmd}"
 php ${install_cmd} 2> >(logError) > >(log)
 # Comment out the line above and uncomment the one below to debug Magento Setup script
 # php -d xdebug.remote_autostart=1 ${install_cmd} 2> >(logError) > >(log)
 
 status "Configuring Varnish FPC according to config.yaml"
-bash "${vagrant_dir}/scripts/guest/configure_varnish" -f 2> >(logError) > >(log)
+bash "${vagrant_dir}/scripts/guest/configure_varnish" -f
 
 status "Enabling Magento cron jobs"
 echo "* * * * * php ${MAGENTO_ROOT}/bin/magento cron:run &
@@ -100,7 +100,7 @@ if [[ ${is_windows_host} == 1 ]] || [[ ${use_nfs} == 0 ]]; then
 fi
 
 status "Configuring search engine according to config.yaml"
-bash "${vagrant_dir}/scripts/guest/configure_search_engine"
+bash configure_search_engine
 
 status "Generating XSD references for PHP Storm"
 php bin/magento dev:urn-catalog:generate /vagrant/.idea/misc.xml

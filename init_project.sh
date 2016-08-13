@@ -2,7 +2,6 @@
 
 vagrant_dir=$PWD
 
-source "${vagrant_dir}/scripts/colors.sh"
 source "${vagrant_dir}/scripts/functions.sh"
 
 magento_ce_dir="${vagrant_dir}/magento2ce"
@@ -95,7 +94,7 @@ fi
 
 status "Installing Magento dependencies via Composer"
 cd "${magento_ce_dir}"
-bash "${vagrant_dir}/scripts/host/composer.sh" install 2> >(logError)
+bash "${vagrant_dir}/scripts/host/composer.sh" install
 
 status "Initializing vagrant box"
 cd "${vagrant_dir}"
@@ -107,20 +106,20 @@ if [[ ${force_project_cleaning} -eq 1 ]] && [[ ${force_phpstorm_config_cleaning}
 fi
 if [[ ! -f "${vagrant_dir}/.idea/deployment.xml" ]]; then
     status "Configuring PhpStorm"
-    bash "${vagrant_dir}/scripts/host/configure_php_storm.sh" 2> >(logError)
+    bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
 fi
 
 if [[ ${host_os} == "Windows" ]] || [[ ${use_nfs} == 0 ]]; then
     # Automatic switch to EE during project initialization cannot be supported on Windows
     status "Installing Magento CE"
-    bash "${vagrant_dir}/m-reinstall" 2> >(logError) > >(log)
+    bash "${vagrant_dir}/m-reinstall"
 else
     if [[ -n "${repository_url_ee}" ]]; then
         status "Installing Magento EE"
-        bash "${vagrant_dir}/m-switch-to-ee" -f 2> >(logError) > >(log)
+        bash "${vagrant_dir}/m-switch-to-ee" -f
     else
         status "Installing Magento CE"
-        bash "${vagrant_dir}/m-switch-to-ce" -f 2> >(logError) > >(log)
+        bash "${vagrant_dir}/m-switch-to-ce" -f
     fi
 fi
 

@@ -9,4 +9,4 @@ magento_ce_dir="${vagrant_dir}/magento2ce"
 cd ${magento_ce_dir}
 
 status "Executing composer command"
-bash "${vagrant_dir}/scripts/host/composer.sh" "$@" 2> >(logError)
+bash "${vagrant_dir}/scripts/host/composer.sh" "$@" 2> >(logError) > >(log)

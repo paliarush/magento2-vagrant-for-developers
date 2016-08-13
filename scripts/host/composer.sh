@@ -4,7 +4,6 @@
 
 vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
 
-source "${vagrant_dir}/scripts/colors.sh"
 source "${vagrant_dir}/scripts/functions.sh"
 
 current_dir=${PWD}
@@ -36,10 +35,10 @@ fi
 host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
 if [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_composer_prefer_source") == 1 ]]; then
     # prefer-source is slow but guarantees that there will be no issues related to max path length on Windows
-    statusLevel2 "composer --ignore-platform-reqs --prefer-source "$@""
+    status "composer --ignore-platform-reqs --prefer-source "$@""
     ${php_executable} "${composer_phar}" --ignore-platform-reqs --prefer-source "$@" 2> >(logError) > >(log)
 else
-    statusLevel2 "composer --ignore-platform-reqs "$@""
+    status "composer --ignore-platform-reqs "$@""
     ${php_executable} "${composer_phar}" --ignore-platform-reqs "$@" 2> >(logError) > >(log)
 fi
 
