@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/functions.sh"

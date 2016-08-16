@@ -9,13 +9,13 @@ nesting_level_file="${vagrant_dir}/scripts/.current_nesting_level"
 
 function info() {
     echo "
-[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${1}${regular} ${grey}[${BASH_SOURCE[1]}]${regular}"
+[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${1}${regular}$(sourceFile)${regular}"
     log "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")info: ${1} [${BASH_SOURCE[1]}]"
 }
 
 function status() {
     echo "
-[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${blue}${1}${regular} ${grey}[${BASH_SOURCE[1]}]${regular}"
+[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${blue}${1}${regular}$(sourceFile)${regular}"
     log "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")status: ${1} [${BASH_SOURCE[1]}]"
     if [[ -n "${2}" ]]; then
         incrementNestingLevel
@@ -24,19 +24,19 @@ function status() {
 
 function warning() {
     echo "
-[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${yellow}${1}${regular} ${grey}[${BASH_SOURCE[1]}]${regular}"
+[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${yellow}${1}${regular}$(sourceFile)${regular}"
     log "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")warning: ${1} [${BASH_SOURCE[1]}]"
 }
 
 function error() {
     echo "
-[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${red}${1}${regular} ${grey}[${BASH_SOURCE[1]}]${regular}"
+[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${red}${1}${regular}$(sourceFile)${regular}"
     log "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")error: ${1} [${BASH_SOURCE[1]}]"
 }
 
 function success() {
     echo "
-[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${green}${1}${regular} ${grey}[${BASH_SOURCE[1]}]${regular}"
+[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${green}${1}${regular}$(sourceFile)${regular}"
     log "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")success: ${1} [${BASH_SOURCE[1]}]"
 }
 
@@ -65,6 +65,12 @@ function logError() {
     fi
 }
 
+function sourceFile() {
+    if [[ ! ${BASH_SOURCE[2]} =~ functions\.sh ]]; then
+        echo " ${grey}[${BASH_SOURCE[2]}]"
+    fi
+}
+
 function formattedDate() {
     date "+%Y-%m-%d %H:%M:%S"
 }
@@ -84,8 +90,7 @@ function outputErrorsOnly()
         | grep -iv "Checking out .* done\."\
     )"
     if [[ -n "${errors}" ]]; then
-        echo "${regular}${red}${errors}${regular}
-"
+        error "${errors}"
         log "error: ${errors}"
     fi
 }
@@ -111,6 +116,13 @@ function outputInfoOnly()
 
 function incrementNestingLevel()
 {
+    # Reset nesting level
+    parent_command="$(ps -o args= $PPID)"
+    initial_command_parent="/bin/bash --login"
+    if [[ ${parent_command} =~ ${initial_command_parent} ]]; then
+        rm -f "${nesting_level_file}"
+    fi
+
     if [[ ! -f "${nesting_level_file}" ]]; then
         echo 1 > "${nesting_level_file}"
     else

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)
 
 source "${vagrant_dir}/scripts/functions.sh"
