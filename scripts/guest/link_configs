@@ -29,7 +29,7 @@ if ! cat /etc/apparmor.d/local/usr.sbin.mysqld | grep -q '/vagrant/etc/guest' ; 
         /vagrant/etc/guest/mysql/*.cnf r," >> /etc/apparmor.d/local/usr.sbin.mysqld
 fi
 
-# Make guest configs visible and editable in the host IDE
+status "Making guest configs visible and editable in the host IDE" 1
 
 # Configs located under /etc/*
 config_dir="/etc"

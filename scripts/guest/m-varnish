@@ -4,6 +4,8 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
+status "Configuring Varnish" 1
+
 if [[ $1 == "help" ]]; then
     status "Usage: ./m-varnish enable/disable"
     exit 0
@@ -26,8 +28,8 @@ elif [[ $1 == "disable" ]]; then
     status "Disabling Varnish search engine"
     sed -ie "s/use_varnish:.*/use_varnish: 0/" /vagrant/etc/config.yaml
 else
-    error "Usage: ./m-varnish enable/disable"
+    error "Usage: ./m-varnish enable|disable"
     exit 1
 fi
 
-configure_varnish
+bash configure_varnish

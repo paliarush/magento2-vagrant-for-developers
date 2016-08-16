@@ -4,7 +4,7 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-status "Clearing Magento cache"
+status "Clearing Magento cache" 1
 
 rm -f "${MAGENTO_ROOT}/app/etc/paths.php"
 if [[ -d "${MAGENTO_ROOT}/var" ]]; then

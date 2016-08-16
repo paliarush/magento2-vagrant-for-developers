@@ -4,6 +4,8 @@ vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
 
 source "${vagrant_dir}/scripts/functions.sh"
 
+status "Installing PHP" 1
+
 host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
 
 if [[ ${host_os} == "Windows" ]]; then
@@ -18,8 +20,8 @@ fi
 
 php_executable=$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")
 if ! ${php_executable} -v | grep -q 'Copyright' ; then
-    echo "Automatic PHP installation is not available for your host OS. Please install any version of PHP to allow Magento dependencies management using Composer. Check out http://php.net/manual/en/install.php"
-    exit 255
+    error "Automatic PHP installation is not available for your host OS. Please install any version of PHP to allow Magento dependencies management using Composer. Check out http://php.net/manual/en/install.php"
+    exit 1
 else
-    echo "PHP installed successfully."
+    success "PHP installed successfully"
 fi

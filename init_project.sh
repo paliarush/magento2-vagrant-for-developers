@@ -14,7 +14,6 @@ use_nfs=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")
 repository_url_ce=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce")
 repository_url_ee=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee")
 
-status "Checking requirements"
 bash "${vagrant_dir}/scripts/host/check_requirements.sh"
 
 status "Installing missing vagrant plugins"

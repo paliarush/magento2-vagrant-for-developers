@@ -9,11 +9,16 @@ function isServiceAvailable() {
 }
 
 use_php7=$4
+vagrant_dir="/vagrant"
 
-# Delete obsolete repository
+source "${vagrant_dir}/scripts/functions.sh"
+
+status "Upgrading environment (recurring)" 1
+
+status "Deleting obsolete repository"
 sudo rm -f /etc/apt/sources.list.d/ondrej-php-7_0-trusty.list
 
-# Upgrade for vagrant box paliarush/magento2.ubuntu v1.1.0
+status "Upgrading vagrant box paliarush/magento2.ubuntu v1.1.0"
 if [[ ${use_php7} -eq 1 ]]; then
     if /usr/bin/php7.0 -v | grep -q '7.0.5' ; then
         apt-get update
@@ -41,12 +46,12 @@ if [[ ${use_php7} -eq 1 ]]; then
     fi
 fi
 
-# Install varnish if not installed
 is_varnish_installed="$(isServiceAvailable varnish)"
 if [[ ${is_varnish_installed} -eq 0 ]]; then
+    status "Installing Varnish"
     apt-get update
     apt-get install -y varnish
 fi
 
-# Fix issue with MySQL being down after VM power off
+status "Fixing potential issue with MySQL being down after VM power off"
 service mysql restart

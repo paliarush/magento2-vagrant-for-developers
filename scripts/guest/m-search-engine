@@ -4,10 +4,13 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
+status "Configuring search engine" 1
+
 if [[ $1 == "help" ]]; then
     status "Usage: ./m-search-engine mysql/elasticsearch"
     exit 0
 fi
+
 
 # Check if user created config.yaml file
 if [[ ! -f /vagrant/etc/config.yaml ]]; then
@@ -26,8 +29,8 @@ elif [[ $1 == "elasticsearch" ]]; then
     status "Enabling ElasticSearch search engine"
     sed -ie 's/search_engine:.*/search_engine: "elasticsearch"/' /vagrant/etc/config.yaml
 else
-    error "Usage: ./m-search-engine mysql/elasticsearch"
+    error "Usage: ./m-search-engine mysql|elasticsearch"
     exit 1
 fi
 
-configure_search_engine
+bash configure_search_engine

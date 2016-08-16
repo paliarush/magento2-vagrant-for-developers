@@ -20,6 +20,7 @@ parse_yaml() {
 vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)
 
 source "${vagrant_dir}/scripts/functions.sh"
+incrementNestingLevel
 
 variable_name=$1
 

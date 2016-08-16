@@ -17,6 +17,9 @@ function status() {
     echo "
 [$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${blue}${1}${regular} ${grey}[${BASH_SOURCE[1]}]${regular}"
     log "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")status: ${1} [${BASH_SOURCE[1]}]"
+    if [[ -n "${2}" ]]; then
+        incrementNestingLevel
+    fi
 }
 
 function warning() {
@@ -137,10 +140,10 @@ function getIndentationByNesting()
     else
         nesting_level=$(cat "${nesting_level_file}")
         if [[ ${nesting_level} -eq 1 ]]; then
-            echo '|---'
+            echo ' >  '
         else
             indentation=$(( (${nesting_level} - 1) * 4 ))
-            echo "$(printf '=%.0s' $(seq 1 ${indentation}))|---" | sed 's|=| |g'
+            echo "$(printf '=%.0s' $(seq 1 ${indentation})) >  " | sed 's|=| |g'
         fi
     fi
 }
@@ -160,7 +163,6 @@ function getStyleByNesting()
 
 function bash()
 {
-    incrementNestingLevel
     $(which bash) "$@" 2> >(logError)
     decrementNestingLevel
 }

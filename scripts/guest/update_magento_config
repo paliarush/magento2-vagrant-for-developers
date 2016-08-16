@@ -7,6 +7,8 @@ source "${vagrant_dir}/scripts/functions.sh"
 config_path=$1
 config_value=$2
 
+status "Updating Magento config: ${config_path} = ${config_value}" 1
+
 mysql -D magento -e "INSERT INTO core_config_data
     ( scope, scope_id, path, value ) VALUES
     ( 'default', '0', '${config_path}', '${config_value}' )

@@ -4,6 +4,8 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
+status "Configuring Varnish FPC according to config.yaml" 1
+
 # Get args
 while getopts 'f' flag; do
   case "${flag}" in
@@ -76,5 +78,5 @@ if [[ $restart_services == 1 ]]; then
     if [[ $use_varnish == 1 ]]; then
         sudo varnishd -f /etc/varnish/default.vcl
     fi
-    m-clear-cache
+    bash m-clear-cache
 fi

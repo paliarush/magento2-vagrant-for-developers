@@ -9,7 +9,11 @@ is_windows_host=$6
 
 vagrant_dir="/vagrant"
 
-# Enable Magento virtual host
+source "${vagrant_dir}/scripts/functions.sh"
+
+status "Configuring environment" 1
+
+status "Enabling Magento virtual host"
 custom_virtual_host_config="${vagrant_dir}/etc/magento2_virtual_host.conf"
 default_virtual_host_config="${vagrant_dir}/etc/magento2_virtual_host.conf.dist"
 if [[ -f ${custom_virtual_host_config} ]]; then
@@ -23,13 +27,13 @@ sed -i "s|<host>|${magento_host_name}|g" "${enabled_virtual_host_config}"
 sed -i "s|<guest_magento_dir>|${guest_magento_dir}|g" "${enabled_virtual_host_config}"
 a2ensite magento2.conf
 
-# Disable default virtual host
+status "Disabling default virtual host"
 sudo a2dissite 000-default
 
-# Configure composer
+status "Configuring composer"
 composer_auth_json="${vagrant_dir}/etc/composer/auth.json"
 if [[ -f ${composer_auth_json} ]]; then
-    echo "Installing composer OAuth tokens from ${composer_auth_json}..."
+    status "Installing composer OAuth tokens from ${composer_auth_json}"
     if [[ ! -d /home/vagrant/.composer ]] ; then
       sudo -H -u vagrant bash -c 'mkdir /home/vagrant/.composer'
     fi
@@ -38,8 +42,8 @@ if [[ -f ${composer_auth_json} ]]; then
     fi
 fi
 
-# Set permissions to allow Magento codebase upload by Vagrant provision script
 if [[ ${use_nfs_for_synced_folders} -eq 0 ]]; then
+    status "Setting permissions to allow Magento codebase upload by Vagrant provision script"
     chown -R vagrant:vagrant /var/www
     chmod -R 755 /var/www
 fi

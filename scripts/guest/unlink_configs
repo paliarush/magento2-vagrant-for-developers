@@ -19,7 +19,7 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-# Revert configs before shutdown or reboot to allow proper services initialization on booting
+status "Reverting configs before shutdown or reboot to allow proper services initialization on booting" 1
 
 # Configs located under /etc/*
 config_dir="/etc"

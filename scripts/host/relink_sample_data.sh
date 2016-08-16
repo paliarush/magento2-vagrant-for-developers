@@ -11,7 +11,7 @@ magento_ee_sample_data_dir="${magento_ce_dir}/magento2ee-sample-data"
 php_executable="$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")"
 install_sample_data=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_install_sample_data")
 
-status "Linking/unlinking sample data according to config.yaml"
+status "Linking/unlinking sample data according to config.yaml" 1
 
 install_ee=0
 if [[ -f "${magento_ce_dir}/app/etc/enterprise/di.xml" ]]; then

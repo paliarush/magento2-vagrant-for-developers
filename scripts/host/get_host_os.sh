@@ -3,6 +3,7 @@
 vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
 
 source "${vagrant_dir}/scripts/functions.sh"
+incrementNestingLevel
 
 if [[ "$(uname)" == "Darwin" ]]; then
     echo "OSX"
@@ -14,5 +15,5 @@ elif [[ "$(expr substr $(uname -s) 1 6)" == "CYGWIN" ]]; then
     echo "Windows"
 else
     echo "Unknown host OS"
-    exit 255
+    exit 1
 fi
