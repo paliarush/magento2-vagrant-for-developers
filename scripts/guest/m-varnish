@@ -4,16 +4,19 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-status "Configuring Varnish" 1
+status "Configuring Varnish"
+incrementNestingLevel
 
 if [[ $1 == "help" ]]; then
     status "Usage: ./m-varnish enable/disable"
+    decrementNestingLevel
     exit 0
 fi
 
 # Check if user created config.yaml file
 if [[ ! -f /vagrant/etc/config.yaml ]]; then
     error "Please make sure you have create a config.yaml file copy from etc/config.yaml.dist"
+    decrementNestingLevel
     exit 1
 fi
 
@@ -29,7 +32,10 @@ elif [[ $1 == "disable" ]]; then
     sed -ie "s/use_varnish:.*/use_varnish: 0/" /vagrant/etc/config.yaml
 else
     error "Usage: ./m-varnish enable|disable"
+    decrementNestingLevel
     exit 1
 fi
 
 bash configure_varnish
+
+decrementNestingLevel

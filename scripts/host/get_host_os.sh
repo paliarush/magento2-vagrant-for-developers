@@ -15,5 +15,8 @@ elif [[ "$(expr substr $(uname -s) 1 6)" == "CYGWIN" ]]; then
     echo "Windows"
 else
     echo "Unknown host OS"
+    decrementNestingLevel
     exit 1
 fi
+
+decrementNestingLevel

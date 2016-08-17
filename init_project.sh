@@ -5,6 +5,7 @@ set -e
 vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/functions.sh"
+resetNestingLevel
 
 magento_ce_dir="${vagrant_dir}/magento2ce"
 magento_ce_sample_data_dir="${magento_ce_dir}/magento2ce-sample-data"
@@ -99,7 +100,7 @@ bash "${vagrant_dir}/scripts/host/composer.sh" install
 
 status "Initializing vagrant box"
 cd "${vagrant_dir}"
-vagrant up 2> >(logError) > >(log)
+vagrant up 2> >(logError) > >(filterVagrantOutput)
 
 if [[ ${force_project_cleaning} -eq 1 ]] && [[ ${force_phpstorm_config_cleaning} -eq 1 ]]; then
     status "Resetting PhpStorm configuration since '-p' option was used"
@@ -113,25 +114,23 @@ fi
 if [[ ${host_os} == "Windows" ]] || [[ ${use_nfs} == 0 ]]; then
     # Automatic switch to EE during project initialization cannot be supported on Windows
     status "Installing Magento CE"
-    bash "${vagrant_dir}/m-reinstall"
+    bash "${vagrant_dir}/scripts/host/m_reinstall.sh" 2> >(logError)
 else
     if [[ -n "${repository_url_ee}" ]]; then
-        status "Installing Magento EE"
-        bash "${vagrant_dir}/m-switch-to-ee" -f
+        bash "${vagrant_dir}/scripts/host/m_switch_to_ee.sh" -f 2> >(logError)
     else
-        status "Installing Magento CE"
-        bash "${vagrant_dir}/m-switch-to-ce" -f
+        bash "${vagrant_dir}/scripts/host/m_switch_to_ce.sh" -f 2> >(logError)
     fi
 fi
 
 success "Project initialization succesfully completed"
 
-info "${bold}[Important]${regular}
-    Please use ${bold}${vagrant_dir}${regular} directory as PhpStorm project root, NOT ${bold}${magento_ce_dir}${regular}."
+info "$(bold)[Important]$(regular)
+    Please use $(bold)${vagrant_dir}$(regular) directory as PhpStorm project root, NOT $(bold)${magento_ce_dir}$(regular)."
 
 if [[ ${host_os} == "Windows" ]] || [[ ${use_nfs} == 0 ]]; then
-    info "${bold}[Optional]${regular}
-    To verify that deployment configuration for ${bold}${magento_ce_dir}${regular} in PhpStorm is correct,
-        use instructions provided here: ${bold}https://github.com/paliarush/magento2-vagrant-for-developers/blob/2.0/docs/phpstorm-configuration-windows-hosts.md${regular}.
+    info "$(bold)[Optional]$(regular)
+    To verify that deployment configuration for $(bold)${magento_ce_dir}$(regular) in PhpStorm is correct,
+        use instructions provided here: $(bold)https://github.com/paliarush/magento2-vagrant-for-developers/blob/2.0/docs/phpstorm-configuration-windows-hosts.md$(regular).
     If not using PhpStorm, you can set up synchronization using rsync"
 fi

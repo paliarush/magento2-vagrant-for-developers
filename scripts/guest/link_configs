@@ -29,10 +29,13 @@ if ! cat /etc/apparmor.d/local/usr.sbin.mysqld | grep -q '/vagrant/etc/guest' ; 
         /vagrant/etc/guest/mysql/*.cnf r," >> /etc/apparmor.d/local/usr.sbin.mysqld
 fi
 
-status "Making guest configs visible and editable in the host IDE" 1
+status "Making guest configs visible and editable in the host IDE"
+incrementNestingLevel
 
 # Configs located under /etc/*
 config_dir="/etc"
 # See unlink_configs script
 configs=( apache2 php mysql varnish rabbitmq )
 process_configs ${config_dir} ${configs}
+
+decrementNestingLevel

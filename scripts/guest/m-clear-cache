@@ -4,7 +4,8 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-status "Clearing Magento cache" 1
+status "Clearing Magento cache"
+incrementNestingLevel
 
 rm -f "${MAGENTO_ROOT}/app/etc/paths.php"
 if [[ -d "${MAGENTO_ROOT}/var" ]]; then
@@ -33,3 +34,5 @@ if [[ -d "${MAGENTO_ROOT}/dev" ]]; then
         mv tmp_gitignore.back tmp/.gitignore
     fi
 fi
+
+decrementNestingLevel

@@ -8,36 +8,40 @@ log_file="${vagrant_dir}/log/debug.log"
 nesting_level_file="${vagrant_dir}/scripts/.current_nesting_level"
 
 function info() {
-    echo "
-[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${1}${regular}$(sourceFile)${regular}"
-    log "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")info: ${1} [${BASH_SOURCE[1]}]"
+    echo "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${1}$(regular)$(sourceFile)$(regular)"
+    log "[$(formattedDate)] INFO:$(getIndentationByNesting "$@")${1}$(sourceFile)]"
 }
 
 function status() {
-    echo "
-[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${blue}${1}${regular}$(sourceFile)${regular}"
-    log "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")status: ${1} [${BASH_SOURCE[1]}]"
-    if [[ -n "${2}" ]]; then
-        incrementNestingLevel
-    fi
+    echo "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")$(blue)${1}$(regular)$(sourceFile)$(regular)"
+    log "[$(formattedDate)] STATUS:$(getIndentationByNesting "$@")${1}$(sourceFile)]"
 }
 
 function warning() {
-    echo "
-[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${yellow}${1}${regular}$(sourceFile)${regular}"
-    log "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")warning: ${1} [${BASH_SOURCE[1]}]"
+    echo "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")$(yellow)${1}$(regular)$(sourceFile)$(regular)"
+    log "[$(formattedDate)] WARNING:$(getIndentationByNesting "$@")${1}$(sourceFile)]"
 }
 
 function error() {
-    echo "
-[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${red}${1}${regular}$(sourceFile)${regular}"
-    log "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")error: ${1} [${BASH_SOURCE[1]}]"
+    echo "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")$(red)${1}$(regular)$(sourceFile)$(regular)"
+    log "[$(formattedDate)] ERROR:$(getIndentationByNesting "$@")${1}$(sourceFile)]"
 }
 
 function success() {
-    echo "
-[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")${green}${1}${regular}$(sourceFile)${regular}"
-    log "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")success: ${1} [${BASH_SOURCE[1]}]"
+    echo "[$(formattedDate)]$(getIndentationByNesting "$@")$(getStyleByNesting "$@")$(green)${1}$(regular)$(sourceFile)$(regular)"
+    log "[$(formattedDate)] SUCCESS:$(getIndentationByNesting "$@")${1}$(sourceFile)]"
+}
+
+function filterVagrantOutput()
+{
+    if [[ -n "${1}" ]]; then
+        input="${1}"
+    else
+        input=$(cat)
+    fi
+    log "${input}"
+    output="$(echo "${input}" | grep -i "\[.*\].*\[.*\]" | sed "s/.*\(\[.*\].*\[.*\]\)/\1/g")"
+    info "${output}"
 }
 
 function log() {
@@ -47,9 +51,7 @@ function log() {
         input=$(cat)
     fi
     if [[ -n "${input}" ]]; then
-        echo "
-${input}
-" >> "${log_file}"
+        echo "${input}" | sed "s/\[[[:digit:]]\{1,\}m//g" >> "${log_file}"
     fi
 }
 
@@ -67,7 +69,9 @@ function logError() {
 
 function sourceFile() {
     if [[ ! ${BASH_SOURCE[2]} =~ functions\.sh ]]; then
-        echo " ${grey}[${BASH_SOURCE[2]}]"
+        echo " $(grey)[${BASH_SOURCE[2]}]"
+    else
+        echo " $(grey)[Unknown source file]"
     fi
 }
 
@@ -116,13 +120,6 @@ function outputInfoOnly()
 
 function incrementNestingLevel()
 {
-    # Reset nesting level
-    parent_command="$(ps -o args= $PPID)"
-    initial_command_parent="/bin/bash --login"
-    if [[ ${parent_command} =~ ${initial_command_parent} ]]; then
-        rm -f "${nesting_level_file}"
-    fi
-
     if [[ ! -f "${nesting_level_file}" ]]; then
         echo 1 > "${nesting_level_file}"
     else
@@ -145,10 +142,17 @@ function decrementNestingLevel()
     fi
 }
 
+function resetNestingLevel()
+{
+    rm -f "${nesting_level_file}"
+    rm -f "${log_file}"
+}
+
 function getIndentationByNesting()
 {
     if [[ ! -f "${nesting_level_file}" ]]; then
         nesting_level=0
+        echo ' '
     else
         nesting_level=$(cat "${nesting_level_file}")
         if [[ ${nesting_level} -eq 1 ]]; then
@@ -169,12 +173,11 @@ function getStyleByNesting()
     fi
 
     if [[ ${nesting_level} -eq 0 ]]; then
-        echo "${bold}"
+        echo "$(bold)"
     fi
 }
 
 function bash()
 {
     $(which bash) "$@" 2> >(logError)
-    decrementNestingLevel
 }

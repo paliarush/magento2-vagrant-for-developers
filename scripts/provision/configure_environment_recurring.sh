@@ -43,7 +43,8 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-status "Configuring environment (recurring)" 1
+status "Configuring environment (recurring)"
+incrementNestingLevel
 
 status "Removing configs from host in case of force stop of virtual machine before linking restored ones"
 cd "${vagrant_dir}/etc" && mv guest/.gitignore guest_gitignore.back && rm -rf guest && mkdir guest && mv guest_gitignore.back guest/.gitignore
@@ -123,3 +124,5 @@ if [[ ${php_config_content} =~ ${pattern} ]]; then
     sed -i "s|;sendmail_path =|sendmail_path = \"/vagrant/scripts/guest/log_email ${vagrant_dir}/log/email\"|g" ${php_ini_file}
     service apache2 restart
 fi
+
+decrementNestingLevel

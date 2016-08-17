@@ -19,10 +19,13 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-status "Reverting configs before shutdown or reboot to allow proper services initialization on booting" 1
+status "Reverting configs before shutdown or reboot to allow proper services initialization on booting"
+incrementNestingLevel
 
 # Configs located under /etc/*
 config_dir="/etc"
 # See link_configs script
 configs=( apache2 php mysql varnish rabbitmq )
 process_configs ${config_dir} ${configs}
+
+decrementNestingLevel

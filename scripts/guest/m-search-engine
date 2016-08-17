@@ -4,10 +4,12 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-status "Configuring search engine" 1
+status "Configuring search engine"
+incrementNestingLevel
 
 if [[ $1 == "help" ]]; then
     status "Usage: ./m-search-engine mysql/elasticsearch"
+    decrementNestingLevel
     exit 0
 fi
 
@@ -15,6 +17,7 @@ fi
 # Check if user created config.yaml file
 if [[ ! -f /vagrant/etc/config.yaml ]]; then
     error "Please make sure you have create a config.yaml file copy from etc/config.yaml.dist"
+    decrementNestingLevel
     exit 1
 fi
 
@@ -30,7 +33,10 @@ elif [[ $1 == "elasticsearch" ]]; then
     sed -ie 's/search_engine:.*/search_engine: "elasticsearch"/' /vagrant/etc/config.yaml
 else
     error "Usage: ./m-search-engine mysql|elasticsearch"
+    decrementNestingLevel
     exit 1
 fi
 
 bash configure_search_engine
+
+decrementNestingLevel

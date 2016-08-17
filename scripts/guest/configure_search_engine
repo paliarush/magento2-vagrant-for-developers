@@ -5,7 +5,8 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-status "Configuring search engine according to config.yaml" 1
+status "Configuring search engine according to config.yaml"
+incrementNestingLevel
 
 if [[ -z "$(grep "search_engine:" /vagrant/etc/config.yaml)" ]]; then
     sed -i '/environment:/a \ \ search_engine: "mysql"' /vagrant/etc/config.yaml
@@ -30,3 +31,5 @@ if [[ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ]]; then
 else
     status "Search engine configuration was not changed (custom search engine is not available in Magento CE)."
 fi
+
+decrementNestingLevel

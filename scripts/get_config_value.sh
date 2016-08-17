@@ -29,3 +29,5 @@ eval $(parse_yaml "${vagrant_dir}/etc/config.yaml.dist")
 eval $(parse_yaml "${vagrant_dir}/etc/config.yaml")
 
 echo ${!variable_name}
+
+decrementNestingLevel

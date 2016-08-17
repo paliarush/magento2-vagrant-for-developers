@@ -11,7 +11,8 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-status "Configuring environment" 1
+status "Configuring environment"
+incrementNestingLevel
 
 status "Enabling Magento virtual host"
 custom_virtual_host_config="${vagrant_dir}/etc/magento2_virtual_host.conf"
@@ -47,3 +48,5 @@ if [[ ${use_nfs_for_synced_folders} -eq 0 ]]; then
     chown -R vagrant:vagrant /var/www
     chmod -R 755 /var/www
 fi
+
+decrementNestingLevel

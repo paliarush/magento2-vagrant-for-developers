@@ -13,7 +13,8 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-status "Upgrading environment (recurring)" 1
+status "Upgrading environment (recurring)"
+incrementNestingLevel
 
 status "Deleting obsolete repository"
 sudo rm -f /etc/apt/sources.list.d/ondrej-php-7_0-trusty.list
@@ -55,3 +56,5 @@ fi
 
 status "Fixing potential issue with MySQL being down after VM power off"
 service mysql restart
+
+decrementNestingLevel

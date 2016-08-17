@@ -4,7 +4,8 @@ vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-status "Configuring PhpStorm" 1
+status "Configuring PhpStorm"
+incrementNestingLevel
 
 cd "${vagrant_dir}"
 ssh_port=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_forwarded_ssh_port")
@@ -46,3 +47,5 @@ else
     mv "${vagrant_dir}/.idea/vcs.ee.xml" "${vagrant_dir}/.idea/vcs.xml"
     rm "${vagrant_dir}/.idea/vcs.ce.xml"
 fi
+
+decrementNestingLevel

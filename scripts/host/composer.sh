@@ -6,7 +6,8 @@ vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-status "Executing composer command" 1
+status "Executing composer command"
+incrementNestingLevel
 
 current_dir=${PWD}
 composer_auth_json="${vagrant_dir}/etc/composer/auth.json"
@@ -48,3 +49,5 @@ if [[ ! ${auth_json_already_exists} = 1 ]] && [[ -f "${current_dir}/auth.json" ]
     status "Removing auth.json from magento2ce"
     rm "${current_dir}/auth.json"
 fi
+
+decrementNestingLevel

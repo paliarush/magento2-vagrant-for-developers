@@ -11,7 +11,8 @@ magento_ee_sample_data_dir="${magento_ce_dir}/magento2ee-sample-data"
 php_executable="$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")"
 install_sample_data=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_install_sample_data")
 
-status "Linking/unlinking sample data according to config.yaml" 1
+status "Linking/unlinking sample data according to config.yaml"
+incrementNestingLevel
 
 install_ee=0
 if [[ -f "${magento_ce_dir}/app/etc/enterprise/di.xml" ]]; then
@@ -39,6 +40,7 @@ if [[ ${install_sample_data} -eq 1 ]]; then
     if [[ ! -f "${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php" ]]; then
         # Sample data not available and should be enabled
         error "CE Sample data repository is not available. Recreate project using \"init_project.sh -fc\", which will delete Magento code base and recreate project from scratch. Or clone sample data to ${magento_ce_sample_data_dir}"
+        decrementNestingLevel
         exit 1
     else
         # Sample data available and should be enabled
@@ -51,6 +53,7 @@ if [[ ${install_sample_data} -eq 1 ]]; then
         if [[ ! -f "${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php" ]]; then
             # Sample data not available and should be enabled
             error "EE Sample data repository is not available. Recreate project using \"init_project.sh -fc\", which will delete Magento code base and recreate project from scratch. Or clone sample data to ${magento_ee_sample_data_dir}."
+            decrementNestingLevel
             exit 1
         else
             # Sample data available and should be enabled
@@ -59,3 +62,5 @@ if [[ ${install_sample_data} -eq 1 ]]; then
         fi
     fi
 fi
+
+decrementNestingLevel

@@ -12,3 +12,5 @@ else
     php_executable="php"
 fi
 echo ${php_executable}
+
+decrementNestingLevel

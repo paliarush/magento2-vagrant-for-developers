@@ -4,13 +4,14 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-status "Configuring Varnish FPC according to config.yaml" 1
+status "Configuring Varnish FPC according to config.yaml"
+incrementNestingLevel
 
 # Get args
 while getopts 'f' flag; do
   case "${flag}" in
     f) force_restart_services=1 ;;
-    *) error "Unexpected option" && exit 1;;
+    *) error "Unexpected option" && decrementNestingLevel && exit 1;;
   esac
 done
 
@@ -80,3 +81,5 @@ if [[ $restart_services == 1 ]]; then
     fi
     bash m-clear-cache
 fi
+
+decrementNestingLevel

@@ -5,6 +5,6 @@ set -e
 vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)
 
 source "${vagrant_dir}/scripts/functions.sh"
+resetNestingLevel
 
-cd "${vagrant_dir}"
-vagrant ssh -c "bash /vagrant/scripts/guest/m-reinstall" 2> >(logError)
+bash "${vagrant_dir}/scripts/host/m_reinstall.sh" "$@" 2> >(logError)
