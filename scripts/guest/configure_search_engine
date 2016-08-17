@@ -28,6 +28,9 @@ if [[ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ]]; then
     fi
 
     bash m-clear-cache
+
+    status "Rebuilding catalog search index"
+    php "${MAGENTO_ROOT}/bin/magento" indexer:reindex catalogsearch_fulltext 2> >(logError) > >(log)
 else
     status "Search engine configuration was not changed (custom search engine is not available in Magento CE)."
 fi

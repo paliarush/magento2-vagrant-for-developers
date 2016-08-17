@@ -35,4 +35,7 @@ if [[ -d "${MAGENTO_ROOT}/dev" ]]; then
     fi
 fi
 
+status "Flushing cache"
+php "${MAGENTO_ROOT}/bin/magento" cache:flush 2> >(logError) > >(log)
+
 decrementNestingLevel

@@ -10,3 +10,5 @@ resetNestingLevel
 arguments=$@
 cd "${vagrant_dir}"
 vagrant ssh -c "\$MAGENTO_ROOT/bin/magento $arguments" 2> >(logError)
+# To debug, comment out line above and uncomment line below
+# vagrant ssh -c "php -d xdebug.remote_autostart=1 \$MAGENTO_ROOT/bin/magento $arguments" 2> >(logError)
