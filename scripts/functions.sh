@@ -41,7 +41,9 @@ function filterVagrantOutput()
     fi
     log "${input}"
     output="$(echo "${input}" | grep -i "\[.*\].*\[.*\]" | sed "s/.*\(\[.*\].*\[.*\]\)/\1/g")"
-    info "${output}"
+    if [[ -n "${output}" ]]; then
+        echo "${output}"
+    fi
 }
 
 function log() {

@@ -100,7 +100,15 @@ bash "${vagrant_dir}/scripts/host/composer.sh" install
 
 status "Initializing vagrant box"
 cd "${vagrant_dir}"
-vagrant up 2> >(logError) > >(filterVagrantOutput)
+
+vagrant up 2> >(logError) | {
+  while IFS= read -r line
+  do
+    filterVagrantOutput "${line}"
+    lastline="${line}"
+  done
+  filterVagrantOutput "${lastline}"
+}
 
 if [[ ${force_project_cleaning} -eq 1 ]] && [[ ${force_phpstorm_config_cleaning} -eq 1 ]]; then
     status "Resetting PhpStorm configuration since '-p' option was used"
