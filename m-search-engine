@@ -4,8 +4,10 @@ set -e
 
 vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)
 
-source "${vagrant_dir}/scripts/functions.sh"
+source "${vagrant_dir}/scripts/output_functions.sh"
 resetNestingLevel
 
 cd "${vagrant_dir}"
 vagrant ssh -c "bash /vagrant/scripts/guest/m-search-engine ${@}" 2> >(logError)
+
+info "See detailed log in '${vagrant_dir}/log/debug.log'"

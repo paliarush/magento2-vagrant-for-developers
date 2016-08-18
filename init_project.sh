@@ -4,14 +4,19 @@ set -e
 
 vagrant_dir=$PWD
 
-source "${vagrant_dir}/scripts/functions.sh"
+source "${vagrant_dir}/scripts/output_functions.sh"
 resetNestingLevel
+
+config_path="${vagrant_dir}/etc/config.yaml"
+if [[ ! -f "${config_path}" ]]; then
+    status "Initializing etc/config.yaml using defaults from etc/config.yaml.dist"
+    cp "${config_path}.dist" "${config_path}"
+fi
 
 magento_ce_dir="${vagrant_dir}/magento2ce"
 magento_ce_sample_data_dir="${magento_ce_dir}/magento2ce-sample-data"
 magento_ee_dir="${magento_ce_dir}/magento2ee"
 magento_ee_sample_data_dir="${magento_ce_dir}/magento2ee-sample-data"
-config_path="${vagrant_dir}/etc/config.yaml"
 host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
 use_nfs=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")
 repository_url_ce=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce")
@@ -31,10 +36,6 @@ if ! echo ${vagrant_plugin_list} | grep -q 'vagrant-host-shell' ; then
     vagrant plugin install vagrant-host-shell
 fi
 
-if [[ ! -f "${vagrant_dir}/etc/config.yaml" ]]; then
-    status "Initializing etc/config.yaml using defaults from etc/config.yaml.dist"
-    cp "${config_path}.dist" "${config_path}"
-fi
 status "Generating random IP address, and host name to prevent collisions (if no custom values specified)"
 random_ip=$(( ( RANDOM % 240 )  + 12 ))
 forwarded_ssh_port=$(( random_ip + 3000 ))
@@ -115,7 +116,6 @@ if [[ ${force_project_cleaning} -eq 1 ]] && [[ ${force_phpstorm_config_cleaning}
     rm -rf "${vagrant_dir}/.idea"
 fi
 if [[ ! -f "${vagrant_dir}/.idea/deployment.xml" ]]; then
-    status "Configuring PhpStorm"
     bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
 fi
 
@@ -142,3 +142,5 @@ if [[ ${host_os} == "Windows" ]] || [[ ${use_nfs} == 0 ]]; then
         use instructions provided here: $(bold)https://github.com/paliarush/magento2-vagrant-for-developers/blob/2.0/docs/phpstorm-configuration-windows-hosts.md$(regular).
     If not using PhpStorm, you can set up synchronization using rsync"
 fi
+
+info "See detailed log in '${vagrant_dir}/log/debug.log'"

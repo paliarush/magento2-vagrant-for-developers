@@ -4,7 +4,7 @@ set -e
 
 vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
 
-source "${vagrant_dir}/scripts/functions.sh"
+source "${vagrant_dir}/scripts/output_functions.sh"
 
 status "Switching to Magento CE"
 incrementNestingLevel

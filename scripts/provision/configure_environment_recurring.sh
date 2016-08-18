@@ -41,7 +41,7 @@ guest_magento_dir=$2
 use_php7=$4
 vagrant_dir="/vagrant"
 
-source "${vagrant_dir}/scripts/functions.sh"
+source "${vagrant_dir}/scripts/output_functions.sh"
 
 status "Configuring environment (recurring)"
 incrementNestingLevel

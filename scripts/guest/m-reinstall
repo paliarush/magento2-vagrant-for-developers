@@ -2,7 +2,7 @@
 
 vagrant_dir="/vagrant"
 
-source "${vagrant_dir}/scripts/functions.sh"
+source "${vagrant_dir}/scripts/output_functions.sh"
 
 get_config_value="/vagrant/scripts/get_config_value.sh"
 magento_host_name=$(bash ${get_config_value} "magento_host_name")
@@ -38,15 +38,15 @@ incrementNestingLevel
 
 cd ${MAGENTO_ROOT}
 
-bash m-clear-cache
-
 status "Removing Magento configuration files (env.php and config.php)"
 rm -f "${MAGENTO_ROOT}/app/etc/config.php"
 rm -f "${MAGENTO_ROOT}/app/etc/env.php"
 
+bash m-clear-cache
+
 db_names=(${setupOptions[db_name]} "magento_integration_tests" )
 for db_name in "${db_names[@]}"; do
-    status "Dropping and creating ${db_name} DB"
+    status "Dropping and creating '${db_name}' DB"
     mysql -e "drop database if exists ${db_name}; create database ${db_name};"
 done
 

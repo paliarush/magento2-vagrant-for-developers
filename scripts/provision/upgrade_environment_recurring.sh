@@ -11,7 +11,7 @@ function isServiceAvailable() {
 use_php7=$4
 vagrant_dir="/vagrant"
 
-source "${vagrant_dir}/scripts/functions.sh"
+source "${vagrant_dir}/scripts/output_functions.sh"
 
 status "Upgrading environment (recurring)"
 incrementNestingLevel

@@ -4,7 +4,9 @@ set -e
 
 vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)
 
-source "${vagrant_dir}/scripts/functions.sh"
+source "${vagrant_dir}/scripts/output_functions.sh"
 resetNestingLevel
 
 bash "${vagrant_dir}/scripts/host/m_switch_to_ee.sh" "$@" 2> >(logError)
+
+info "See detailed log in '${vagrant_dir}/log/debug.log'"

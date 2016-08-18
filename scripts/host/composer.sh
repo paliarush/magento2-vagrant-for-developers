@@ -4,7 +4,7 @@
 
 vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
 
-source "${vagrant_dir}/scripts/functions.sh"
+source "${vagrant_dir}/scripts/output_functions.sh"
 
 status "Executing composer command"
 incrementNestingLevel
@@ -21,7 +21,7 @@ php_executable=$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")
 if [[ ! -f ${composer_phar} ]]; then
     status "Installing composer"
     cd "${composer_dir}"
-    curl -sS https://getcomposer.org/installer | ${php_executable}
+    curl -sS https://getcomposer.org/installer | ${php_executable} 2> >(logError) > >(log)
 fi
 
 auth_json_already_exists=0

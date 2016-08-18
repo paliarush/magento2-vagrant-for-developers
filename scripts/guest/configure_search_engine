@@ -3,7 +3,7 @@
 # Init environment variables
 vagrant_dir="/vagrant"
 
-source "${vagrant_dir}/scripts/functions.sh"
+source "${vagrant_dir}/scripts/output_functions.sh"
 
 status "Configuring search engine according to config.yaml"
 incrementNestingLevel

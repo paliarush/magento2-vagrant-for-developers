@@ -2,13 +2,13 @@
 
 vagrant_dir="/vagrant"
 
-source "${vagrant_dir}/scripts/functions.sh"
+source "${vagrant_dir}/scripts/output_functions.sh"
 
 config_path=$1
 config_value=$2
 
-status "Updating Magento config: ${config_path} = ${config_value}"
 incrementNestingLevel
+status "Updating Magento config: ${config_path} = ${config_value}"
 
 mysql -D magento -e "INSERT INTO core_config_data
     ( scope, scope_id, path, value ) VALUES

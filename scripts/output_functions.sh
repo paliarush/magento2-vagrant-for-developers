@@ -90,6 +90,7 @@ function outputErrorsOnly()
         | grep -iv "Package fabpot/php-cs-fixer is abandoned"\
         | grep -iv "Generating autoload files"\
         | grep -iv "Installing .*/.* (.*)"\
+        | grep -iv "Removing .*/.* (.*)"\
         | grep -iv "Loading from cache"\
         | grep -iv ".* suggests installing .*"\
         | grep -iv "Cloning into .*\.\.\."\
@@ -110,6 +111,7 @@ function outputInfoOnly()
         | grep -i "Package fabpot/php-cs-fixer is abandoned"\
         | grep -i "Generating autoload files"\
         | grep -i "Installing .*/.* (.*)"\
+        | grep -i "Removing .*/.* (.*)"\
         | grep -i "Loading from cache"\
         | grep -i ".* suggests installing .*"\
         | grep -i "Cloning into .*\.\.\."\
