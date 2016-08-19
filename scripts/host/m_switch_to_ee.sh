@@ -32,7 +32,7 @@ else
     fi
 
     status "Linking EE repository"
-    ${php_executable} -f ${magento_ee_dir}/dev/tools/build-ee.php -- --command=link --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}"
+    ${php_executable} -f ${magento_ee_dir}/dev/tools/build-ee.php -- --command=link --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}" 2> >(logError) > >(log)
 
     cp ${magento_ee_dir}/composer.json ${magento_ce_dir}/composer.json
     cp ${magento_ee_dir}/composer.lock ${magento_ce_dir}/composer.lock
