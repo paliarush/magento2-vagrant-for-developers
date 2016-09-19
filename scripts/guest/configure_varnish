@@ -21,7 +21,7 @@ fi
 
 # Configure Varnish if enabled in config
 restart_services=0
-use_varnish=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_use_varnish")
+use_varnish="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_use_varnish")"
 if [[ $use_varnish == 1 ]]; then
     status "Configuring apache files to be ready for varnish"
     if [[ -z "$(grep "VirtualHost\s\*:8080" /etc/apache2/sites-enabled/magento2.conf)" ]]; then

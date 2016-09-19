@@ -2,7 +2,7 @@
 
 set -e
 
-vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
+cd "$(dirname "${BASH_SOURCE[0]}")/../.." && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/output_functions.sh"
 
@@ -11,8 +11,8 @@ incrementNestingLevel
 
 magento_ce_dir="${vagrant_dir}/magento2ce"
 magento_ee_dir="${magento_ce_dir}/magento2ee"
-host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
-php_executable=$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")
+host_os="$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")"
+php_executable="$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")"
 
 force_switch=0
 while getopts 'f' flag; do

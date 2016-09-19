@@ -13,7 +13,7 @@ if [[ -z "$(grep "search_engine:" /vagrant/etc/config.yaml)" ]]; then
 fi
 
 if [[ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ]]; then
-    search_engine=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_search_engine")
+    search_engine="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_search_engine")"
     if [[ ${search_engine} == "elasticsearch" ]]; then
         status "Configuring ElasticSearch search engine"
         update_magento_config 'catalog/search/engine' 'elasticsearch'

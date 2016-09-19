@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
+cd "$(dirname "${BASH_SOURCE[0]}")/../.." && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/output_functions.sh"
 
 status "Checking requirements"
 incrementNestingLevel
 
-php_executable=$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")
+php_executable="$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")"
 
 if ! ${php_executable} -v | grep -q 'Copyright' ; then
     bash "${vagrant_dir}/scripts/host/install_php.sh"

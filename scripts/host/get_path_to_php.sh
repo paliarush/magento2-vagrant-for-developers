@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
+cd "$(dirname "${BASH_SOURCE[0]}")/../.." && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/output_functions.sh"
 incrementNestingLevel

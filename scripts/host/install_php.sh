@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
+cd "$(dirname "${BASH_SOURCE[0]}")/../.." && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/output_functions.sh"
 
 status "Installing PHP"
 incrementNestingLevel
 
-host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
+host_os="$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")"
 
 if [[ ${host_os} == "Windows" ]]; then
     curl http://windows.php.net/downloads/releases/archives/php-5.6.9-nts-Win32-VC11-x86.zip -o "${vagrant_dir}/lib/php.zip"
@@ -19,7 +19,7 @@ if [[ ${host_os} == "Windows" ]]; then
     rm -rf "${vagrant_dir}/lib/php/*.back"
 fi
 
-php_executable=$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")
+php_executable="$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")"
 if ! ${php_executable} -v | grep -q 'Copyright' ; then
     error "Automatic PHP installation is not available for your host OS. Please install any version of PHP to allow Magento dependencies management using Composer. Check out http://php.net/manual/en/install.php"
     decrementNestingLevel

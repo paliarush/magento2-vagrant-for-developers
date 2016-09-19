@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)
+cd "$(dirname "${BASH_SOURCE[0]}")/.." && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/colors.sh"
 
@@ -37,7 +37,7 @@ function filterVagrantOutput()
     if [[ -n "${1}" ]]; then
         input="${1}"
     else
-        input=$(cat)
+        input="$(cat)"
     fi
     log "${input}"
     output="$(echo "${input}" | grep -i "\[.*\].*\[.*\]" | sed "s/.*\(\[.*\].*\[.*\]\)/\1/g")"
@@ -50,7 +50,7 @@ function log() {
     if [[ -n "${1}" ]]; then
         input="${1}"
     else
-        input=$(cat)
+        input="$(cat)"
     fi
     if [[ -n "${input}" ]]; then
         echo "${input}" | sed "s/\[[[:digit:]]\{1,\}m//g" >> "${log_file}"
@@ -61,7 +61,7 @@ function logError() {
     if [[ -n "${1}" ]]; then
         input="${1}"
     else
-        input=$(cat)
+        input="$(cat)"
     fi
     if [[ -n "${input}" ]]; then
         outputErrorsOnly "${input}"
@@ -129,8 +129,8 @@ function incrementNestingLevel()
     if [[ ! -f "${nesting_level_file}" ]]; then
         echo 1 > "${nesting_level_file}"
     else
-        nesting_level=$(cat "${nesting_level_file}")
-        nesting_level=$((${nesting_level}+1))
+        nesting_level="$(cat "${nesting_level_file}")"
+        nesting_level="$((${nesting_level}+1))"
         echo ${nesting_level} > "${nesting_level_file}"
     fi
 }
@@ -138,8 +138,8 @@ function incrementNestingLevel()
 function decrementNestingLevel()
 {
     if [[ -f "${nesting_level_file}" ]]; then
-        nesting_level=$(cat "${nesting_level_file}")
-        nesting_level=$((${nesting_level}-1))
+        nesting_level="$(cat "${nesting_level_file}")"
+        nesting_level="$((${nesting_level}-1))"
         if [[ ${nesting_level} -eq 0 ]]; then
             rm -f "${nesting_level_file}"
         else
@@ -160,11 +160,11 @@ function getIndentationByNesting()
         nesting_level=0
         echo ' '
     else
-        nesting_level=$(cat "${nesting_level_file}")
+        nesting_level="$(cat "${nesting_level_file}")"
         if [[ ${nesting_level} -eq 1 ]]; then
             echo ' >  '
         else
-            indentation=$(( (${nesting_level} - 1) * 4 ))
+            indentation="$(( (${nesting_level} - 1) * 4 ))"
             echo "$(printf '=%.0s' $(seq 1 ${indentation})) >  " | sed 's|=| |g'
         fi
     fi
@@ -175,7 +175,7 @@ function getStyleByNesting()
     if [[ ! -f "${nesting_level_file}" ]]; then
         nesting_level=0
     else
-        nesting_level=$(cat "${nesting_level_file}")
+        nesting_level="$(cat "${nesting_level_file}")"
     fi
 
     if [[ ${nesting_level} -eq 0 ]]; then

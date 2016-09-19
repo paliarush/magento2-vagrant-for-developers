@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -ex
 
 vagrant_dir=$PWD
 
@@ -17,15 +17,15 @@ magento_ce_dir="${vagrant_dir}/magento2ce"
 magento_ce_sample_data_dir="${magento_ce_dir}/magento2ce-sample-data"
 magento_ee_dir="${magento_ce_dir}/magento2ee"
 magento_ee_sample_data_dir="${magento_ce_dir}/magento2ee-sample-data"
-host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
-use_nfs=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")
-repository_url_ce=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce")
-repository_url_ee=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee")
+host_os="$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")"
+use_nfs="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")"
+repository_url_ce="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce")"
+repository_url_ee="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee")"
 
 bash "${vagrant_dir}/scripts/host/check_requirements.sh"
 
 status "Installing missing vagrant plugins"
-vagrant_plugin_list=$(vagrant plugin list)
+vagrant_plugin_list="$(vagrant plugin list)"
 if ! echo ${vagrant_plugin_list} | grep -q 'vagrant-hostmanager' ; then
     vagrant plugin install vagrant-hostmanager
 fi
@@ -37,8 +37,8 @@ if ! echo ${vagrant_plugin_list} | grep -q 'vagrant-host-shell' ; then
 fi
 
 status "Generating random IP address, and host name to prevent collisions (if no custom values specified)"
-random_ip=$(( ( RANDOM % 240 )  + 12 ))
-forwarded_ssh_port=$(( random_ip + 3000 ))
+random_ip="$(( ( RANDOM % 240 )  + 12 ))"
+forwarded_ssh_port="$(( random_ip + 3000 ))"
 sed -i.back "s|ip_address: \"192.168.10.2\"|ip_address: \"192.168.10.${random_ip}\"|g" "${config_path}"
 sed -i.back "s|host_name: \"magento2.vagrant2\"|host_name: \"magento2.vagrant${random_ip}\"|g" "${config_path}"
 sed -i.back "s|forwarded_ssh_port: 3000|forwarded_ssh_port: ${forwarded_ssh_port}|g" "${config_path}"
@@ -80,7 +80,7 @@ if [[ ! -d ${magento_ce_dir} ]]; then
     status "Checking out CE repository"
     git clone ${repository_url_ce} "${magento_ce_dir}" 2> >(logError) > >(log)
     status "Checking out CE sample data repository"
-    repository_url_ce_sample_data=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce_sample_data")
+    repository_url_ce_sample_data="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce_sample_data")"
     git clone ${repository_url_ce_sample_data} "${magento_ce_sample_data_dir}" 2> >(logError) > >(log)
     # By default EE repository is not specified and EE project is not checked out
     if [[ -n "${repository_url_ee}" ]]; then
@@ -88,7 +88,7 @@ if [[ ! -d ${magento_ce_dir} ]]; then
         git clone ${repository_url_ee} "${magento_ee_dir}" 2> >(logError) > >(log)
     fi
     # By default EE sample data repository is not specified and EE project is not checked out
-    repository_url_ee_sample_data=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee_sample_data")
+    repository_url_ee_sample_data="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee_sample_data")"
     if [ -n "${repository_url_ee_sample_data}" ]; then
         status "Checking out EE sample data repository"
         git clone ${repository_url_ee_sample_data} "${magento_ee_sample_data_dir}" 2> >(logError) > >(log)

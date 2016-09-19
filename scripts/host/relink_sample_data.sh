@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)
+cd "$(dirname "${BASH_SOURCE[0]}")/../.." && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/output_functions.sh"
 
@@ -9,7 +9,7 @@ magento_ee_dir="${magento_ce_dir}/magento2ee"
 magento_ce_sample_data_dir="${magento_ce_dir}/magento2ce-sample-data"
 magento_ee_sample_data_dir="${magento_ce_dir}/magento2ee-sample-data"
 php_executable="$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")"
-install_sample_data=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_install_sample_data")
+install_sample_data="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_install_sample_data")"
 
 status "Linking/unlinking sample data according to config.yaml"
 incrementNestingLevel

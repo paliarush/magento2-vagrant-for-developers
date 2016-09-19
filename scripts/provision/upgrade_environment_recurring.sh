@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function isServiceAvailable() {
-    all_services=$(service --status-all 2> >(log))
+    all_services="$(service --status-all 2> >(log))"
     if [[ ${all_services} =~ ${1} ]]; then
         echo 1
     else
