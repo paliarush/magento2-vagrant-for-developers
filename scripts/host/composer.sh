@@ -39,10 +39,10 @@ host_os="$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")"
 if [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_composer_prefer_source") == 1 ]]; then
     # prefer-source is slow but guarantees that there will be no issues related to max path length on Windows
     status "composer --ignore-platform-reqs --prefer-source "$@""
-    ${php_executable} "${composer_phar}" --ignore-platform-reqs --prefer-source "$@" 2> >(logError) > >(log)
+    ${php_executable} "${composer_phar}" --ignore-platform-reqs --prefer-source "$@" 2> >(log) > >(log)
 else
     status "composer --ignore-platform-reqs "$@""
-    ${php_executable} "${composer_phar}" --ignore-platform-reqs "$@" 2> >(logError) > >(log)
+    ${php_executable} "${composer_phar}" --ignore-platform-reqs "$@" 2> >(log) > >(log)
 fi
 
 if [[ ! ${auth_json_already_exists} = 1 ]] && [[ -f "${current_dir}/auth.json" ]]; then

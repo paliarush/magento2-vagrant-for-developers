@@ -83,20 +83,7 @@ function formattedDate() {
 
 function outputErrorsOnly()
 {
-    errors="$(echo "${1}" | grep -iv "Connection to 127.0.0.1 closed." \
-        | grep -iv "Loading composer repositories with package information" \
-        | grep -iv "Installing dependencies (including require-dev) from lock file" \
-        | grep -iv "Nothing to install or update"\
-        | grep -iv "Package fabpot/php-cs-fixer is abandoned"\
-        | grep -iv "Generating autoload files"\
-        | grep -iv "Installing .*/.* (.*)"\
-        | grep -iv "Removing .*/.* (.*)"\
-        | grep -iv "Downloading: .* 100%"\
-        | grep -iv "Loading from cache"\
-        | grep -iv ".* suggests installing .*"\
-        | grep -iv "Cloning into .*\.\.\."\
-        | grep -iv "Checking out .* done\."\
-    )"
+    errors="$(echo "${1}" | grep -iv "Connection to 127.0.0.1 closed.")"
     if [[ -n "${errors}" ]]; then
         error "${errors}"
         log "error: ${errors}"
@@ -105,20 +92,7 @@ function outputErrorsOnly()
 
 function outputInfoOnly()
 {
-    info="$(echo "${1}" | grep -iv "Connection to 127.0.0.1 closed." \
-        | grep -i "Loading composer repositories with package information" \
-        | grep -i "Installing dependencies (including require-dev) from lock file" \
-        | grep -i "Nothing to install or update"\
-        | grep -i "Package fabpot/php-cs-fixer is abandoned"\
-        | grep -i "Generating autoload files"\
-        | grep -i "Installing .*/.* (.*)"\
-        | grep -i "Removing .*/.* (.*)"\
-        | grep -i "Downloading: .* 100%"\
-        | grep -i "Loading from cache"\
-        | grep -i ".* suggests installing .*"\
-        | grep -i "Cloning into .*\.\.\."\
-        | grep -i "Checking out .* done\."\
-    )"
+    info="$(echo "${1}" | grep -iv "Connection to 127.0.0.1 closed.")"
     if [[ -n "${info}" ]]; then
         log "${info}"
     fi
