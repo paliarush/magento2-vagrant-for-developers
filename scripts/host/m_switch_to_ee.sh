@@ -32,9 +32,8 @@ else
     fi
 
     status "Linking EE repository"
-    ${php_executable} -f ${magento_ee_dir}/dev/tools/build-ee.php -- --command=link --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}" 2> >(logError) > >(log)
+    ${php_executable} -f ${magento_ee_dir}/dev/tools/build-ee.php -- --command=link --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}" --exclude=true 2> >(logError) > >(log)
 
-    cp ${magento_ee_dir}/composer.json ${magento_ce_dir}/composer.json
     cp ${magento_ee_dir}/composer.lock ${magento_ce_dir}/composer.lock
 
     if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then
@@ -55,6 +54,8 @@ bash "${vagrant_dir}/scripts/host/relink_sample_data.sh" 2> >(logError)
 
 bash "${vagrant_dir}/scripts/host/m_clear_cache.sh" 2> >(logError)
 bash "${vagrant_dir}/scripts/host/m_composer.sh" install 2> >(logError)
+
+cd ${magento_ce_dir} && git checkout composer.lock 2> >(logError) > >(log)
 
 if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then
     read -p "$(warning "[Action Required] Wait while Magento2 code is uploaded in PhpStorm and press any key to continue...")" -n1 -s

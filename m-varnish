@@ -15,4 +15,4 @@ fi
 cd "${vagrant_dir}"
 vagrant ssh -c "bash /vagrant/scripts/guest/m-varnish ${@}" 2> >(logError)
 
-info "See detailed log in '${vagrant_dir}/log/debug.log'"
+info "See detailed log in '${vagrant_dir}/log/debug.log'. For even more details you can set 'debug:vagrant_project' to 1 in etc/config.yaml"

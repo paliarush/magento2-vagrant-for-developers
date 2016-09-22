@@ -36,8 +36,9 @@ else
     fi
 
     status "Unlinking EE repository"
-    ${php_executable} -f ${magento_ee_dir}/dev/tools/build-ee.php -- --command=unlink --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}" 2> >(logError) > >(log)
+    ${php_executable} -f ${magento_ee_dir}/dev/tools/build-ee.php -- --command=unlink --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}" --exclude=true 2> >(logError) > >(log)
 
+   # TODO: Remove after some time. For now this is left for backward compatibility
     cd ${magento_ce_dir}
     git checkout composer.json
     git checkout composer.lock

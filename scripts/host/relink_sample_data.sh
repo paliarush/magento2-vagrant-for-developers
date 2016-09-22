@@ -22,17 +22,17 @@ fi
 # As a precondition, disable CE sample data
 if [[ -f "${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php" ]]; then
     status "Unlinking CE sample data"
-    ${php_executable} -f "${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=unlink --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ce_sample_data_dir}" 2> >(logError) > >(log)
+    ${php_executable} -f "${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=unlink --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ce_sample_data_dir}" --exclude=true 2> >(logError) > >(log)
 fi
 # As a precondition, disable EE sample data
 if [[ -f "${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php" ]]; then
-    "${php_executable}" -f "${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=unlink --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ee_sample_data_dir}" 2> >(logError) > >(log)
+    "${php_executable}" -f "${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=unlink --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ee_sample_data_dir}" --exclude=true 2> >(logError) > >(log)
     status "Unlinking EE sample data"
 fi
 
 if [[ ${install_ee} -eq 1 ]]; then
     status "Linking EE to CE"
-    "${php_executable}" -f "${magento_ee_dir}/dev/tools/build-ee.php" -- --command=link --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}" 2> >(logError) > >(log)
+    "${php_executable}" -f "${magento_ee_dir}/dev/tools/build-ee.php" -- --command=link --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}" --exclude=true 2> >(logError) > >(log)
 fi
 
 if [[ ${install_sample_data} -eq 1 ]]; then
@@ -46,7 +46,7 @@ if [[ ${install_sample_data} -eq 1 ]]; then
         # Sample data available and should be enabled
         success "CE Sample data enabled"
         cd ${magento_ce_sample_data_dir} && git fetch && git pull 2> >(logError) > >(log)
-        "${php_executable}" -f "${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=link --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ce_sample_data_dir}" 2> >(logError) > >(log)
+        "${php_executable}" -f "${magento_ce_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=link --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ce_sample_data_dir}" --exclude=true 2> >(logError) > >(log)
     fi
 
     if [[ ${install_ee} -eq 1 ]]; then
@@ -60,7 +60,7 @@ if [[ ${install_sample_data} -eq 1 ]]; then
             # Sample data available and should be enabled
             success "EE Sample data enabled"
             cd ${magento_ee_sample_data_dir} && git fetch && git pull 2> >(logError) > >(log)
-            "${php_executable}" -f "${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=link --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ee_sample_data_dir}" 2> >(logError) > >(log)
+            "${php_executable}" -f "${magento_ee_sample_data_dir}/dev/tools/build-sample-data.php" -- --command=link --ce-source="${magento_ce_dir}" --sample-data-source="${magento_ee_sample_data_dir}" --exclude=true 2> >(logError) > >(log)
         fi
     fi
 fi

@@ -18,4 +18,4 @@ vagrant ssh -c "\$MAGENTO_ROOT/bin/magento $arguments" 2> >(logError)
 # To debug, comment out line above and uncomment line below
 # vagrant ssh -c "php -d xdebug.remote_autostart=1 \$MAGENTO_ROOT/bin/magento $arguments" 2> >(logError)
 
-info "See detailed log in '${vagrant_dir}/log/debug.log'"
+info "See detailed log in '${vagrant_dir}/log/debug.log'. For even more details you can set 'debug:vagrant_project' to 1 in etc/config.yaml"
