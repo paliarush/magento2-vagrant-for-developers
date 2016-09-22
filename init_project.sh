@@ -7,6 +7,11 @@ vagrant_dir=$PWD
 source "${vagrant_dir}/scripts/output_functions.sh"
 resetNestingLevel
 
+debug_vagrant_project="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_vagrant_project")"
+if [[ ${debug_vagrant_project} -eq 1 ]]; then
+    set -x
+fi
+
 config_path="${vagrant_dir}/etc/config.yaml"
 if [[ ! -f "${config_path}" ]]; then
     status "Initializing etc/config.yaml using defaults from etc/config.yaml.dist"
