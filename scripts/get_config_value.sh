@@ -3,7 +3,7 @@
 parse_yaml() {
     # src: https://gist.github.com/pkuczynski/8665367
     local prefix=$2
-    local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
+    local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs="$(echo @|tr @ '\034')"
     sed -ne "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
         -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  "$1" |
     awk -F$fs '{
@@ -17,11 +17,14 @@ parse_yaml() {
     }'
 }
 
-vagrant_dir=$(cd "$(dirname "$0")/.."; pwd)
+cd "$(dirname "${BASH_SOURCE[0]}")/.." && vagrant_dir=$PWD
+
 variable_name=$1
 
 # Read configs
 eval $(parse_yaml "${vagrant_dir}/etc/config.yaml.dist")
-eval $(parse_yaml "${vagrant_dir}/etc/config.yaml")
+if [[ -f "${vagrant_dir}/etc/config.yaml" ]]; then
+    eval $(parse_yaml "${vagrant_dir}/etc/config.yaml")
+fi
 
 echo ${!variable_name}

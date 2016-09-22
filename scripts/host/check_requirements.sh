@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "$0")/../.."; pwd)
-php_executable=$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")
+cd "$(dirname "${BASH_SOURCE[0]}")/../.." && vagrant_dir=$PWD
 
-# Enable trace printing and exit on the first error
-set -ex
+source "${vagrant_dir}/scripts/output_functions.sh"
+
+status "Checking requirements"
+incrementNestingLevel
+
+php_executable="$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")"
 
 if ! ${php_executable} -v | grep -q 'Copyright' ; then
     bash "${vagrant_dir}/scripts/host/install_php.sh"
 fi
+
+decrementNestingLevel

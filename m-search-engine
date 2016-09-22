@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "$0")"; pwd)
+set -e
 
-# Enable trace printing and exit on the first error
-set -ex
+cd "$(dirname "${BASH_SOURCE[0]}")" && vagrant_dir=$PWD
+
+source "${vagrant_dir}/scripts/output_functions.sh"
+resetNestingLevel
+
+debug_vagrant_project="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_vagrant_project")"
+if [[ ${debug_vagrant_project} -eq 1 ]]; then
+    set -x
+fi
 
 cd "${vagrant_dir}"
-vagrant ssh -c "m-search-engine ${@}"
+vagrant ssh -c "bash /vagrant/scripts/guest/m-search-engine ${@}" 2> >(logError)
+
+info "See detailed log in '${vagrant_dir}/log/debug.log'. For even more details you can set 'debug:vagrant_project' to 1 in etc/config.yaml"

@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
 
-# Enable trace printing and exit on the first error
-set -ex
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/output_functions.sh"
 
 config_path=$1
 config_value=$2
+
+incrementNestingLevel
+status "Updating Magento config: ${config_path} = ${config_value}"
 
 mysql -D magento -e "INSERT INTO core_config_data
     ( scope, scope_id, path, value ) VALUES
     ( 'default', '0', '${config_path}', '${config_value}' )
      ON DUPLICATE KEY UPDATE value = '${config_value}'
 ;"
+
+decrementNestingLevel

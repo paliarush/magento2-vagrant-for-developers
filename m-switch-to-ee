@@ -1,65 +1,17 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "$0")"; pwd)
-magento_ce_dir="${vagrant_dir}/magento2ce"
-magento_ee_dir="${magento_ce_dir}/magento2ee"
-host_os=$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")
-php_executable=$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")
+set -e
 
-# Enable trace printing and exit on the first error
-set -ex
+cd "$(dirname "${BASH_SOURCE[0]}")" && vagrant_dir=$PWD
 
-force_switch=0
-while getopts 'f' flag; do
-  case "${flag}" in
-    f) force_switch=1 ;;
-    *) error "Unexpected option ${flag}" ;;
-  esac
-done
+source "${vagrant_dir}/scripts/output_functions.sh"
+resetNestingLevel
 
-if [[ ! -f ${magento_ee_dir}/app/etc/enterprise/di.xml ]]; then
-    if [[ ${force_switch} -eq 0 ]]; then
-        set +x
-        echo "EE codebase is not available. Use 'm-switch-to-ee -f' to switch anyway."
-        set -x
-        exit 0
-    fi
-else
-    if [[ -f ${magento_ce_dir}/app/etc/enterprise/di.xml ]] && [[ ${force_switch} -eq 0 ]]; then
-        set +x
-        echo "Already switched to EE. Use 'm-switch-to-ee -f' to switch anyway."
-        exit 0
-    fi
-
-    ${php_executable} -f ${magento_ee_dir}/dev/tools/build-ee.php -- --command=link --ee-source="${magento_ee_dir}" --ce-source="${magento_ce_dir}" --exclude=true
-
-    cp ${magento_ee_dir}/composer.lock ${magento_ce_dir}/composer.lock
-
-    if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then
-        # Prevent issues on Windows with incorrect symlinks to files
-        if [[ -f ${magento_ee_dir}/app/etc/aliases_to_classes_map.json ]] && [[ -L ${magento_ce_dir}/app/etc/aliases_to_classes_map.json ]]; then
-            rm ${magento_ce_dir}/app/etc/aliases_to_classes_map.json
-            cp ${magento_ee_dir}/app/etc/aliases_to_classes_map.json ${magento_ce_dir}/app/etc/aliases_to_classes_map.json
-        fi
-        if [[ -f ${magento_ee_dir}/app/etc/enterprise/di.xml ]] && [[ -L ${magento_ce_dir}/app/etc/enterprise ]]; then
-            rm ${magento_ce_dir}/app/etc/enterprise
-            mkdir ${magento_ce_dir}/app/etc/enterprise
-            cp ${magento_ee_dir}/app/etc/enterprise/di.xml ${magento_ce_dir}/app/etc/enterprise/di.xml
-        fi
-    fi
+debug_vagrant_project="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_vagrant_project")"
+if [[ ${debug_vagrant_project} -eq 1 ]]; then
+    set -x
 fi
 
-bash "${vagrant_dir}/scripts/host/relink_sample_data.sh"
+bash "${vagrant_dir}/scripts/host/m_switch_to_ee.sh" "$@" 2> >(logError)
 
-bash "${vagrant_dir}/m-clear-cache"
-bash "${vagrant_dir}/m-composer" install
-
-cd ${magento_ce_dir}
-git checkout composer.lock
-
-echo "Magento installation..."
-if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then
-    read -p "Wait while Magento2 code is uploaded in PhpStorm and press any key to continue..." -n1 -s
-fi
-
-bash "${vagrant_dir}/m-reinstall"
+info "See detailed log in '${vagrant_dir}/log/debug.log'. For even more details you can set 'debug:vagrant_project' to 1 in etc/config.yaml"

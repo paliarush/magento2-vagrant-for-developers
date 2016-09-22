@@ -39,3 +39,7 @@ magento:
   currency: "USD"
   admin_user: "admin"
   admin_password: "123123q"
+debug:
+  # Enable detailed output from all scripts provided by current vagrant project
+  # [Changes applied immediately]
+  vagrant_project: 0

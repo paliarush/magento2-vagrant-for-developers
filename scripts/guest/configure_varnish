@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/output_functions.sh"
+
+status "Configuring Varnish FPC according to config.yaml"
+incrementNestingLevel
+
 # Get args
 while getopts 'f' flag; do
   case "${flag}" in
     f) force_restart_services=1 ;;
-    *) error "Unexpected option ${flag}" ;;
+    *) error "Unexpected option" && decrementNestingLevel && exit 1;;
   esac
 done
-
-# Init environment variables
-vagrant_dir="/vagrant"
 
 if [[ -z "$(grep "use_varnish:" /vagrant/etc/config.yaml)" ]]; then
     sed -i '/environment:/a \ \ use_varnish: 0' /vagrant/etc/config.yaml
@@ -17,10 +21,9 @@ fi
 
 # Configure Varnish if enabled in config
 restart_services=0
-use_varnish=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_use_varnish")
+use_varnish="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_use_varnish")"
 if [[ $use_varnish == 1 ]]; then
-
-    # Configure apache files to be ready for varnish
+    status "Configuring apache files to be ready for varnish"
     if [[ -z "$(grep "VirtualHost\s\*:8080" /etc/apache2/sites-enabled/magento2.conf)" ]]; then
         sudo sed -ie "s/<VirtualHost .*/<VirtualHost \*:8080>/" /etc/apache2/sites-enabled/magento2.conf
         restart_services=1
@@ -34,15 +37,14 @@ if [[ $use_varnish == 1 ]]; then
         restart_services=1
     fi
 
-    # Update Magento database to use varnish FPC
+    status "Updating Magento database to use varnish FPC"
     mysql -D magento -e "INSERT INTO core_config_data
         ( scope, scope_id, path, value ) VALUES
         ( 'default', '0', 'system/full_page_cache/caching_application', '2' )
          ON DUPLICATE KEY UPDATE value = 2
     ;"
 else
-
-    # Configure apache files to run without varnish
+    status "Configuring apache files to run without varnish"
     if [[ -z "$(grep "VirtualHost\s\*:80\b" /etc/apache2/sites-enabled/magento2.conf)" ]]; then
         sudo sed -ie "s/<VirtualHost .*/<VirtualHost \*:80>/" /etc/apache2/sites-enabled/magento2.conf
         restart_services=1
@@ -56,7 +58,7 @@ else
         restart_services=1
     fi
 
-    # Update Magento database to not use varnish FPC
+    status "Updating Magento database to not use varnish FPC"
     mysql -D magento -e "INSERT INTO core_config_data
         ( scope, scope_id, path, value ) VALUES
         ( 'default', '0', 'system/full_page_cache/caching_application', '1' )
@@ -66,16 +68,18 @@ fi
 
 # Check if need restart services
 if [[ $force_restart_services == 1 ]]; then
-    echo "Force restarting Apache and Varnish"
     restart_services=1
 fi
 if [[ $restart_services == 1 ]]; then
+    status "Restarting Apache and Varnish"
     if [[ "$(ps -ax | pgrep varnish)" ]]; then
         sudo pkill varnishd
     fi
-    sudo service apache2 restart
+    sudo service apache2 restart 2> >(logError) > >(log)
     if [[ $use_varnish == 1 ]]; then
         sudo varnishd -f /etc/varnish/default.vcl
     fi
-    bash "${vagrant_dir}/scripts/guest/m-clear-cache"
+    bash m-clear-cache
 fi
+
+decrementNestingLevel

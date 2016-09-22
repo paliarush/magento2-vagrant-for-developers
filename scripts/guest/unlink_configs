@@ -15,13 +15,17 @@ function process_configs () {
     done
 }
 
-# Enable trace printing and exit on the first error
-set -ex
+vagrant_dir="/vagrant"
 
-# Revert configs before shutdown or reboot to allow proper services initialization on booting
+source "${vagrant_dir}/scripts/output_functions.sh"
+
+status "Reverting configs before shutdown or reboot to allow proper services initialization on booting"
+incrementNestingLevel
 
 # Configs located under /etc/*
 config_dir="/etc"
 # See link_configs script
 configs=( apache2 php mysql varnish rabbitmq )
 process_configs ${config_dir} ${configs}
+
+decrementNestingLevel

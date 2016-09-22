@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
-# Enable trace printing and exit on the first error
-set -ex
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/output_functions.sh"
 
 get_config_value="/vagrant/scripts/get_config_value.sh"
-magento_host_name=$(bash ${get_config_value} "magento_host_name")
-vagrant_dir="/vagrant"
-use_nfs=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")
+magento_host_name="$(bash ${get_config_value} "magento_host_name")"
+use_nfs="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")"
 is_windows_host=${IS_WINDOWS_HOST}
 
 declare -A setupOptions
-setupOptions[admin_frontname]=$(bash ${get_config_value} "magento_admin_frontname")
-setupOptions[language]=$(bash ${get_config_value} "magento_language")
-setupOptions[timezone]=$(bash ${get_config_value} "magento_timezone")
-setupOptions[currency]=$(bash ${get_config_value} "magento_currency")
-setupOptions[admin_user]=$(bash ${get_config_value} "magento_admin_user")
-setupOptions[admin_password]=$(bash ${get_config_value} "magento_admin_password")
+setupOptions[admin_frontname]="$(bash ${get_config_value} "magento_admin_frontname")"
+setupOptions[language]="$(bash ${get_config_value} "magento_language")"
+setupOptions[timezone]="$(bash ${get_config_value} "magento_timezone")"
+setupOptions[currency]="$(bash ${get_config_value} "magento_currency")"
+setupOptions[admin_user]="$(bash ${get_config_value} "magento_admin_user")"
+setupOptions[admin_password]="$(bash ${get_config_value} "magento_admin_password")"
 setupOptions[db_host]='localhost'
 setupOptions[db_name]='magento'
 setupOptions[db_user]='root'
@@ -33,18 +33,20 @@ if [[ ${is_windows_host} == 1 ]] || [[ ${use_nfs} == 0 ]]; then
     sudo chown -R vagrant:vagrant ${MAGENTO_ROOT}
 fi
 
+status "Installing/re-installing Magento"
+incrementNestingLevel
+
 cd ${MAGENTO_ROOT}
 
-# Clear cache
-m-clear-cache
-
-# Remove configuration files
+status "Removing Magento configuration files (env.php and config.php)"
 rm -f "${MAGENTO_ROOT}/app/etc/config.php"
 rm -f "${MAGENTO_ROOT}/app/etc/env.php"
 
-# Create DB
+bash m-clear-cache
+
 db_names=(${setupOptions[db_name]} "magento_integration_tests" )
 for db_name in "${db_names[@]}"; do
+    status "Dropping and creating '${db_name}' DB"
     mysql -e "drop database if exists ${db_name}; create database ${db_name};"
 done
 
@@ -79,32 +81,35 @@ if [[ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ]]; then
 fi
 
 sudo chmod +x bin/magento
-php ${install_cmd}
+status "${install_cmd}"
+php ${install_cmd} 2> >(logError) > >(log)
 # Comment out the line above and uncomment the one below to debug Magento Setup script
-# php -d xdebug.remote_autostart=1 ${install_cmd}
+# php -d xdebug.remote_autostart=1 ${install_cmd} 2> >(logError) > >(log)
 
-# Configure Varnish FPC, if enabled
 bash "${vagrant_dir}/scripts/guest/configure_varnish" -f
 
-# Enable Magento cron jobs
+status "Enabling Magento cron jobs"
 echo "* * * * * php ${MAGENTO_ROOT}/bin/magento cron:run &
 * * * * * php ${MAGENTO_ROOT}/update/cron.php &
 * * * * * php ${MAGENTO_ROOT}/bin/magento setup:cron:run &" | crontab -u vagrant -
 
 if [[ ${is_windows_host} == 1 ]] || [[ ${use_nfs} == 0 ]]; then
+    status "Changing ownership of "${MAGENTO_ROOT}" to vagrant:vagrant"
     sudo chown -R vagrant:vagrant ${MAGENTO_ROOT}
 fi
 
-# Configure search engine according to config.yaml
-bash "${vagrant_dir}/scripts/guest/configure_search_engine"
+bash configure_search_engine
 
-# Generate XSD references for PHP Storm
+status "Generating XSD references for PHP Storm"
 php bin/magento dev:urn-catalog:generate /vagrant/.idea/misc.xml
 sed -i "s|${MAGENTO_ROOT}|${MAGENTO_ROOT_HOST}|g" "/vagrant/.idea/misc.xml"
 
-set +x
-echo "
-Magento application was deployed to ${MAGENTO_ROOT} and installed successfully
+decrementNestingLevel
 
-Access storefront at ${setupOptions[base_url]}
-Access admin panel at ${setupOptions[base_url]}${setupOptions[admin_frontname]}/"
+success "Magento reinstalled successfully"
+
+info "Magento application was deployed to $(bold)${MAGENTO_ROOT}$(regular) and installed successfully
+
+Access storefront at $(bold)${setupOptions[base_url]}$(regular)
+Access admin panel at $(bold)${setupOptions[base_url]}${setupOptions[admin_frontname]}/$(regular)"
+

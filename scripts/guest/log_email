@@ -6,12 +6,12 @@ if [[ ! -d ${email_log_dir} ]]; then
 fi
 
 # Construct email file path
-current_time=$( date +"%Y-%m-%d_%H-%M-%S" )
+current_time="$( date +"%Y-%m-%d_%H-%M-%S" )"
 # Add random suffix to file name just in case there several emails sent in one second
-random_suffix=$(( RANDOM % 100 ))
+random_suffix="$(( RANDOM % 100 ))"
 email_file_path="${email_log_dir}/${current_time}_${random_suffix}"
 
-raw_email_output=$(cat)
+raw_email_output="$(cat)"
 
 # Add email topic to file name
 pattern="Subject: (.*)\sX-PHP-Originating-Script:"

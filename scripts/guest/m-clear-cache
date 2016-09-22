@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-echo "Clearing Magento cache..."
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/output_functions.sh"
+
+status "Clearing Magento cache"
+incrementNestingLevel
+
+status "Clearing directories containing temporary files"
 
 rm -f "${MAGENTO_ROOT}/app/etc/paths.php"
 if [[ -d "${MAGENTO_ROOT}/var" ]]; then
@@ -30,4 +37,9 @@ if [[ -d "${MAGENTO_ROOT}/dev" ]]; then
     fi
 fi
 
-echo "Magento cache cleared."
+if [[ -f "${MAGENTO_ROOT}/app/etc/env.php" ]]; then
+    status "Flushing cache using 'bin/magento cache:flush'"
+    php "${MAGENTO_ROOT}/bin/magento" cache:flush 2> >(logError) > >(log)
+fi
+
+decrementNestingLevel

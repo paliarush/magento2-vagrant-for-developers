@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
  - After EE is linked, EE versions of composer.lock and composer.json are replaced back with CE versions (thus are not marked by git as modified)
+ - Improved CLI scripts output formatting
 
 ### Fixed
 

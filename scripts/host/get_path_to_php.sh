@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-vagrant_dir=$(cd "$(dirname "$0")/../.."; pwd)
+cd "$(dirname "${BASH_SOURCE[0]}")/../.." && vagrant_dir=$PWD
 
-# Enable trace printing and exit on the first error
-set -ex
+source "${vagrant_dir}/scripts/output_functions.sh"
+incrementNestingLevel
 
 # Find path to available PHP
 if [[ -f "${vagrant_dir}/lib/php/php.exe" ]]; then
@@ -12,3 +12,5 @@ else
     php_executable="php"
 fi
 echo ${php_executable}
+
+decrementNestingLevel

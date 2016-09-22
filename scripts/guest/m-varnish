@@ -1,13 +1,22 @@
 #!/usr/bin/env bash
 
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/output_functions.sh"
+
+status "Configuring Varnish"
+incrementNestingLevel
+
 if [[ $1 == "help" ]]; then
-    echo "Usage: ./m-varnish enable/disable"
+    status "Usage: ./m-varnish enable/disable"
+    decrementNestingLevel
     exit 0
 fi
 
 # Check if user created config.yaml file
 if [[ ! -f /vagrant/etc/config.yaml ]]; then
-    echo "Please make sure you have create a config.yaml file copy from etc/config.yaml.dist"
+    error "Please make sure you have create a config.yaml file copy from etc/config.yaml.dist"
+    decrementNestingLevel
     exit 1
 fi
 
@@ -16,14 +25,17 @@ if [[ -z "$(grep "use_varnish:" /vagrant/etc/config.yaml)" ]]; then
 fi
 
 if [[ $1 == "enable" ]]; then
+    status "Enabling Varnish search engine"
     sed -ie "s/use_varnish:.*/use_varnish: 1/" /vagrant/etc/config.yaml
 elif [[ $1 == "disable" ]]; then
+    status "Disabling Varnish search engine"
     sed -ie "s/use_varnish:.*/use_varnish: 0/" /vagrant/etc/config.yaml
 else
-    echo "Usage: ./m-varnish enable/disable"
+    error "Usage: ./m-varnish enable|disable"
+    decrementNestingLevel
     exit 1
 fi
 
-configure_varnish
+bash configure_varnish
 
-echo "Done."
+decrementNestingLevel
