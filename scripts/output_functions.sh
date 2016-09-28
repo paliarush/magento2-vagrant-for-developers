@@ -83,7 +83,10 @@ function formattedDate() {
 
 function outputErrorsOnly()
 {
-    errors="$(echo "${1}" | grep -iv "Connection to 127.0.0.1 closed.")"
+    errors="$(echo "${1}" | grep -iv "Connection to 127.0.0.1 closed." \
+        | grep -iv "Cloning into .*\.\.\."\
+        | grep -iv "Checking out .* done\."\
+    )"
     if [[ -n "${errors}" ]]; then
         error "${errors}"
         log "error: ${errors}"
@@ -92,7 +95,10 @@ function outputErrorsOnly()
 
 function outputInfoOnly()
 {
-    info="$(echo "${1}" | grep -iv "Connection to 127.0.0.1 closed.")"
+    info="$(echo "${1}" | grep -iv "Connection to 127.0.0.1 closed." \
+        | grep -i "Cloning into .*\.\.\."\
+        | grep -i "Checking out .* done\."\
+    )"
     if [[ -n "${info}" ]]; then
         log "${info}"
     fi

@@ -20,12 +20,12 @@ while getopts 'f' flag; do
   esac
 done
 
-if [[ ! -f ${magento_ee_dir}/app/etc/enterprise/di.xml ]]; then
+if [[ ! -f ${magento_ee_dir}/LICENSE_EE.txt ]]; then
     error "EE codebase is not available."
     decrementNestingLevel
     exit 0
 else
-    if [[ -f ${magento_ce_dir}/app/etc/enterprise/di.xml ]] && [[ ${force_switch} -eq 0 ]]; then
+    if [[ -f ${magento_ce_dir}/LICENSE_EE.txt ]] && [[ ${force_switch} -eq 0 ]]; then
         warning "Already switched to EE. Use 'm-switch-to-ee -f' to switch anyway."
         decrementNestingLevel
         exit 0
@@ -42,10 +42,10 @@ else
             rm ${magento_ce_dir}/app/etc/aliases_to_classes_map.json
             cp ${magento_ee_dir}/app/etc/aliases_to_classes_map.json ${magento_ce_dir}/app/etc/aliases_to_classes_map.json
         fi
-        if [[ -f ${magento_ee_dir}/app/etc/enterprise/di.xml ]] && [[ -L ${magento_ce_dir}/app/etc/enterprise ]]; then
+        if [[ -f ${magento_ee_dir}/LICENSE_EE.txt ]] && [[ -L ${magento_ce_dir}/app/etc/enterprise ]]; then
             rm ${magento_ce_dir}/app/etc/enterprise
             mkdir ${magento_ce_dir}/app/etc/enterprise
-            cp ${magento_ee_dir}/app/etc/enterprise/di.xml ${magento_ce_dir}/app/etc/enterprise/di.xml
+            cp ${magento_ee_dir}/LICENSE_EE.txt ${magento_ce_dir}/LICENSE_EE.txt
         fi
     fi
 fi

@@ -136,7 +136,7 @@ else
     fi
 fi
 
-success "Project initialization succesfully completed"
+success "Project initialization succesfully completed (make sure there are no errors in the log above)"
 
 info "$(bold)[Important]$(regular)
     Please use $(bold)${vagrant_dir}$(regular) directory as PhpStorm project root, NOT $(bold)${magento_ce_dir}$(regular)."
