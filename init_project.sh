@@ -26,6 +26,51 @@ host_os="$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")"
 use_nfs="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")"
 repository_url_ce="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce")"
 repository_url_ee="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee")"
+composer_project_name="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "composer_project_name")"
+composer_project_url="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "composer_project_url")"
+checkout_source_from="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "checkout_source_from")"
+
+function checkoutSourceCodeFromGit()
+{
+    if [[ ! -d ${magento_ce_dir} ]]; then
+        if [[ ${host_os} == "Windows" ]]; then
+            status "Configuring git for Windows host"
+            git config --global core.autocrlf false
+            git config --global core.eol LF
+            git config --global diff.renamelimit 5000
+        fi
+        status "Checking out CE repository"
+        git clone ${repository_url_ce} "${magento_ce_dir}" 2> >(logError) > >(log)
+        status "Checking out CE sample data repository"
+        repository_url_ce_sample_data="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce_sample_data")"
+        git clone ${repository_url_ce_sample_data} "${magento_ce_sample_data_dir}" 2> >(logError) > >(log)
+        # By default EE repository is not specified and EE project is not checked out
+        if [[ -n "${repository_url_ee}" ]]; then
+            status "Checking out EE repository"
+            git clone ${repository_url_ee} "${magento_ee_dir}" 2> >(logError) > >(log)
+        fi
+        # By default EE sample data repository is not specified and EE project is not checked out
+        repository_url_ee_sample_data="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee_sample_data")"
+        if [ -n "${repository_url_ee_sample_data}" ]; then
+            status "Checking out EE sample data repository"
+            git clone ${repository_url_ee_sample_data} "${magento_ee_sample_data_dir}" 2> >(logError) > >(log)
+        fi
+    fi
+
+    status "Installing Magento dependencies via Composer"
+    cd "${magento_ce_dir}"
+    bash "${vagrant_dir}/scripts/host/composer.sh" install
+}
+
+function composerCreateProject()
+{
+    if [[ ! -d ${magento_ce_dir} ]]; then
+        status "Downloading Magento codebase using 'composer create-project'"
+
+        cd "${magento_ce_dir}"
+        bash "${vagrant_dir}/scripts/host/composer.sh" create-project ${composer_project_name} --repository-url=${composer_project_url}
+    fi
+}
 
 bash "${vagrant_dir}/scripts/host/check_requirements.sh"
 
@@ -76,33 +121,15 @@ if [[ ${force_project_cleaning} -eq 1 ]]; then
 fi
 
 if [[ ! -d ${magento_ce_dir} ]]; then
-    if [[ ${host_os} == "Windows" ]]; then
-        status "Configuring git for Windows host"
-        git config --global core.autocrlf false
-        git config --global core.eol LF
-        git config --global diff.renamelimit 5000
-    fi
-    status "Checking out CE repository"
-    git clone ${repository_url_ce} "${magento_ce_dir}" 2> >(logError) > >(log)
-    status "Checking out CE sample data repository"
-    repository_url_ce_sample_data="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce_sample_data")"
-    git clone ${repository_url_ce_sample_data} "${magento_ce_sample_data_dir}" 2> >(logError) > >(log)
-    # By default EE repository is not specified and EE project is not checked out
-    if [[ -n "${repository_url_ee}" ]]; then
-        status "Checking out EE repository"
-        git clone ${repository_url_ee} "${magento_ee_dir}" 2> >(logError) > >(log)
-    fi
-    # By default EE sample data repository is not specified and EE project is not checked out
-    repository_url_ee_sample_data="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee_sample_data")"
-    if [ -n "${repository_url_ee_sample_data}" ]; then
-        status "Checking out EE sample data repository"
-        git clone ${repository_url_ee_sample_data} "${magento_ee_sample_data_dir}" 2> >(logError) > >(log)
+    if [[ "${checkout_source_from}" == "composer" ]]; then
+        composerCreateProject
+    elif [[ "${checkout_source_from}" == "git" ]]; then
+        checkoutSourceCodeFromGit
+    else
+        error "Value specified for 'checkout_source_from' is invalid. Supported options: composer OR git"
+        exit 1
     fi
 fi
-
-status "Installing Magento dependencies via Composer"
-cd "${magento_ce_dir}"
-bash "${vagrant_dir}/scripts/host/composer.sh" install
 
 status "Initializing vagrant box"
 cd "${vagrant_dir}"
