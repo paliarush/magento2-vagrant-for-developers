@@ -123,6 +123,7 @@ fi
 if [[ ! -f "${vagrant_dir}/.idea/deployment.xml" ]]; then
     bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
 fi
+bash "${vagrant_dir}/scripts/host/configure_tests.sh"
 
 if [[ ${host_os} == "Windows" ]] || [[ ${use_nfs} == 0 ]]; then
     # Automatic switch to EE during project initialization cannot be supported on Windows
