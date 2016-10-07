@@ -23,6 +23,9 @@ fi
 if [[ ! -f "${magento_tests_root}/integration/phpunit.xml" ]] && [[ -f "${magento_tests_root}/integration/phpunit.xml.dist" ]]; then
     status "Creating configuration for Integration tests"
     cp "${magento_tests_root}/integration/phpunit.xml.dist" "${magento_tests_root}/integration/phpunit.xml"
+    sed -i.back "s|<const name=\"TESTS_CLEANUP\" value=\"enabled\"/>|<const name=\"TESTS_CLEANUP\" value=\"disabled\"/>|g" "${magento_tests_root}/integration/phpunit.xml"
+    rm -f "${magento_tests_root}/integration/phpunit.xml.back"
+
     if [[ ! -f "${magento_tests_root}/integration/etc/install-config-mysql.php" ]] && [[ -f "${magento_tests_root}/integration/etc/install-config-mysql.php.dist" ]]; then
         cp "${magento_tests_root}/integration/etc/install-config-mysql.php.dist" "${magento_tests_root}/integration/etc/install-config-mysql.php"
         sed -i.back "s|'db-password' => '123123q'|'db-password' => ''|g" "${magento_tests_root}/integration/etc/install-config-mysql.php"
@@ -41,6 +44,7 @@ if [[ ! -f "${magento_tests_root}/api-functional/rest.xml" ]] && [[ -f "${magent
     status "Creating configuration for REST tests"
     cp "${magento_tests_root}/api-functional/phpunit.xml.dist" "${magento_tests_root}/api-functional/rest.xml"
     sed -i.back "s|http://magento.url|http://${magento_host_name}|g" "${magento_tests_root}/api-functional/rest.xml"
+    sed -i.back "s|<const name=\"TESTS_CLEANUP\" value=\"enabled\"/>|<const name=\"TESTS_CLEANUP\" value=\"disabled\"/>|g" "${magento_tests_root}/api-functional/rest.xml"
     rm -f "${magento_tests_root}/api-functional/rest.xml.back"
 fi
 if [[ ! -f "${magento_tests_root}/api-functional/soap.xml" ]] && [[ -f "${magento_tests_root}/api-functional/phpunit.xml.dist" ]]; then
@@ -48,6 +52,7 @@ if [[ ! -f "${magento_tests_root}/api-functional/soap.xml" ]] && [[ -f "${magent
     cp "${magento_tests_root}/api-functional/phpunit.xml.dist" "${magento_tests_root}/api-functional/soap.xml"
     sed -i.back "s|http://magento.url|http://${magento_host_name}|g" "${magento_tests_root}/api-functional/soap.xml"
     sed -i.back "s|<const name=\"TESTS_WEB_API_ADAPTER\" value=\"rest\"/>|<const name=\"TESTS_WEB_API_ADAPTER\" value=\"soap\"/>|g" "${magento_tests_root}/api-functional/soap.xml"
+    sed -i.back "s|<const name=\"TESTS_CLEANUP\" value=\"enabled\"/>|<const name=\"TESTS_CLEANUP\" value=\"disabled\"/>|g" "${magento_tests_root}/api-functional/soap.xml"
     rm -f "${magento_tests_root}/api-functional/soap.xml.back"
 fi
 

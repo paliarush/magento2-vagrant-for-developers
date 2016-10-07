@@ -23,6 +23,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+ - Tests configuration files are generated during project initialization
  - Added sample data support
  - Added ElasticSearch support
 
