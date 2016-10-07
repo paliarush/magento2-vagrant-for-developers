@@ -22,14 +22,14 @@ while getopts 'f' flag; do
   esac
 done
 
-if [[ ! -f ${magento_ee_dir}/app/etc/enterprise/di.xml ]]; then
+if [[ ! -f ${magento_ee_dir}/LICENSE_EE.txt ]]; then
     if [[ ${force_switch} -eq 0 ]]; then
         error "EE codebase is not available. Use 'm-switch-to-ce -f' to switch anyway."
         decrementNestingLevel
         exit 0
     fi
 else
-    if [[ ! -f ${magento_ce_dir}/app/etc/enterprise/di.xml ]] && [[ ${force_switch} -eq 0 ]]; then
+    if [[ ! -f ${magento_ce_dir}/LICENSE_EE.txt ]] && [[ ${force_switch} -eq 0 ]]; then
         warning "Already switched to CE. Use 'm-switch-to-ce -f' to switch anyway."
         decrementNestingLevel
         exit 0
@@ -48,8 +48,8 @@ else
         if [[ -f ${magento_ce_dir}/app/etc/aliases_to_classes_map.json ]]; then
             rm ${magento_ce_dir}/app/etc/aliases_to_classes_map.json
         fi
-        if [[ -f ${magento_ce_dir}/app/etc/enterprise/di.xml ]] && [[ ! -L ${magento_ce_dir}/app/etc/enterprise ]]; then
-            rm ${magento_ce_dir}/app/etc/enterprise/di.xml
+        if [[ -f ${magento_ce_dir}/LICENSE_EE.txt ]] && [[ ! -L ${magento_ce_dir}/app/etc/enterprise ]]; then
+            rm ${magento_ce_dir}/LICENSE_EE.txt
             rmdir ${magento_ce_dir}/app/etc/enterprise
         fi
     fi

@@ -12,7 +12,7 @@ if [[ -z "$(grep "search_engine:" /vagrant/etc/config.yaml)" ]]; then
     sed -i '/environment:/a \ \ search_engine: "mysql"' /vagrant/etc/config.yaml
 fi
 
-if [[ -f "${MAGENTO_ROOT}/app/etc/enterprise/di.xml" ]]; then
+if [[ -f "${MAGENTO_ROOT}/LICENSE_EE.txt" ]]; then
     search_engine="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_search_engine")"
     if [[ ${search_engine} == "elasticsearch" ]]; then
         status "Configuring ElasticSearch search engine"

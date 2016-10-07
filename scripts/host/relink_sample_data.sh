@@ -15,7 +15,7 @@ status "Linking/unlinking sample data according to config.yaml"
 incrementNestingLevel
 
 install_ee=0
-if [[ -f "${magento_ce_dir}/app/etc/enterprise/di.xml" ]]; then
+if [[ -f "${magento_ce_dir}/LICENSE_EE.txt" ]]; then
     install_ee=1
 fi
 

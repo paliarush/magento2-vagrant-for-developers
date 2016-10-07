@@ -150,6 +150,7 @@ fi
 if [[ ! -f "${vagrant_dir}/.idea/deployment.xml" ]]; then
     bash "${vagrant_dir}/scripts/host/configure_php_storm.sh"
 fi
+bash "${vagrant_dir}/scripts/host/configure_tests.sh"
 
 if [[ ${host_os} == "Windows" ]] || [[ ${use_nfs} == 0 ]]; then
     # Automatic switch to EE during project initialization cannot be supported on Windows
@@ -163,7 +164,7 @@ else
     fi
 fi
 
-success "Project initialization succesfully completed"
+success "Project initialization succesfully completed (make sure there are no errors in the log above)"
 
 info "$(bold)[Important]$(regular)
     Please use $(bold)${vagrant_dir}$(regular) directory as PhpStorm project root, NOT $(bold)${magento_ce_dir}$(regular)."

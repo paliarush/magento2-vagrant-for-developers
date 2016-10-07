@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/output_functions.sh"
+
+status "Changing Magento configuration to allow execution of functional tests"
+incrementNestingLevel
+
+update_magento_config 'cms/wysiwyg/enabled' 'disabled'
+update_magento_config 'admin/security/admin_account_sharing' '1'
+update_magento_config 'admin/security/use_form_key' '0'
+
+decrementNestingLevel

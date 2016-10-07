@@ -34,6 +34,7 @@ sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/deploym
 sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/deployment.xml"
 sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/.name"
 sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/modules.xml"
+sed -i.back "s|<host_name>|${magento_host_name}|g" "${vagrant_dir}/.idea/remote-mappings.xml"
 rm -rf "${vagrant_dir}/.idea/*.back"
 rm -f "${vagrant_dir}/.idea/.name.back"
 
