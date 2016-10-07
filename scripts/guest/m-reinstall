@@ -100,6 +100,8 @@ fi
 
 bash configure_search_engine
 
+change_magento_config_for_functional_tests
+
 status "Generating XSD references for PHP Storm"
 php bin/magento dev:urn-catalog:generate /vagrant/.idea/misc.xml
 sed -i "s|${MAGENTO_ROOT}|${MAGENTO_ROOT_HOST}|g" "/vagrant/.idea/misc.xml"
