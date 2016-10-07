@@ -66,9 +66,7 @@ function composerCreateProject()
 {
     if [[ ! -d ${magento_ce_dir} ]]; then
         status "Downloading Magento codebase using 'composer create-project'"
-
-        cd "${magento_ce_dir}"
-        bash "${vagrant_dir}/scripts/host/composer.sh" create-project ${composer_project_name} --repository-url=${composer_project_url}
+        bash "${vagrant_dir}/scripts/host/composer.sh" create-project ${composer_project_name} "${magento_ce_dir}" --repository-url=${composer_project_url}
     fi
 }
 

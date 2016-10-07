@@ -11,6 +11,13 @@ magento_ce_dir="${vagrant_dir}/magento2ce"
 magento_ee_dir="${magento_ce_dir}/magento2ee"
 host_os="$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")"
 php_executable="$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")"
+checkout_source_from="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "checkout_source_from")"
+
+if [[ "${checkout_source_from}" == "composer" ]]; then
+    warning "Switching between CE and EE is not possible for composer-based installation. Falling back to reinstall"
+    bash "${vagrant_dir}/scripts/host/m_reinstall.sh" 2> >(logError)
+    exit 0
+fi
 
 force_switch=0
 while getopts 'f' flag; do
