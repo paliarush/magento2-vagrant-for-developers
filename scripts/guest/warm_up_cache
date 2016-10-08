@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+cd "$(dirname "${BASH_SOURCE[0]}")/../.." && vagrant_dir=$PWD
+
+source "${vagrant_dir}/scripts/output_functions.sh"
+
+function loadByUrl()
+{
+    log "Warming up ${1}"
+    wget -q -O - "${1}" | grep -o "http://${host_name}[^\"]*" | grep -o ".*\.[A-Za-z]*$" | while read -r link ; do
+        log "Warming up ${link}"
+        wget -q ${link} 2> >(log) > >(log)
+    done
+}
+
+admin_frontname="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_admin_frontname")"
+host_name="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_host_name")"
+
+status "Warming up Magento cache by loading frontend and admin pages"
+
+incrementNestingLevel
+
+loadByUrl "http://${host_name}"
+loadByUrl "http://${host_name}/${admin_frontname}"
+
+decrementNestingLevel

@@ -99,19 +99,26 @@ if [[ ${is_windows_host} == 1 ]] || [[ ${use_nfs} == 0 ]]; then
 fi
 
 bash configure_search_engine
+bash change_magento_config_for_functional_tests
 
-change_magento_config_for_functional_tests
+status "Checking if Magento frontend accessible at '${setupOptions[base_url]}'"
+magento_home_page_content="$(curl -sL ${setupOptions[base_url]})"
+pattern="All rights reserved."
+if [[ ${magento_home_page_content} =~ ${pattern} ]]; then
 
-status "Generating XSD references for PHP Storm"
-php bin/magento dev:urn-catalog:generate /vagrant/.idea/misc.xml
-sed -i "s|${MAGENTO_ROOT}|${MAGENTO_ROOT_HOST}|g" "/vagrant/.idea/misc.xml"
+    bash warm_up_cache
 
-decrementNestingLevel
+    status "Generating XSD references for PHP Storm"
+    php bin/magento dev:urn-catalog:generate /vagrant/.idea/misc.xml
+    sed -i "s|${MAGENTO_ROOT}|${MAGENTO_ROOT_HOST}|g" "/vagrant/.idea/misc.xml"
 
-success "Magento reinstalled successfully (make sure there are no errors in the log above)"
+    decrementNestingLevel
+    success "Magento reinstalled successfully"
+    info "Magento application was deployed to $(bold)${MAGENTO_ROOT}$(regular) and installed successfully
 
-info "Magento application was deployed to $(bold)${MAGENTO_ROOT}$(regular) and installed successfully
-
-Access storefront at $(bold)${setupOptions[base_url]}$(regular)
-Access admin panel at $(bold)${setupOptions[base_url]}${setupOptions[admin_frontname]}/$(regular)"
-
+    Access storefront at $(bold)${setupOptions[base_url]}$(regular)
+    Access admin panel at $(bold)${setupOptions[base_url]}${setupOptions[admin_frontname]}/$(regular)"
+else
+    error "Magento frontend is not accessible at '${setupOptions[base_url]}' after installation. Please scan output above and logs for errors"
+    exit 1
+fi
