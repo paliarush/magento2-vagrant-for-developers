@@ -2,12 +2,16 @@
 checkout_source_from: "git"
 
 composer_project:
+  # Current section used only if 'checkout_source_from' is set to 'composer'
+
   # [To apply changes: init_project.sh -fc]
   name: "magento/project-community-edition"
   # Make sure to specify valid keys for this repository in etc/composer/auth.json
   url: "https://repo.magento.com"
 
 repository_url:
+  # Current section used only if 'checkout_source_from' is set to 'git'
+
   # [To apply changes: init_project.sh -fc]
   # git@github.com:magento/magento2ce.git OR custom one
   ce: "git@github.com:magento/magento2.git"

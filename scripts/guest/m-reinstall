@@ -101,7 +101,7 @@ fi
 bash configure_search_engine
 bash change_magento_config_for_functional_tests
 
-status "Checking if Magento frontend accessible at '${setupOptions[base_url]}'"
+status "Checking if Magento frontend is accessible at '${setupOptions[base_url]}'"
 magento_home_page_content="$(curl -sL ${setupOptions[base_url]})"
 pattern="All rights reserved."
 if [[ ${magento_home_page_content} =~ ${pattern} ]]; then
