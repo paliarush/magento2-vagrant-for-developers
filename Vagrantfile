@@ -44,6 +44,8 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
 
     config.vm.provider "virtualbox" do |vb|
         vb.memory = guest_memory
+        # Uncomment option below to avoid issues with VirtualBox on Windows 10
+        # vb.gui=true
     end
 
     config.vm.synced_folder '.', '/vagrant', disabled: true

@@ -56,10 +56,6 @@ function checkoutSourceCodeFromGit()
             git clone ${repository_url_ee_sample_data} "${magento_ee_sample_data_dir}" 2> >(logError) > >(log)
         fi
     fi
-
-    status "Installing Magento dependencies via Composer"
-    cd "${magento_ce_dir}"
-    bash "${vagrant_dir}/scripts/host/composer.sh" install
 }
 
 function composerCreateProject()
@@ -127,6 +123,12 @@ if [[ ! -d ${magento_ce_dir} ]]; then
         error "Value specified for 'checkout_source_from' is invalid. Supported options: composer OR git"
         exit 1
     fi
+fi
+
+if [[ "${checkout_source_from}" == "git" ]]; then
+    status "Installing Magento dependencies via Composer"
+    cd "${magento_ce_dir}"
+    bash "${vagrant_dir}/scripts/host/composer.sh" install
 fi
 
 status "Initializing vagrant box"

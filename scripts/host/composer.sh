@@ -24,7 +24,8 @@ if [[ ! -f ${composer_phar} ]]; then
     curl -sS https://getcomposer.org/installer | ${php_executable} 2> >(logError) > >(log)
 fi
 
-${php_executable} "${composer_phar}" global require "hirak/prestissimo:^0.3"
+# commented out due to composer conflicts
+# ${php_executable} "${composer_phar}" global require "hirak/prestissimo:^0.3"
 
 cd "${current_dir}"
 if [[ -f ${composer_auth_json} ]]; then
