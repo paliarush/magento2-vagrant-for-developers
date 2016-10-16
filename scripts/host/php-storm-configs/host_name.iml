@@ -5,6 +5,9 @@
       <sourceFolder url="file://$MODULE_DIR$/magento2ce/app/code" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/magento2ce/dev/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/magento2ce/magento2ee/app/code" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/magento2ce/magento2ee" />
+      <excludeFolder url="file://$MODULE_DIR$/magento2ce/magento2ce-sample-data" />
+      <excludeFolder url="file://$MODULE_DIR$/magento2ce/magento2ee-sample-data" />
       <excludeFolder url="file://$MODULE_DIR$/magento2ce/dev/tests/integration/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/magento2ce/pub/static" />
       <excludeFolder url="file://$MODULE_DIR$/magento2ce/var/cache" />

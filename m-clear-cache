@@ -14,4 +14,10 @@ fi
 
 bash "${vagrant_dir}/scripts/host/m_clear_cache.sh" "$@" 2> >(logError)
 
+incrementNestingLevel
+
+bash "${vagrant_dir}/scripts/host/warm_up_cache.sh" 2> >(logError)
+
+decrementNestingLevel
+
 info "See detailed log in '${vagrant_dir}/log/debug.log'. For even more details you can set 'debug:vagrant_project' to 1 in etc/config.yaml"

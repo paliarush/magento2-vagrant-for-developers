@@ -44,6 +44,7 @@ if [[ ! -f "${magento_tests_root}/api-functional/rest.xml" ]] && [[ -f "${magent
     status "Creating configuration for REST tests"
     cp "${magento_tests_root}/api-functional/phpunit.xml.dist" "${magento_tests_root}/api-functional/rest.xml"
     sed -i.back "s|http://magento.url|http://${magento_host_name}|g" "${magento_tests_root}/api-functional/rest.xml"
+    sed -i.back "s|http://magento-ee.localhost|http://${magento_host_name}|g" "${magento_tests_root}/api-functional/rest.xml"
     sed -i.back "s|<const name=\"TESTS_CLEANUP\" value=\"enabled\"/>|<const name=\"TESTS_CLEANUP\" value=\"disabled\"/>|g" "${magento_tests_root}/api-functional/rest.xml"
     rm -f "${magento_tests_root}/api-functional/rest.xml.back"
 fi
@@ -51,6 +52,7 @@ if [[ ! -f "${magento_tests_root}/api-functional/soap.xml" ]] && [[ -f "${magent
     status "Creating configuration for SOAP tests"
     cp "${magento_tests_root}/api-functional/phpunit.xml.dist" "${magento_tests_root}/api-functional/soap.xml"
     sed -i.back "s|http://magento.url|http://${magento_host_name}|g" "${magento_tests_root}/api-functional/soap.xml"
+    sed -i.back "s|http://magento-ee.localhost|http://${magento_host_name}|g" "${magento_tests_root}/api-functional/soap.xml"
     sed -i.back "s|<const name=\"TESTS_WEB_API_ADAPTER\" value=\"rest\"/>|<const name=\"TESTS_WEB_API_ADAPTER\" value=\"soap\"/>|g" "${magento_tests_root}/api-functional/soap.xml"
     sed -i.back "s|<const name=\"TESTS_CLEANUP\" value=\"enabled\"/>|<const name=\"TESTS_CLEANUP\" value=\"disabled\"/>|g" "${magento_tests_root}/api-functional/soap.xml"
     rm -f "${magento_tests_root}/api-functional/soap.xml.back"

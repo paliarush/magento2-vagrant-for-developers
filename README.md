@@ -44,7 +44,7 @@ It is easy to [install multiple Magento instances](#multiple-magento-instances) 
 
  1. Adds some missing software on the host
  1. Configures all software necessary for Magento 2 using [custom Ubuntu vagrant box](https://atlas.hashicorp.com/paliarush/boxes/magento2.ubuntu) (Apache 2.4, PHP 7.0 (or 5.6), MySQL 5.6, Git, Composer, XDebug, Rabbit MQ, Varnish)
- 1. Installs Magento 2
+ 1. Installs Magento 2 from Git repositories or Composer packages (can be configured via `checkout_source_from` option in [etc/config.yaml](etc/config.yaml.dist))
  1. Configures PHP Storm project (partially at the moment)
 
 ## How to install
@@ -82,11 +82,11 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
    git clone git@github.com:paliarush/magento2-vagrant-for-developers.git vagrant-magento
    ```
 
- 1. Optionally, if you use private repositories on GitHub or download packages from Magento Marketplace
+ 1. Optionally, if you use private repositories on GitHub or download packages from Magento Marketplace using Composer
 
    - copy [etc/composer/auth.json.dist](etc/composer/auth.json.dist) to `etc/composer/auth.json`
    - specify your GitHub token by adding `"github.com": "your-github-token"` to `github-oauth` section for GitHub authorization
-   - add Magento Marketplace keys for Marketplace authorization
+   - add Magento Marketplace keys for Marketplace authorization to `repo.magento.com` section
 
  1. Optionally, copy [etc/config.yaml.dist](etc/config.yaml.dist) as `etc/config.yaml` and make necessary customizations
 

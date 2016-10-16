@@ -23,6 +23,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+ - Added Composer-based installation support
+ - Added Magento cache warming up after re-install and clearing cache
  - Tests configuration files are generated during project initialization
  - Added sample data support
  - Added ElasticSearch support
