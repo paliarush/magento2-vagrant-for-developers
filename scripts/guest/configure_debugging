@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/output_functions.sh"
+
+debug_magento_storefront="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_magento_storefront")"
+if [[ ${debug_magento_storefront} == 1 ]]; then
+    status "Enabling Magento storefront debugging (as specified in etc/config.yaml)"
+    incrementNestingLevel
+    update_magento_config 'dev/debug/template_hints_storefront' '1'
+    update_magento_config 'dev/debug/template_hints_blocks' '1'
+    decrementNestingLevel
+else
+    update_magento_config 'dev/debug/template_hints_storefront' '0' 2> >(logError) > >(log)
+    update_magento_config 'dev/debug/template_hints_blocks' '0' 2> >(logError) > >(log)
+fi
+
+debug_magento_admin="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_magento_admin")"
+if [[ ${debug_magento_admin} == 1 ]]; then
+    status "Enabling Magento admin debugging (as specified in etc/config.yaml)"
+    incrementNestingLevel
+    update_magento_config 'dev/debug/template_hints_admin' '1'
+    decrementNestingLevel
+else
+    update_magento_config 'dev/debug/template_hints_admin' '0' 2> >(logError) > >(log)
+fi
+
+debug_magento="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_magento")"
+if [[ ${debug_magento} == 1 ]]; then
+    status "Enabling Magento developer mode (as specified in etc/config.yaml)"
+    sudo sed -i "s|^#\s*SetEnv MAGE_MODE developer|SetEnv MAGE_MODE developer|g" "${MAGENTO_ROOT}/.htaccess"
+else
+    sudo sed -i "s|^\s*SetEnv MAGE_MODE developer|#   SetEnv MAGE_MODE developer|g" "${MAGENTO_ROOT}/.htaccess"
+fi

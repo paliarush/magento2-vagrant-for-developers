@@ -12,22 +12,26 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+ - Magento EE and sample data directories are added to 'Exclude list' in PhpStorm
+ - Redis is used as default cache backend instead of filesystem
  - After EE is linked, EE versions of composer.lock and composer.json are replaced back with CE versions (thus are not marked by git as modified)
  - Improved CLI scripts output formatting
 
 ### Fixed
 
- - Fixed issue with some files marked as unversioned in git after EE linking
+ - Issue with some files marked as unversioned in git after EE linking
  - It is now possible to use spaces in path to vagrant project on Windows. On OSX and Linux hosts it works in non-NFS mode, in NFS mode it does not work because of [bug in vagrant](mitchellh/vagrant#7540)
- - Fixed issue with MySQL being down after VM power off
+ - Issue with MySQL being down after VM power off
 
 ### Added
 
- - Added Composer-based installation support
- - Added Magento cache warming up after re-install and clearing cache
+ - Redis support for Magento caching
+ - Access to Magento developer mode and storefront/admin UI debugging features via [etc/config.yaml.dist](etc/config.yaml.dist)
+ - Composer-based installation support
+ - Magento cache warming up after re-install and clearing cache
  - Tests configuration files are generated during project initialization
- - Added sample data support
- - Added ElasticSearch support
+ - Sample data support
+ - ElasticSearch support
 
 ## [v2.1.0] - 2016-06-22
 
@@ -40,20 +44,20 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
- - Fixed permissions during Magento installation on Windows hosts
- - Fixed issue with Magento compiler on Windows hosts
- - Fixed "stdin: is not a tty" warning
+ - Permissions during Magento installation on Windows hosts
+ - Issue with Magento compiler on Windows hosts
+ - "stdin: is not a tty" warning
 
 ### Added
 
- - Added setup and upgrade cron scripts to crontab
- - Added logging of all emails in HTML format to `vagrant-magento/log/email`
- - Added host wrapper script for bin/magento command on guest
- - Added ability to modify guest config files (PHP, Apache etc) directly from host IDE
- - Added ability to choose if PhpStorm configs should be removed during project reinitialization
- - Added ability to switch PHP version without destroying the project ("vagrant reload" is required)
- - Added ability to do force switch to CE or EE (even if already switched to target edition)
- - Added ability to use Varnish full page caching automatically. (Using "vagrant reload" or m-varnish script)
+ - Setup and upgrade cron scripts to crontab
+ - Logging of all emails in HTML format to `vagrant-magento/log/email`
+ - Host wrapper script for bin/magento command on guest
+ - Ability to modify guest config files (PHP, Apache etc) directly from host IDE
+ - Ability to choose if PhpStorm configs should be removed during project reinitialization
+ - Ability to switch PHP version without destroying the project ("vagrant reload" is required)
+ - Ability to do force switch to CE or EE (even if already switched to target edition)
+ - Ability to use Varnish full page caching automatically. (Using "vagrant reload" or m-varnish script)
 
 ## [v2.0.0] - 2016-02-05
 
@@ -74,20 +78,20 @@ This project adheres to [Semantic Versioning](http://semver.org/).
  - Added [project initialization script](init_project.sh) and host scripts for routine flows (compatible with OSX, *nix and Windows)
  - Implemented static value of forwarded SSH port to prevent necessity to reconfigure software accessing guest via SSH
  - Implemented collision prevention for IP address and host name (in case when several machines are created at once)
- - Added configuration file [etc/config.yaml.dist](etc/config.yaml.dist)
- - Added PHP 7.0 support
- - Added PHP Storm configuration during project initialization (particularly automatic deployment settings)
- - Added automatic vagrant plugins installation
+ - Configuration file [etc/config.yaml.dist](etc/config.yaml.dist)
+ - PHP 7.0 support
+ - PHP Storm configuration during project initialization (particularly automatic deployment settings)
+ - Automatic vagrant plugins installation
 
 ## [v1.0.0] - 2016-01-11
 
 ### Added
 
  - Integrated vagrant host manager plugin to allow automatic /etc/hosts update
- - Added support of EE linked to CE using symlinks on *nix hosts
- - Added ${MAGENTO_ROOT} environment variable, which stores installation path on the guest
- - Added support of Rabbit MQ
- - Added possibility to specify tokens for repo.magento.com composer repository
+ - Support of EE linked to CE using symlinks on *nix hosts
+ - ${MAGENTO_ROOT} environment variable, which stores installation path on the guest
+ - Support of Rabbit MQ
+ - Possibility to specify tokens for repo.magento.com composer repository
  - git is now installed on guest machine
  - Removed 'magento' MySQL user, password of 'root' user removed
  - Database for integration tests are created by default
