@@ -143,6 +143,8 @@ vagrant up 2> >(logError) | {
   filterVagrantOutput "${lastline}"
 }
 
+bash "${vagrant_dir}/scripts/host/check_mounted_directories.sh"
+
 if [[ ${force_project_cleaning} -eq 1 ]] && [[ ${force_phpstorm_config_cleaning} -eq 1 ]]; then
     status "Resetting PhpStorm configuration since '-p' option was used"
     rm -rf "${vagrant_dir}/.idea"
