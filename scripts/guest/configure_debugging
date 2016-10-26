@@ -33,5 +33,5 @@ status "Checking if Magento mode should be changed to '${magento_mode}' (as spec
 mage_mode_pattern="'MAGE_MODE' => '${magento_mode}"
 if [[ ! ${env_php_content} =~ ${mage_mode_pattern} ]]; then
     status "Enabling Magento '${magento_mode}' mode"
-    php "${MAGENTO_ROOT}/bin/magento" deploy:mode:set ${magento_mode}
+    php "${MAGENTO_ROOT}/bin/magento" deploy:mode:set ${magento_mode} 2> >(logError) > >(log)
 fi
