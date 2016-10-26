@@ -37,9 +37,11 @@ if [[ -d "${MAGENTO_ROOT}/dev" ]]; then
     fi
 fi
 
-if [[ -f "${MAGENTO_ROOT}/app/etc/env.php" ]]; then
+if [[ -f "${MAGENTO_ROOT}/app/etc/config.php" ]]; then
 
     bash configure_debugging
+
+    bash configure_cache_backend
 
     status "Flushing cache using 'bin/magento cache:flush'"
     php "${MAGENTO_ROOT}/bin/magento" cache:flush 2> >(logError) > >(log)

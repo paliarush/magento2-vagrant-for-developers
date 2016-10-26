@@ -26,10 +26,12 @@ else
     update_magento_config 'dev/debug/template_hints_admin' '0' 2> >(logError) > >(log)
 fi
 
-debug_magento="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_magento")"
-if [[ ${debug_magento} == 1 ]]; then
-    status "Enabling Magento developer mode (as specified in etc/config.yaml)"
-    sudo sed -i "s|^#\s*SetEnv MAGE_MODE developer|SetEnv MAGE_MODE developer|g" "${MAGENTO_ROOT}/.htaccess"
-else
-    sudo sed -i "s|^\s*SetEnv MAGE_MODE developer|#   SetEnv MAGE_MODE developer|g" "${MAGENTO_ROOT}/.htaccess"
+# Switch to desired Magento mode
+env_php_content="$(cat "${MAGENTO_ROOT}/app/etc/env.php")"
+magento_mode="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_mode")"
+status "Checking if Magento mode should be changed to '${magento_mode}' (as specified in etc/config.yaml)"
+mage_mode_pattern="'MAGE_MODE' => '${magento_mode}"
+if [[ ! ${env_php_content} =~ ${mage_mode_pattern} ]]; then
+    status "Enabling Magento '${magento_mode}' mode"
+    php "${MAGENTO_ROOT}/bin/magento" deploy:mode:set ${magento_mode}
 fi

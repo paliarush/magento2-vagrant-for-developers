@@ -62,8 +62,8 @@ if [[ ${is_redis_installed} -eq 0 ]]; then
     apt-get update 2> >(logError) > >(log)
     apt-get install tcl8.5 2> >(logError) > >(log)
 
-    wget http://download.redis.io/redis-stable.tar.gz 2> >(logError) > >(log)
-    tar xvzf redis-stable.tar.gz 2> >(logError) > >(log)
+    wget http://download.redis.io/redis-stable.tar.gz 2> >(log) > >(log)
+    tar xvzf redis-stable.tar.gz 2> >(log) > >(log)
     cd redis-stable
     make install 2> >(logError) > >(log)
     echo -n | sudo utils/install_server.sh 2> >(logError) > >(log)
