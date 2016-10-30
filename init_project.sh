@@ -39,8 +39,9 @@ function checkoutSourceCodeFromGit()
             git config --global core.eol LF
             git config --global diff.renamelimit 5000
         fi
-        status "Checking out CE repository"
-        git clone ${repository_url_ce} "${magento_ce_dir}" 2> >(logError) > >(log)
+
+        initMagentoCeGit
+
         status "Checking out CE sample data repository"
         repository_url_ce_sample_data="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce_sample_data")"
         git clone ${repository_url_ce_sample_data} "${magento_ce_sample_data_dir}" 2> >(logError) > >(log)
@@ -56,6 +57,44 @@ function checkoutSourceCodeFromGit()
             git clone ${repository_url_ee_sample_data} "${magento_ee_sample_data_dir}" 2> >(logError) > >(log)
         fi
     fi
+}
+
+function initMagentoCeGit()
+{
+    if [[ ${repository_url_ce} == *"::"* ]]; then
+        local ce_branch=$(getGitBranch ${repository_url_ce})
+        local ce_repo=$(getGitRepository ${repository_url_ce})
+    fi
+
+    status "Checking out CE repository"
+    git clone ${ce_repo} "${magento_ce_dir}" 2> >(logError) > >(log)
+
+    if [[ -n ${ce_branch} ]]; then
+        status "Checking out branch ${ce_branch} of CE repository"
+        cd "${magento_ce_dir}"
+        git fetch
+        git checkout ${ce_branch}
+    fi
+
+    cd "../"
+}
+
+# Get the git repository from a repository_url setting in config.yaml
+function getGitRepository()
+{
+    local repo=`expr "${1}" : '\(.*::\)'` # Gets the substring before the '::' characters, including '::' 
+    local repo=`echo ${repo::${#repo}-2}`
+
+    echo ${repo}
+}
+
+# Get the git branch from a repository_url setting in config.yaml
+function getGitBranch()
+{
+    local branch=`expr "${1}" : '.*\(::.*\)'` # Gets the substring after the '::' characters, including '::' 
+    local branch=`echo $branch | cut -c 3-`
+
+    echo ${branch}
 }
 
 function composerCreateProject()
