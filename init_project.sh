@@ -41,42 +41,72 @@ function checkoutSourceCodeFromGit()
         fi
 
         initMagentoCeGit
+        initMagentoCeSampleGit
 
-        status "Checking out CE sample data repository"
-        repository_url_ce_sample_data="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce_sample_data")"
-        git clone ${repository_url_ce_sample_data} "${magento_ce_sample_data_dir}" 2> >(logError) > >(log)
         # By default EE repository is not specified and EE project is not checked out
         if [[ -n "${repository_url_ee}" ]]; then
-            status "Checking out EE repository"
-            git clone ${repository_url_ee} "${magento_ee_dir}" 2> >(logError) > >(log)
+            initMagentoEeGit
         fi
         # By default EE sample data repository is not specified and EE project is not checked out
         repository_url_ee_sample_data="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ee_sample_data")"
         if [ -n "${repository_url_ee_sample_data}" ]; then
-            status "Checking out EE sample data repository"
-            git clone ${repository_url_ee_sample_data} "${magento_ee_sample_data_dir}" 2> >(logError) > >(log)
+            initMagentoEeSampleGit
         fi
     fi
 }
 
 function initMagentoCeGit()
 {
-    if [[ ${repository_url_ce} == *"::"* ]]; then
-        local ce_branch=$(getGitBranch ${repository_url_ce})
-        local ce_repo=$(getGitRepository ${repository_url_ce})
+    initGitRepository ${repository_url_ce} "CE" ${magento_ce_dir}
+    cd ${vagrant_dir}
+}
+
+function initMagentoEeGit()
+{
+    initGitRepository ${repository_url_ee} "EE" ${magento_ee_dir}
+    cd ${vagrant_dir}
+}
+
+function initMagentoCeSampleGit()
+{
+    repository_url_ce_sample_data="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce_sample_data")"
+    initGitRepository ${repository_url_ce_sample_data} "CE sample data" ${magento_ce_sample_data_dir}
+    cd ${vagrant_dir}
+}
+
+function initMagentoEeSampleGit()
+{
+    initGitRepository ${repository_url_ee_sample_data} "EE sample data" ${magento_ee_sample_data_dir}
+    cd ${vagrant_dir}
+}
+
+# Initialize the cloning and checkout of a git repository
+# Arguments:
+#   Url of repository
+#   Name of repository (CE, EE)
+#   Directory where the repository will be cloned to
+function initGitRepository()
+{
+    local repository_url=${1}
+    local repository_name=${2}
+    local directory=${3}
+
+    if [[ ${repository_url} == *"::"* ]]; then
+        local branch=$(getGitBranch ${repository_url})
+        local repo=$(getGitRepository ${repository_url})
+    else
+        local repo=${repository_url}
     fi
 
-    status "Checking out CE repository"
-    git clone ${ce_repo} "${magento_ce_dir}" 2> >(logError) > >(log)
+    status "Checking out ${2} repository"
+    git clone ${repo} "${directory}" 2> >(logError) > >(log)
 
-    if [[ -n ${ce_branch} ]]; then
-        status "Checking out branch ${ce_branch} of CE repository"
-        cd "${magento_ce_dir}"
+    if [[ -n ${branch} ]]; then
+        status "Checking out branch ${branch} of ${2} repository"
+        cd "${directory}"
         git fetch
-        git checkout ${ce_branch}
+        git checkout ${branch}
     fi
-
-    cd "../"
 }
 
 # Get the git repository from a repository_url setting in config.yaml
