@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/output_functions.sh"
+
+debug_magento_storefront="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_magento_storefront")"
+if [[ ${debug_magento_storefront} == 1 ]]; then
+    status "Enabling Magento storefront debugging (as specified in etc/config.yaml)"
+    incrementNestingLevel
+    update_magento_config 'dev/debug/template_hints_storefront' '1'
+    update_magento_config 'dev/debug/template_hints_blocks' '1'
+    decrementNestingLevel
+else
+    update_magento_config 'dev/debug/template_hints_storefront' '0' 2> >(logError) > >(log)
+    update_magento_config 'dev/debug/template_hints_blocks' '0' 2> >(logError) > >(log)
+fi
+
+debug_magento_admin="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_magento_admin")"
+if [[ ${debug_magento_admin} == 1 ]]; then
+    status "Enabling Magento admin debugging (as specified in etc/config.yaml)"
+    incrementNestingLevel
+    update_magento_config 'dev/debug/template_hints_admin' '1'
+    decrementNestingLevel
+else
+    update_magento_config 'dev/debug/template_hints_admin' '0' 2> >(logError) > >(log)
+fi
+
+# Switch to desired Magento mode
+env_php_content="$(cat "${MAGENTO_ROOT}/app/etc/env.php")"
+magento_mode="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_mode")"
+status "Checking if Magento mode should be changed to '${magento_mode}' (as specified in etc/config.yaml)"
+mage_mode_pattern="'MAGE_MODE' => '${magento_mode}"
+if [[ ! ${env_php_content} =~ ${mage_mode_pattern} ]]; then
+    status "Enabling Magento '${magento_mode}' mode"
+    php "${MAGENTO_ROOT}/bin/magento" deploy:mode:set ${magento_mode} 2> >(logError) > >(log)
+fi

@@ -27,6 +27,7 @@
    * [Switch between PHP 5.6 and 7.0](#switch-between-php-56-and-70)
    * [Activating Varnish](#activating-varnish)
    * [Activating ElasticSearch](#activating-elasticsearch)
+   * [Redis for caching](#redis-for-caching)
    * [Reset environment](#reset-environment)
  * [FAQ](#faq)
 
@@ -208,6 +209,8 @@ To debug a CLI script:
 
 To debug Magento Setup script, go to [Magento installation script](scripts/guest/m-reinstall) and find `php ${install_cmd}`. Follow steps above for any CLI script
 
+:information_source: In addition to XDebug support, [config.yaml](etc/config.yaml.dist) has several options in `debug` section which allow storefront and admin UI debugging. Plus, desired Magento mode (developer/production/default) can be enabled using `magento_mode` option, default is developer mode.
+
 ### Connecting to MySQL DB
 
 Answer can be found [here](https://github.com/paliarush/magento2-vagrant-for-developers/issues/8)
@@ -260,6 +263,12 @@ Use the following commands to enable/disable varnish without reinstalling Magent
 Set `search_engine: "elasticsearch"` in [config.yaml](etc/config.yaml.dist) to use ElasticSearch as current search engine or `search_engine: "mysql"` to use MySQL. Changes will be applied on `m-reinstall`.
 
 Use the following commands to switch between search engines without reinstalling Magento: `m-search-engine elasticsearch` or `m-search-engine mysql`.
+
+### Redis for caching
+
+:information_source: Available in Magento v2.0.6 and higher.
+
+Redis is configured as cache backend by default. It is still possible to switch back to filesystem cache by changing `environment_cache_backend` to `filesystem` in [config.yaml](etc/config.yaml.dist).
 
 ### Reset environment
 

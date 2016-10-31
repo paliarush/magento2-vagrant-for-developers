@@ -56,6 +56,19 @@ if [[ ${is_varnish_installed} -eq 0 ]]; then
     apt-get install -y varnish 2> >(logError) > >(log)
 fi
 
+is_redis_installed="$(isServiceAvailable redis)"
+if [[ ${is_redis_installed} -eq 0 ]]; then
+    status "Installing Redis"
+    apt-get update 2> >(logError) > >(log)
+    apt-get install tcl8.5 2> >(logError) > >(log)
+
+    wget http://download.redis.io/redis-stable.tar.gz 2> >(log) > >(log)
+    tar xvzf redis-stable.tar.gz 2> >(log) > >(log)
+    cd redis-stable
+    make install 2> >(logError) > >(log)
+    echo -n | sudo utils/install_server.sh 2> >(logError) > >(log)
+fi
+
 status "Fixing potential issue with MySQL being down after VM power off"
 service mysql restart 2> >(logError) > >(log)
 
