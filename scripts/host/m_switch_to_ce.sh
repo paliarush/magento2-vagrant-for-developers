@@ -18,9 +18,11 @@ checkout_source_from="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "check
 if [[ "${checkout_source_from}" == "git" ]]; then
     # Current installation is Git-based
     force_switch=0
-    while getopts 'f' flag; do
+    upgrade_only=0
+    while getopts 'fu' flag; do
       case "${flag}" in
         f) force_switch=1 ;;
+        u) upgrade_only=1 ;;
         *) error "Unexpected option" && decrementNestingLevel && exit 1;;
       esac
     done
@@ -71,6 +73,12 @@ if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config
     read -p "$(warning "[Action Required] Wait while Magento2 code is uploaded in PhpStorm and press any key to continue...")" -n1 -s
 fi
 
-bash "${vagrant_dir}/scripts/host/m_reinstall.sh" 2> >(logError)
+if [[ ${upgrade_only} -eq 1 ]]; then
+    bash "${vagrant_dir}/m-bin-magento" "setup:upgrade" 2> >(logError)
+    bash "${vagrant_dir}/m-bin-magento" "indexer:reindex" 2> >(logError)
+    bash "${vagrant_dir}/m-clear-cache" 2> >(logError)
+else
+    bash "${vagrant_dir}/scripts/host/m_reinstall.sh" 2> >(logError)
+fi
 
 decrementNestingLevel
