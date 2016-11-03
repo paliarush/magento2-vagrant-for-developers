@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/output_functions.sh"
+
+status "Configuring cache backend according to config.yaml"
+incrementNestingLevel
+
+cache_backend="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_cache_backend")"
+magento_composer_content="$(cat "${MAGENTO_ROOT}/composer.json")"
+redis_configuration="
+    'cache' => [
+        'frontend' => [
+            'default' => [
+                'backend' => 'Cm_Cache_Backend_Redis',
+                'backend_options' => [
+                    'server' => '127.0.0.1',
+                    'port' => '6379'
+                ],
+            ],
+            'page_cache' => [
+                'backend' => 'Cm_Cache_Backend_Redis',
+                'backend_options' => [
+                    'server' => '127.0.0.1',
+                    'port' => '6379',
+                    'database' => '1',
+                    'compress_data' => '0'
+                ]
+            ]
+        ]
+    ],
+"
+
+# Removing existing configuration
+perl -i -p0e "s/,\s*'cache'.*\],/,/smg" "${MAGENTO_ROOT}/app/etc/env.php"
+
+incompatible_magento_version_pattern='"version": "2.0.[0-5]'
+if [[ ${cache_backend} == "redis" ]] && [[ ! ${magento_composer_content} =~ ${incompatible_magento_version_pattern} ]]; then
+    status "Using Redis backend for caching"
+    perl -i -p0e "s/\n*\);/${redis_configuration});/smg" "${MAGENTO_ROOT}/app/etc/env.php"
+    redis-cli flushall 2> >(logError) > >(log)
+else
+    status "Using file system backend for caching"
+fi
+
+decrementNestingLevel
