@@ -57,26 +57,26 @@ function checkoutSourceCodeFromGit()
 
 function initMagentoCeGit()
 {
-    initGitRepository ${repository_url_ce} "CE" ${magento_ce_dir}
+    initGitRepository ${repository_url_ce} "CE" "${magento_ce_dir}"
     cd ${vagrant_dir}
 }
 
 function initMagentoEeGit()
 {
-    initGitRepository ${repository_url_ee} "EE" ${magento_ee_dir}
+    initGitRepository ${repository_url_ee} "EE" "${magento_ee_dir}"
     cd ${vagrant_dir}
 }
 
 function initMagentoCeSampleGit()
 {
     repository_url_ce_sample_data="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce_sample_data")"
-    initGitRepository ${repository_url_ce_sample_data} "CE sample data" ${magento_ce_sample_data_dir}
+    initGitRepository ${repository_url_ce_sample_data} "CE sample data" "${magento_ce_sample_data_dir}"
     cd ${vagrant_dir}
 }
 
 function initMagentoEeSampleGit()
 {
-    initGitRepository ${repository_url_ee_sample_data} "EE sample data" ${magento_ee_sample_data_dir}
+    initGitRepository ${repository_url_ee_sample_data} "EE sample data" "${magento_ee_sample_data_dir}"
     cd ${vagrant_dir}
 }
 
@@ -98,11 +98,11 @@ function initGitRepository()
         local repo=${repository_url}
     fi
 
-    status "Checking out ${2} repository"
+    status "Checking out ${repository_name} repository"
     git clone ${repo} "${directory}" 2> >(logError) > >(log)
 
     if [[ -n ${branch} ]]; then
-        status "Checking out branch ${branch} of ${2} repository"
+        status "Checking out branch ${branch} of ${repository_name} repository"
         cd "${directory}"
         git fetch
         git checkout ${branch}
@@ -112,18 +112,14 @@ function initGitRepository()
 # Get the git repository from a repository_url setting in config.yaml
 function getGitRepository()
 {
-    local repo=`expr "${1}" : '\(.*::\)'` # Gets the substring before the '::' characters, including '::' 
-    local repo=`echo ${repo::${#repo}-2}`
-
+    local repo="${1%::*}" # Gets the substring before the '::' characters
     echo ${repo}
 }
 
 # Get the git branch from a repository_url setting in config.yaml
 function getGitBranch()
 {
-    local branch=`expr "${1}" : '.*\(::.*\)'` # Gets the substring after the '::' characters, including '::' 
-    local branch=`echo $branch | cut -c 3-`
-
+    local branch="${1#*::}" # Gets the substring after the '::' characters
     echo ${branch}
 }
 
