@@ -13,18 +13,18 @@ host_os="$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")"
 php_executable="$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")"
 checkout_source_from="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "checkout_source_from")"
 
+force_switch=0
+upgrade_only=0
+while getopts 'fu' flag; do
+  case "${flag}" in
+    f) force_switch=1 ;;
+    u) upgrade_only=1 ;;
+    *) error "Unexpected option" && decrementNestingLevel && exit 1;;
+  esac
+done
+
 if [[ "${checkout_source_from}" == "git" ]]; then
     # Current installation is Git-based
-    force_switch=0
-    upgrade_only=0
-    while getopts 'fu' flag; do
-      case "${flag}" in
-        f) force_switch=1 ;;
-        u) upgrade_only=1 ;;
-        *) error "Unexpected option" && decrementNestingLevel && exit 1;;
-      esac
-    done
-
     if [[ ! -f ${magento_ee_dir}/LICENSE_EE.txt ]]; then
         error "EE codebase is not available."
         decrementNestingLevel
