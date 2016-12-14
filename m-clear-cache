@@ -5,7 +5,17 @@ set -e
 cd "$(dirname "${BASH_SOURCE[0]}")" && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/output_functions.sh"
+current_script_name=`basename "$0"`
+log_file="${vagrant_dir}/log/${current_script_name}.log"
 resetNestingLevel
+
+warm_up_cache=0
+while getopts 'w' flag; do
+  case "${flag}" in
+    w) warm_up_cache=1 ;;
+    *) error "Unexpected option" && exit 1;;
+  esac
+done
 
 debug_vagrant_project="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_vagrant_project")"
 if [[ ${debug_vagrant_project} -eq 1 ]]; then
@@ -14,10 +24,12 @@ fi
 
 bash "${vagrant_dir}/scripts/host/m_clear_cache.sh" "$@" 2> >(logError)
 
-incrementNestingLevel
+if [[ ${warm_up_cache} -eq 1 ]]; then
+    incrementNestingLevel
+    bash "${vagrant_dir}/scripts/host/warm_up_cache.sh" 2> >(logError)
+    decrementNestingLevel
+else
+    info "Use 'bash ./m-clear-cache -w' to get automatic cache warm up"
+fi
 
-bash "${vagrant_dir}/scripts/host/warm_up_cache.sh" 2> >(logError)
-
-decrementNestingLevel
-
-info "See detailed log in '${vagrant_dir}/log/debug.log'. For even more details you can set 'debug:vagrant_project' to 1 in etc/config.yaml"
+info "See detailed log in '${vagrant_dir}/log/${current_script_name}.log'. For even more details you can set 'debug:vagrant_project' to 1 in etc/config.yaml"

@@ -5,6 +5,8 @@ set -e
 cd "$(dirname "${BASH_SOURCE[0]}")" && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/output_functions.sh"
+current_script_name=`basename "$0"`
+log_file="${vagrant_dir}/log/${current_script_name}.log"
 resetNestingLevel
 
 debug_vagrant_project="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_vagrant_project")"
@@ -14,4 +16,4 @@ fi
 
 bash "${vagrant_dir}/scripts/host/m_switch_to_ce.sh" "$@" 2> >(logError)
 
-info "See detailed log in '${vagrant_dir}/log/debug.log'. For even more details you can set 'debug:vagrant_project' to 1 in etc/config.yaml"
+info "See detailed log in '${vagrant_dir}/log/${current_script_name}.log'. For even more details you can set 'debug:vagrant_project' to 1 in etc/config.yaml"

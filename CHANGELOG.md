@@ -25,10 +25,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+ - Added generation of basic sample data for testing purposes
+ - Ability to upgrade Magento using `m-switch-to-ce` and `m-switch-to-ee` (when `-u` flag is specified)
  - Redis support for Magento caching
  - Access to Magento developer mode and storefront/admin UI debugging features via [etc/config.yaml.dist](etc/config.yaml.dist)
  - Composer-based installation support
- - Magento cache warming up after re-install and clearing cache
+ - Magento cache warming up after re-install and clearing cache (when `-w` flag is specified)
  - Tests configuration files are generated during project initialization
  - Sample data support
  - ElasticSearch support
