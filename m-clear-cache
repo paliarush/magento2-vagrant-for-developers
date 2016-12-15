@@ -5,9 +5,8 @@ set -e
 cd "$(dirname "${BASH_SOURCE[0]}")" && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/output_functions.sh"
-current_script_name=`basename "$0"`
-log_file="${vagrant_dir}/log/${current_script_name}.log"
 resetNestingLevel
+initLogFile `basename "$0"`
 
 warm_up_cache=0
 while getopts 'w' flag; do

@@ -137,12 +137,17 @@ function decrementNestingLevel()
 function resetNestingLevel()
 {
     rm -f "${nesting_level_file}"
-    if [[ -f "${log_file_path}" ]]; then
-        log_file="${vagrant_dir}/$(cat "${log_file_path}")"
-        rm -f "${log_file_path}"
-        rm -f "${log_file}"
+}
+
+function initLogFile()
+{
+    if [[ -n "${1}" ]]; then
+        log_file="${1}"
+    else
+        log_file="debug"
     fi
-    rm -f "${default_log}"
+    echo "log/${log_file}.log" > "${log_file_path}"
+    rm -f "${vagrant_dir}/log/${log_file}.log"
 }
 
 function getIndentationByNesting()
