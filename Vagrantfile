@@ -30,6 +30,7 @@ magento_host_name = config_data['magento']['host_name']
 magento_ip_address = config_data['guest']['ip_address']
 forwarded_ssh_port = config_data['guest']['forwarded_ssh_port']
 guest_memory = config_data['guest']['memory']
+guest_cpus = config_data['guest']['cpus']
 
 # NFS will be used for *nix and OSX hosts, if not disabled explicitly in config
 use_nfs_for_synced_folders = !OS.is_windows && (config_data['guest']['use_nfs'] == 1)
@@ -44,6 +45,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
 
     config.vm.provider "virtualbox" do |vb|
         vb.memory = guest_memory
+        vb.cpu = guest_cpus
         # Uncomment option below to avoid issues with VirtualBox on Windows 10
         # vb.gui=true
     end
