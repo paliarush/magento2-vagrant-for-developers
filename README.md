@@ -21,6 +21,7 @@
    * [Connecting to MySQL DB](#connecting-to-mysql-db)
    * [View emails sent by Magento](#view-emails-sent-by-magento)
    * [Accessing PHP and other config files](#accessing-php-and-other-config-files)
+   * [Upgrading Magento](#upgrading-magento)
    * [Multiple Magento instances](#multiple-magento-instances)
    * [Update Composer dependencies](#update-composer-dependencies)
  * [Environment configuration](#environment-configuration)
@@ -139,10 +140,12 @@ Note, that semantic versioning is only used for `x.0` branches (not for `develop
 ## Day-to-day development scenarios
 
 ### Reinstall Magento
-To save some time and get clear Magento installation, you can skip installation of software like web server or php.
-The following command will clear Magento DB, Magento caches and reinstall Magento instance.
 
-Go to 'vagrant-magento' created earlier and run in command line:
+Use commands described in [Switch between CE and EE](#switch-between-ce-and-ee) section with `-f` flag. Before doing actual re-installation, these commands update linking of EE codebase, clear cache, update composer dependencies.
+
+If no composer update and relinking of EE codebase is necessary, use the following command. It will clear Magento DB, Magento caches and reinstall Magento instance.
+
+Go to the root of vagrant project in command line and execute:
 
 ```
 bash m-reinstall
@@ -150,7 +153,7 @@ bash m-reinstall
 
 ### Clear Magento cache
 
-Go to 'vagrant-magento' created earlier and run in command line:
+Go to the root of vagrant project in command line and execute:
 
 ```
 bash m-clear-cache
@@ -169,6 +172,8 @@ bash m-switch-to-ee
 ```
 
 Force switch can be done using `-f` flag even if already switched to the target edition. May be helpful to relink EE modules after switching between branches.
+
+Upgrade can be performed instead of re-installation using `-u` flag.
 
 :information_source: On Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly) you will be asked to wait until code is uploaded to guest machine by PhpStorm (PhpStorm must be launched). To continue the process press any key.
 
@@ -225,6 +230,13 @@ It is possible to view/modify majority of guest machine config files directly fr
 Do not edit any symlinks using PhpStorm because it may break your installation.
 
 After editing configs in IDE it is still required to restart related services manually.
+
+### Upgrading Magento
+
+Sometimes it is necessary to test upgrade flow. This can be easily done as follows (assuming that you have installed instance):
+
+ - For git-based installation - check out codebase corresponding to the target Magento version. Or modify your `composer.json` in case of composer-based installation
+ - Use commands described in [Switch between CE and EE](#switch-between-ce-and-ee) section with `-u` flag
 
 ### Multiple Magento instances
 
