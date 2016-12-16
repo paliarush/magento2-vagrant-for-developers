@@ -20,7 +20,7 @@ module Config
 
         config_data_dist = YAML.load_file(config_dist_file)
         config_data = File.exists?(config_file) ? YAML.load_file(config_file) : {}
-        return config_data_dist.merge!(config_data)
+        return config_data_dist.deep_merge!(config_data)
     end
 end
 
@@ -45,7 +45,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
 
     config.vm.provider "virtualbox" do |vb|
         vb.memory = guest_memory
-        vb.cpu = guest_cpus
+        vb.cpus = guest_cpus
         # Uncomment option below to avoid issues with VirtualBox on Windows 10
         # vb.gui=true
     end

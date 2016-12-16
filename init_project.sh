@@ -6,7 +6,8 @@ vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/output_functions.sh"
 resetNestingLevel
-initLogFile `basename "$0"`
+current_script_name=`basename "$0"`
+initLogFile ${current_script_name}
 
 debug_vagrant_project="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_vagrant_project")"
 if [[ ${debug_vagrant_project} -eq 1 ]]; then
@@ -197,7 +198,7 @@ fi
 status "Initializing vagrant box"
 cd "${vagrant_dir}"
 
-vagrant up 2> >(logError) | {
+vagrant up --provider virtualbox 2> >(logError) | {
   while IFS= read -r line
   do
     filterVagrantOutput "${line}"
