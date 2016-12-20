@@ -64,6 +64,9 @@ if [[ "${checkout_source_from}" == "git" ]]; then
 else
     # Current installation is Composer-based
     warning "Switching between CE and EE is not possible for composer-based installation. Falling back to reinstall"
+    if [[ ${upgrade_only} -eq 1 ]]; then
+        rm "${magento_ce_dir}/composer.lock"
+    fi
 fi
 
 bash "${vagrant_dir}/scripts/host/m_clear_cache.sh" 2> >(logError)
@@ -74,6 +77,7 @@ if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config
 fi
 
 if [[ ${upgrade_only} -eq 1 ]]; then
+    cd "${vagrant_dir}" && vagrant ssh -c 'chmod a+x ${MAGENTO_ROOT}/bin/magento' 2> >(logError)
     bash "${vagrant_dir}/m-bin-magento" "setup:upgrade" 2> >(logError)
     bash "${vagrant_dir}/m-bin-magento" "indexer:reindex" 2> >(logError)
     bash "${vagrant_dir}/m-clear-cache" 2> >(logError)
