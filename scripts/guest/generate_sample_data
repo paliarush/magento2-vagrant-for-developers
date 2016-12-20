@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/output_functions.sh"
+
+host_name="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_host_name")"
+
+status "Generating sample data"
+
+incrementNestingLevel
+
+adminToken=$(curl -sb -X POST "http://${host_name}/rest/V1/integration/admin/token" \
+    -H "Content-Type:application/json" \
+    -d '{"username":"admin", "password":"123123q"}')
+adminToken=$(echo ${adminToken} | sed -e 's/"//g')
+
+category_creation_response=$(curl -sb -X POST "http://${host_name}/rest/V1/categories" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "category": {
+                "parentId": 2,
+                "name": "Test Category",
+                "isActive": true,
+                "includeInMenu": true
+            }
+        }')
+
+pattern='\{\"id\":([0-9]+),'
+if [[ "${category_creation_response}" =~ ${pattern} ]]; then
+    category_id=${BASH_REMATCH[1]}
+fi
+
+product_creation_response=$(curl -sb -X POST "http://${host_name}/rest/V1/products" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "product": {
+                "sku": "testSimpleProduct",
+                "name": "Test Simple Product",
+                "attribute_set_id": 4,
+                "price": 22,
+                "status": 1,
+                "visibility": 4,
+                "type_id": "simple",
+                "extension_attributes": {
+                    "stock_item": {
+                        "qty": 12345,
+                        "is_in_stock": true
+                    }
+                },
+                "custom_attributes": [
+                    {
+                        "attribute_code": "category_ids",
+                        "value": [
+                            "'"${category_id}"'"
+                        ]
+                    }
+                ]
+            }
+        }')
+
+customer_creation_response=$(curl -sb -X POST "http://${host_name}/rest/V1/customers" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "customer": {
+                "group_id":1,
+                "email":"customer@example.com",
+                "firstname":"FirstName",
+                "lastname":"LastName",
+                "store_id":1,
+                "addresses":[],
+                "disable_auto_group_change": 0
+            },
+            "password": "123123qQ"
+        }')
+
+decrementNestingLevel

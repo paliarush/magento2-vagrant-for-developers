@@ -4,7 +4,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.." && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/colors.sh"
 
-log_file="${vagrant_dir}/log/debug.log"
+default_log="${vagrant_dir}/log/debug.log"
+log_file_path="${vagrant_dir}/scripts/.current_log_path"
 nesting_level_file="${vagrant_dir}/scripts/.current_nesting_level"
 
 function info() {
@@ -53,6 +54,11 @@ function log() {
         input="$(cat)"
     fi
     if [[ -n "${input}" ]]; then
+        if [[ -f "${log_file_path}" ]]; then
+            log_file="${vagrant_dir}/$(cat "${log_file_path}")"
+        else
+            log_file="${default_log}"
+        fi
         echo "${input}" | sed "s/\[[[:digit:]]\{1,\}m//g" >> "${log_file}"
     fi
 }
@@ -131,7 +137,17 @@ function decrementNestingLevel()
 function resetNestingLevel()
 {
     rm -f "${nesting_level_file}"
-    rm -f "${log_file}"
+}
+
+function initLogFile()
+{
+    if [[ -n "${1}" ]]; then
+        log_file="${1}"
+    else
+        log_file="debug"
+    fi
+    echo "log/${log_file}.log" > "${log_file_path}"
+    rm -f "${vagrant_dir}/log/${log_file}.log"
 }
 
 function getIndentationByNesting()

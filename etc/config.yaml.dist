@@ -27,6 +27,8 @@ guest:
   use_nfs: 1
   # [To apply changes: vagrant reload] Default is 2Gb, around 3Gb is necessary to run functional tests.
   memory: 2048
+  # Recommended number of CPUs is 2
+  cpus: 1
   ip_address: "192.168.10.2"
   forwarded_ssh_port: 3000
 

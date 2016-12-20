@@ -6,6 +6,8 @@ vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/output_functions.sh"
 resetNestingLevel
+current_script_name=`basename "$0"`
+initLogFile ${current_script_name}
 
 debug_vagrant_project="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_vagrant_project")"
 if [[ ${debug_vagrant_project} -eq 1 ]]; then
@@ -240,4 +242,4 @@ if [[ ${host_os} == "Windows" ]] || [[ ${use_nfs} == 0 ]]; then
     If not using PhpStorm, you can set up synchronization using rsync"
 fi
 
-info "See detailed log in '${vagrant_dir}/log/debug.log'. For even more details you can set debug:vagrant_project to 1 in config.yaml"
+info "See detailed log in '${vagrant_dir}/log/${current_script_name}.log'. For even more details you can set debug:vagrant_project to 1 in config.yaml"

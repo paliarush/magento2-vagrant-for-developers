@@ -25,10 +25,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+ - Added ability to configure number of CPUs for virtual machine via [etc/config.yaml](etc/config.yaml.dist)
+ - Added generation of basic sample data for testing purposes
+ - Ability to upgrade Magento using `m-switch-to-ce` and `m-switch-to-ee` (when `-u` flag is specified)
  - Redis support for Magento caching
- - Access to Magento developer mode and storefront/admin UI debugging features via [etc/config.yaml.dist](etc/config.yaml.dist)
+ - Access to Magento developer mode and storefront/admin UI debugging features via [etc/config.yaml](etc/config.yaml.dist)
  - Composer-based installation support
- - Magento cache warming up after re-install and clearing cache
+ - Magento cache warming up after re-install and clearing cache (when `-w` flag is specified)
  - Tests configuration files are generated during project initialization
  - Sample data support
  - ElasticSearch support
@@ -40,7 +43,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
  - Removed requirement for public github token due to Composer limitations (issue is fixed on Composer side)
  - Changed requirement for minimum box version from 1.0 to 1.1
  - Upgraded PHP 5.5.9 to PHP 5.6
- - When [init_project.sh](init_project.sh) is executed, EE will be installed by default, if EE repository is specified in [etc/config.yaml.dist](etc/config.yaml.dist). Not supported on Windows hosts
+ - When [init_project.sh](init_project.sh) is executed, EE will be installed by default, if EE repository is specified in [etc/config.yaml](etc/config.yaml.dist). Not supported on Windows hosts
 
 ### Fixed
 
@@ -65,7 +68,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
  - Moved provisioning scripts
  - Magento project directory moved to vagrant project root. Current structure is as follows: `vagrant-magento/magento2ce/magento2ee`
- - PHP 7.0 is installed by default instead of PHP 5.5.9 (can be configured in [etc/config.yaml.dist](etc/config.yaml.dist))
+ - PHP 7.0 is installed by default instead of PHP 5.5.9 (can be configured in [etc/config.yaml](etc/config.yaml.dist))
  - Renamed configuration folder from `local.config` to `etc`
  - Set minimum Vagrant version as 1.8
  - Improved deployment speed in case of disabled NFS for folders sync
@@ -78,7 +81,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
  - Added [project initialization script](init_project.sh) and host scripts for routine flows (compatible with OSX, *nix and Windows)
  - Implemented static value of forwarded SSH port to prevent necessity to reconfigure software accessing guest via SSH
  - Implemented collision prevention for IP address and host name (in case when several machines are created at once)
- - Configuration file [etc/config.yaml.dist](etc/config.yaml.dist)
+ - Configuration file [etc/config.yaml](etc/config.yaml.dist)
  - PHP 7.0 support
  - PHP Storm configuration during project initialization (particularly automatic deployment settings)
  - Automatic vagrant plugins installation

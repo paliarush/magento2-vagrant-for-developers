@@ -3,55 +3,35 @@
 # CLI color functions
 function red()
 {
-    tput setaf 1
+    printf "\e[31m"
 }
 
 function bold()
 {
-    tput bold
+    printf "\e[1m"
 }
 
 function green()
 {
-    tput setaf 2
+    printf "\e[32m"
 }
 
 function yellow()
 {
-    tput setaf 3
-}
-
-function yellow_background()
-{
-    tput setab 3
+    printf "\e[33m"
 }
 
 function blue()
 {
-    tput setaf 4
-}
-
-function magenta()
-{
-    tput setaf 5
-}
-
-function cyan()
-{
-    tput setaf 6
+    printf "\e[34m"
 }
 
 function grey()
 {
-    tput setaf 7
-}
-
-function grey_background()
-{
-    tput setab 7
+    printf "\e[37m"
 }
 
 function regular()
 {
-    tput sgr0
+    printf "\e[m"
 }

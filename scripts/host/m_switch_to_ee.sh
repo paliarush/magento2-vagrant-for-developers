@@ -13,16 +13,18 @@ host_os="$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")"
 php_executable="$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")"
 checkout_source_from="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "checkout_source_from")"
 
+force_switch=0
+upgrade_only=0
+while getopts 'fu' flag; do
+  case "${flag}" in
+    f) force_switch=1 ;;
+    u) upgrade_only=1 ;;
+    *) error "Unexpected option" && decrementNestingLevel && exit 1;;
+  esac
+done
+
 if [[ "${checkout_source_from}" == "git" ]]; then
     # Current installation is Git-based
-    force_switch=0
-    while getopts 'f' flag; do
-      case "${flag}" in
-        f) force_switch=1 ;;
-        *) error "Unexpected option" && decrementNestingLevel && exit 1;;
-      esac
-    done
-
     if [[ ! -f ${magento_ee_dir}/LICENSE_EE.txt ]]; then
         error "EE codebase is not available."
         decrementNestingLevel
@@ -57,17 +59,29 @@ if [[ "${checkout_source_from}" == "git" ]]; then
 else
     # Current installation is Composer-based
     warning "Switching between CE and EE is not possible for composer-based installation. Falling back to reinstall"
+    if [[ ${upgrade_only} -eq 1 ]]; then
+        rm "${magento_ce_dir}/composer.lock"
+    fi
 fi
 
 bash "${vagrant_dir}/scripts/host/m_clear_cache.sh" 2> >(logError)
 bash "${vagrant_dir}/scripts/host/m_composer.sh" install 2> >(logError)
 
-cd ${magento_ce_dir} && git checkout composer.lock 2> >(logError) > >(log)
+if [[ "${checkout_source_from}" == "git" ]]; then
+    cd ${magento_ce_dir} && git checkout composer.lock 2> >(logError) > >(log)
+fi
 
 if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then
     read -p "$(warning "[Action Required] Wait while Magento2 code is uploaded in PhpStorm and press any key to continue...")" -n1 -s
 fi
 
-bash "${vagrant_dir}/scripts/host/m_reinstall.sh" 2> >(logError)
+if [[ ${upgrade_only} -eq 1 ]]; then
+    cd "${vagrant_dir}" && vagrant ssh -c 'chmod a+x ${MAGENTO_ROOT}/bin/magento' 2> >(logError)
+    bash "${vagrant_dir}/m-bin-magento" "setup:upgrade" 2> >(logError)
+    bash "${vagrant_dir}/m-bin-magento" "indexer:reindex" 2> >(logError)
+    bash "${vagrant_dir}/m-clear-cache" 2> >(logError)
+else
+    bash "${vagrant_dir}/scripts/host/m_reinstall.sh" 2> >(logError)
+fi
 
 decrementNestingLevel
