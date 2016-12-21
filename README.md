@@ -204,7 +204,7 @@ XDebug is already configured to connect to the host machine automatically. So ju
 
 To debug a CLI script:
 
- 1. Create [remote debug configuration](https://www.jetbrains.com/help/phpstorm/2016.1/run-debug-configuration-php-remote-debug.html) in PhpStorm, use `PHPSTORM` as IDE key
+ 1. Create [remote debug configuration](https://www.jetbrains.com/help/phpstorm/2016.1/run-debug-configuration-php-remote-debug.html) in PhpStorm, use `phpstorm` as IDE key
  1. Run created remote debug configuration
  1. Run CLI command on the guest as follows (`xdebug.remote_host` value might be different for you):
 
