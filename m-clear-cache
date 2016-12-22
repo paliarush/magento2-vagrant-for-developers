@@ -32,4 +32,4 @@ else
     info "Use 'bash ./m-clear-cache -w' to get automatic cache warm up"
 fi
 
-info "See detailed log in '${vagrant_dir}/log/${current_script_name}.log'. For even more details you can set 'debug:vagrant_project' to 1 in etc/config.yaml"
+info "$(regular)See details in $(bold)${vagrant_dir}/log/${current_script_name}.log$(regular). For debug output set $(bold)debug:vagrant_project$(regular) to $(bold)1$(regular) in $(bold)etc/config.yaml$(regular)"

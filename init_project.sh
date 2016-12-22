@@ -242,4 +242,4 @@ if [[ ${host_os} == "Windows" ]] || [[ ${use_nfs} == 0 ]]; then
     If not using PhpStorm, you can set up synchronization using rsync"
 fi
 
-info "See detailed log in '${vagrant_dir}/log/${current_script_name}.log'. For even more details you can set debug:vagrant_project to 1 in config.yaml"
+info "$(regular)See details in $(bold)${vagrant_dir}/log/${current_script_name}.log$(regular). For debug output set $(bold)debug:vagrant_project$(regular) to $(bold)1$(regular) in $(bold)etc/config.yaml$(regular)"

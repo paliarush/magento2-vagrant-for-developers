@@ -86,6 +86,11 @@ php ${install_cmd} 2> >(logError) > >(log)
 # Comment out the line above and uncomment the one below to debug Magento Setup script
 # php -d xdebug.remote_autostart=1 ${install_cmd} 2> >(logError) > >(log)
 
+if [[ $? != 0 ]]; then
+    error "Magento installation failed."
+    exit 1
+fi
+
 bash "${vagrant_dir}/scripts/guest/configure_varnish" -f
 
 status "Enabling Magento cron jobs"

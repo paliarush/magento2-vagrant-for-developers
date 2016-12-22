@@ -12,3 +12,5 @@ if [[ ! -f "${vagrant_dir}/etc/guest/mysql/my.cnf" ]]; then
     exit 1
 fi
 vagrant ssh -c "bash /vagrant/scripts/guest/check_mounted_directories" 2> >(logError)
+# Explicit exit is necessary to bypass incorrect output from vagrant in case of errors
+exit 0

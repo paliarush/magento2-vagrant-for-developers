@@ -78,7 +78,7 @@ Software listed below should be available in [PATH](https://en.wikipedia.org/wik
 
  1. Open terminal and change directory to the one which you want to contain Magento project. ![](docs/images/windows-icon.png) On Windows use Git Bash, which is available after Git installation
 
- 1. Download project with Vagrant configuration:
+ 1. Download project with Vagrant configuration. :warning: Do not open it in PhpStorm until `init_project.sh` has completed PhpStorm configuration:
 
    ```
    git clone git@github.com:paliarush/magento2-vagrant-for-developers.git vagrant-magento
