@@ -49,12 +49,4 @@ if [[ ${use_nfs_for_synced_folders} -eq 0 ]]; then
     chmod -R 755 /var/www
 fi
 
-status "Installing js build tools"
-{
-apt-get install -y nodejs npm
-ln -s /usr/bin/nodejs /usr/bin/node
-npm install -g grunt-cli
-npm install gulp -g 
-} 2> >(logError) > >(log)
-
 decrementNestingLevel

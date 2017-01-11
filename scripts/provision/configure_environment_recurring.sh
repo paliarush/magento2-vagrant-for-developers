@@ -39,6 +39,12 @@ function isServiceAvailable() {
     fi
 }
 
+function isNodeJsInstalled() {
+    nodejs_status="$(dpkg -s nodejs | grep Status 2> >(log))"
+    npm_status="$(dpkg -s npm | grep Status 2> >(log))"
+    [[ ${npm_status} == "Status: install ok installed" && ${nodejs_status} == "Status: install ok installed" ]]
+}
+
 guest_magento_dir=$2
 use_php7=$4
 vagrant_dir="/vagrant"
@@ -122,6 +128,16 @@ php_config_content="$(cat ${php_ini_file})"
 if [[ ${php_config_content} =~ ${pattern} ]]; then
     sed -i "s|;sendmail_path =|sendmail_path = \"/vagrant/scripts/guest/log_email ${vagrant_dir}/log/email\"|g" ${php_ini_file}
     service apache2 restart 2> >(logError) > >(log)
+fi
+
+if ! isNodeJsInstalled; then
+    status "Installing js build tools"
+    {
+    apt-get install -y nodejs npm
+    ln -s /usr/bin/nodejs /usr/bin/node
+    npm install -g grunt-cli
+    npm install gulp -g 
+    } 2> >(logError) > >(log)
 fi
 
 decrementNestingLevel
