@@ -48,6 +48,7 @@ It is easy to [install multiple Magento instances](#multiple-magento-instances) 
  1. Configures all software necessary for Magento 2 using [custom Ubuntu vagrant box](https://atlas.hashicorp.com/paliarush/boxes/magento2.ubuntu) (Apache 2.4, PHP 7.0 (or 5.6), MySQL 5.6, Git, Composer, XDebug, Rabbit MQ, Varnish)
  1. Installs Magento 2 from Git repositories or Composer packages (can be configured via `checkout_source_from` option in [etc/config.yaml](etc/config.yaml.dist))
  1. Configures PHP Storm project (partially at the moment)
+ 1. Installs NodeJS, NPM, Grunt and Gulp for front end development
 
 ## How to install
 
