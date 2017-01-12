@@ -35,6 +35,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
  - Tests configuration files are generated during project initialization
  - Sample data support
  - ElasticSearch support
+ - NodeJS, NPM, Gulp and Grunt are installed as part of the provisioning process
 
 ## [v2.1.0] - 2016-06-22
 
