@@ -13,16 +13,12 @@ mage_mode=$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_mode")
 
 rm -f "${MAGENTO_ROOT}/app/etc/paths.php"
 if [[ -d "${MAGENTO_ROOT}/var" ]]; then
-    #clear var
+    # clear var
     cd "${MAGENTO_ROOT}"
     mv var/.htaccess var_htaccess.back
     if [[ -d "${MAGENTO_ROOT}/var/generation" ]] && [[ ${mage_mode} == "production" ]]; then
         # for Magento v2.0.x and v2.1.x
         mv var/generation var_generation.back
-    fi
-    if [[ -d "${MAGENTO_ROOT}/generated" ]] && [[ ${mage_mode} != "production" ]]; then
-        # for Magento v2.2.0 and greater
-        rm -rf generated/* generated/.[^.]*
     fi
     rm -rf var/* var/.[^.]*
     if [[ -f var_htaccess.back ]]; then
@@ -33,8 +29,14 @@ if [[ -d "${MAGENTO_ROOT}/var" ]]; then
     fi
 fi
 
+if [[ -d "${MAGENTO_ROOT}/generated" ]] && [[ ${mage_mode} != "production" ]]; then
+    # for Magento v2.2.0 and greater
+    cd "${MAGENTO_ROOT}"
+    rm -rf generated/*
+fi
+
 if [[ -d "${MAGENTO_ROOT}/pub" ]] && [[ ${mage_mode} != "production" ]]; then
-    #clear pub/statics
+    # clear pub/statics
     cd "${MAGENTO_ROOT}/pub" && mv static/.htaccess static_htaccess.back && rm -rf static && mkdir static
     if [[ -f static_htaccess.back ]]; then
         mv static_htaccess.back static/.htaccess
@@ -42,12 +44,12 @@ if [[ -d "${MAGENTO_ROOT}/pub" ]] && [[ ${mage_mode} != "production" ]]; then
 fi
 
 if [[ -d "${MAGENTO_ROOT}/dev" ]]; then
-    #clear integration tests tmp
+    # clear integration tests tmp
     cd "${MAGENTO_ROOT}/dev/tests/integration" && mv tmp/.gitignore tmp_gitignore.back && rm -rf tmp && mkdir tmp
     if [[ -f tmp_gitignore.back ]]; then
         mv tmp_gitignore.back tmp/.gitignore
     fi
-    #clear unit tests tmp
+    # clear unit tests tmp
     cd "${MAGENTO_ROOT}/dev/tests/unit" && mv tmp/.gitignore tmp_gitignore.back && rm -rf tmp && mkdir tmp
     if [[ -f tmp_gitignore.back ]]; then
         mv tmp_gitignore.back tmp/.gitignore
