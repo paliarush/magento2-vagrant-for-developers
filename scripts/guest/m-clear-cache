@@ -17,7 +17,12 @@ if [[ -d "${MAGENTO_ROOT}/var" ]]; then
     cd "${MAGENTO_ROOT}"
     mv var/.htaccess var_htaccess.back
     if [[ -d "${MAGENTO_ROOT}/var/generation" ]] && [[ ${mage_mode} == "production" ]]; then
+        # for Magento v2.0.x and v2.1.x
         mv var/generation var_generation.back
+    fi
+    if [[ -d "${MAGENTO_ROOT}/generated" ]] && [[ ${mage_mode} != "production" ]]; then
+        # for Magento v2.2.0 and greater
+        rm -rf generated/* generated/.[^.]*
     fi
     rm -rf var/* var/.[^.]*
     if [[ -f var_htaccess.back ]]; then

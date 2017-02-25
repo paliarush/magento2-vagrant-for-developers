@@ -61,6 +61,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
     else
         guest_magento_dir = '/var/www/magento2ce'
         config.vm.synced_folder host_magento_dir + '/var', guest_magento_dir + '/var', create: true
+        config.vm.synced_folder host_magento_dir + '/generated', guest_magento_dir + '/generated', create: true
         config.vm.synced_folder host_magento_dir + '/app/etc', guest_magento_dir + '/app/etc', create: true
     end
 
