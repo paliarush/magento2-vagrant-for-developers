@@ -24,6 +24,7 @@
    * [Upgrading Magento](#upgrading-magento)
    * [Multiple Magento instances](#multiple-magento-instances)
    * [Update Composer dependencies](#update-composer-dependencies)
+   * [Running Magento tests](#running-magento-tests)
  * [Environment configuration](#environment-configuration)
    * [Switch between PHP 5.6 and 7.0](#switch-between-php-56-and-70)
    * [Activating Varnish](#activating-varnish)
@@ -253,6 +254,10 @@ bash m-composer install
 OR
 bash m-composer update
 ```
+
+### Running Magento tests
+
+See [draft](https://github.com/paliarush/magento2-vagrant-for-developers/issues/120)
 
 ## Environment configuration
 
