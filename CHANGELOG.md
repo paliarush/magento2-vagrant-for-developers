@@ -15,6 +15,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
  - Support for new location of `generated` directory in Magento 2.2.0
 
+### Fixed
+
+ - Magento 2.2.0 EE installation from composer
+
 ## [v2.2.0] - 2017-02-25
 
 ### Changed
