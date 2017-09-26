@@ -609,7 +609,7 @@ customer_creation_response=$(curl -sb -X POST "http://${host_name}/rest/V1/custo
                 ],
                 "disable_auto_group_change": 0
             },
-            "password": "123123^q"
+            "password": "123123qQ"
         }')
 
 decrementNestingLevel
