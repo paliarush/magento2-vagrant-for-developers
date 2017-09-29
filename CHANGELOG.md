@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
  - Upgraded Varnish to v4.1
+ - Improved Magento re-installation speed by avoiding unnecessary cache cleaning
 
 ### Added
 

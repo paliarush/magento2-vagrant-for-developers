@@ -69,7 +69,6 @@ else
     fi
 fi
 
-bash "${vagrant_dir}/scripts/host/m_clear_cache.sh" 2> >(logError)
 bash "${vagrant_dir}/scripts/host/m_composer.sh" install 2> >(logError)
 
 if [[ ${host_os} == "Windows" ]] || [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs") == 0 ]]; then
