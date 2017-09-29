@@ -270,7 +270,7 @@ PHP version will be applied after "vagrant reload".
 
 Set `use_varnish: 1` to use varnish along apache in [config.yaml](etc/config.yaml.dist). Changes will be applied on `m-reinstall`.
 It will use default file etc/magento2_default_varnish.vcl.dist generated from a Magento instance.
-Varnish Version: 3.0.5
+Varnish Version: 4.1
 
 Use the following commands to enable/disable varnish without reinstalling Magento: `m-varnish disable` or `m-varnish enable`.
 

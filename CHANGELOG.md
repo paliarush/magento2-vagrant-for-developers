@@ -11,6 +11,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+ - Upgraded Varnish to v4.1
+
 ### Added
 
  - Support for new location of `generated` directory in Magento 2.2.0
