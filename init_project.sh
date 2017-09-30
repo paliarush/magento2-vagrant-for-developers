@@ -127,7 +127,16 @@ function composerCreateProject()
     if [[ ! -d ${magento_ce_dir} ]]; then
         status "Downloading Magento codebase using 'composer create-project'"
         bash "${vagrant_dir}/scripts/host/composer.sh" create-project ${composer_project_name} "${magento_ce_dir}" --repository-url=${composer_project_url}
-        if [[ ${composer_project_name} == *"2.2"* ]]; then
+
+        # TODO: Workaround for Magento 2.2+ until PHP is upgraded to 7.1 on the guest
+        cd "${magento_ce_dir}"
+        composer_dir="${vagrant_dir}/scripts/host"
+        composer_phar="${composer_dir}/composer.phar"
+        php_executable="$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")"
+        project_version="$("${php_executable}" "${composer_phar}" show --self | grep version)"
+        matching_version_pattern='2.[23].[0-9]+'
+        if [[ ${project_version} =~ ${matching_version_pattern} ]]; then
+            status "Composer require zendframework/zend-code:~3.1.0 (needed for Magento 2.2+ only)"
             cd "${magento_ce_dir}"
             bash "${vagrant_dir}/scripts/host/composer.sh" require "zendframework/zend-code:~3.1.0"
         fi
