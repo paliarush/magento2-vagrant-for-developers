@@ -46,6 +46,8 @@ environment:
 magento:
   # [To apply changes: m-switch-to-ce -f OR m-switch-to-ee -f]
   install_sample_data: 0
+  # [To apply changes: m-switch-to-ce -f OR m-switch-to-ee -f] Generate customer (customer@example.com:123123qQ), category, simple product, configurable product after successful Magento installation
+  generate_basic_data: 1
   # [To apply changes: init_project.sh -f]
   host_name: "magento2.vagrant2"
   # [To apply changes: m-reinstall]

@@ -20,6 +20,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
  - Support for new location of `generated` directory in Magento 2.2.0
+ - Basic data generation can be turned off. Added configurable product and customer address generation 
 
 ### Fixed
 

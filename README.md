@@ -16,6 +16,7 @@
    * [Clear Magento cache](#clear-magento-cache)
    * [Switch between CE and EE](#switch-between-ce-and-ee)
    * [Sample data installation](#sample-data-installation)
+   * [Basic data generation](#basic-data-generation)
    * [Use Magento CLI (bin/magento)](#use-magento-cli-binmagento)
    * [Debugging with XDebug](#debugging-with-xdebug)
    * [Connecting to MySQL DB](#connecting-to-mysql-db)
@@ -185,6 +186,16 @@ Make sure that `ce_sample_data` and `ee_sample_data` are defined in [config.yaml
 During initial project setup or during `bash init_project.sh -fc` (with `-fc` project will be re-created from scratch), sample data repositories willl be checked out to `vagrant_project_root/magento2ce/magento2ce-sample-data` and `vagrant_project_root/magento2ce/magento2ee-sample-data`.
 
 To install Magento with sample data set `install_sample_data` in [config.yaml](etc/config.yaml.dist) to `1` and run `bash m-switch-to-ce -f` or `bash m-switch-to-ee -f`, depending on the edition to be installed. To disable sample data, set this option to `0` and force-switch to necessary edition (using the same commands).
+
+### Basic data generation
+
+Several entities are generated for testing purposes by default using REST API after Magento installation:
+- Customer with address (credentials `customer@example.com`:`123123qQ`)
+- Category
+- Couple simple products
+- Configurable product
+
+To disable this feature, set `magento/generate_basic_data` in [config.yaml](etc/config.yaml.dist) to `0` and run `bash m-switch-to-ce -f` or `bash m-switch-to-ee -f`, depending on the edition to be installed.
 
 ### Use Magento CLI (bin/magento)
 
