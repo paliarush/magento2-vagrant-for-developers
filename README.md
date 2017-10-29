@@ -268,8 +268,8 @@ PHP version will be applied after "vagrant reload".
 
 ### Activating Varnish
 
-Set `use_varnish: 1` to use varnish along apache in [config.yaml](etc/config.yaml.dist). Changes will be applied on `m-reinstall`.
-It will use default file etc/magento2_default_varnish.vcl.dist generated from a Magento instance.
+Set `use_varnish: 1` to use varnish along with apache in [config.yaml](etc/config.yaml.dist). Changes will be applied on `m-reinstall`.
+It will use default file etc/magento2_default_varnish.vcl.dist generated from a Magento 2.1 instance. Magento 2.2+ supports additional Varnish features and you may need to provide custom version of VCL to enable them.
 Varnish Version: 4.1
 
 Use the following commands to enable/disable varnish without reinstalling Magento: `m-varnish disable` or `m-varnish enable`.
