@@ -62,7 +62,12 @@ fi
 if [[ ! -f "${magento_tests_root}/functional/phpunit.xml" ]] && [[ -f "${magento_tests_root}/functional/phpunit.xml.dist" ]]; then
     status "Creating configuration for Functional tests"
     cp "${magento_tests_root}/functional/phpunit.xml.dist" "${magento_tests_root}/functional/phpunit.xml"
+
+    # For Magento 2.0 and 2.1
     sed -i.back "s|http://localhost|http://${magento_host_name}|g" "${magento_tests_root}/functional/phpunit.xml"
+    # For Magento 2.2
+    sed -i.back "s|http://127.0.0.1|http://${magento_host_name}|g" "${magento_tests_root}/functional/phpunit.xml"
+
     sed -i.back "s|/backend/|/${magento_admin_frontname}/|g" "${magento_tests_root}/functional/phpunit.xml"
     rm -f "${magento_tests_root}/functional/phpunit.xml.back"
 

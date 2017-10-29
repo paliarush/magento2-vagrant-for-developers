@@ -268,9 +268,9 @@ PHP version will be applied after "vagrant reload".
 
 ### Activating Varnish
 
-Set `use_varnish: 1` to use varnish along apache in [config.yaml](etc/config.yaml.dist). Changes will be applied on `m-reinstall`.
-It will use default file etc/magento2_default_varnish.vcl.dist generated from a Magento instance.
-Varnish Version: 3.0.5
+Set `use_varnish: 1` to use varnish along with apache in [config.yaml](etc/config.yaml.dist). Changes will be applied on `m-reinstall`.
+It will use default file etc/magento2_default_varnish.vcl.dist generated from a Magento 2.1 instance. Magento 2.2+ supports additional Varnish features and you may need to provide custom version of VCL to enable them.
+Varnish Version: 4.1
 
 Use the following commands to enable/disable varnish without reinstalling Magento: `m-varnish disable` or `m-varnish enable`.
 
@@ -323,8 +323,7 @@ bash init_project.sh -fcp
  1. ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) On OSX and \*nix hosts NFS will be used by default to sync your project files with guest. On some hosts Vagrant cannot configure NFS properly, in this case it is possible to deploy project without NFS by setting `use_nfs` option in [config.yaml](etc/config.yaml.dist) to `0` <br />
  1. ![](docs/images/windows-icon.png) On Windows hosts you might face `Composer Install Error: ZipArchive::extractTo(): Full extraction path exceed MAXPATHLEN (260)` exception during `composer install`. This can be fixed in 2 ways: decrease path length to the project directory or set `composer_prefer_source` option in [config.yaml](etc/config.yaml.dist) to `1`
  1. Make sure that you used `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`)
- 1. If project opened in PhpStorm looks broken, close PhpStorm  and remove `vagrant-magento/.idea`. After opening project in PhpStorm again everything should look good
+ 1. If project opened in PhpStorm looks broken, close PhpStorm  and remove `vagrant-magento/.idea`. Run `bash vagrant-magento/scripts/host/configure_php_storm.sh`. After opening project in PhpStorm again everything should look good
  1. If code is not synchronized properly on Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly), make sure that PhpStorm is running before making any changes in the code. This is important because otherwise PhpStorm will not be able to detect changes and upload them to the guest machine
  1. Please make sure that currently installed software, specified in [requirements section](#requirements), meets minimum version requirement
- 1. If MySQL fails to start and Magento reinstallation fails with `ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (13)`, try to run login to virtual machine using `vagrant ssh` and then run `sudo dpkg-reconfigure mysql-server-5.6`, then `sudo service mysql restart.`
  1. Be careful if your OS is case-insensitive, NFS might break the symlinks if you cd into the wrong casing and you power the vagrant up. Just be sure to cd in to the casing the directory was originally created as.

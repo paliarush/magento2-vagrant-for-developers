@@ -24,11 +24,9 @@
     </inspection_tool>
     <inspection_tool class="PhpCSValidationInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <scope name="Changed Files" level="ERROR" enabled="true">
-        <option name="CODING_STANDARD" value="Custom" />
-        <option name="CUSTOM_RULESET_PATH" value="$PROJECT_DIR$/magento2ce/dev/tests/static/framework/Magento" />
+        <option name="CODING_STANDARD" value="PSR2" />
       </scope>
-      <option name="CODING_STANDARD" value="Custom" />
-      <option name="CUSTOM_RULESET_PATH" value="$PROJECT_DIR$/magento2ce/dev/tests/static/framework/Magento" />
+      <option name="CODING_STANDARD" value="PSR2" />
       <option name="WARNING_HIGHLIGHT_LEVEL_NAME" value="ERROR" />
     </inspection_tool>
   </profile>
