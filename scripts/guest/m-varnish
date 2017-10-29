@@ -25,10 +25,10 @@ if [[ -z "$(grep "use_varnish:" /vagrant/etc/config.yaml)" ]]; then
 fi
 
 if [[ $1 == "enable" ]]; then
-    status "Enabling Varnish search engine"
+    status "Enabling Varnish"
     sed -ie "s/use_varnish:.*/use_varnish: 1/" /vagrant/etc/config.yaml
 elif [[ $1 == "disable" ]]; then
-    status "Disabling Varnish search engine"
+    status "Disabling Varnish"
     sed -ie "s/use_varnish:.*/use_varnish: 0/" /vagrant/etc/config.yaml
 else
     error "Usage: ./m-varnish enable|disable"

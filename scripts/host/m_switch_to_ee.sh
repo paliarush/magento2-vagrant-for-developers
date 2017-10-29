@@ -64,7 +64,6 @@ else
     fi
 fi
 
-bash "${vagrant_dir}/scripts/host/m_clear_cache.sh" 2> >(logError)
 bash "${vagrant_dir}/scripts/host/m_composer.sh" install 2> >(logError)
 
 if [[ "${checkout_source_from}" == "git" ]]; then

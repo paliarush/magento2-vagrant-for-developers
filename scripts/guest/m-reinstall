@@ -43,6 +43,8 @@ rm -f "${MAGENTO_ROOT}/app/etc/config.php"
 rm -f "${MAGENTO_ROOT}/app/etc/env.php"
 
 bash m-clear-cache
+# Cache cleaning takes 5-10 seconds and should be avoided until the end of installation to speed up the process
+export SKIP_CACHE_CLEAN=1
 
 db_names=("${setupOptions[db_name]}" "magento_integration_tests" )
 for db_name in "${db_names[@]}"; do
@@ -107,6 +109,9 @@ bash generate_sample_data
 bash configure_search_engine
 bash change_magento_config_for_functional_tests
 bash update_magento_config 'admin/security/session_lifetime' '86400'
+
+export SKIP_CACHE_CLEAN=0
+bash m-clear-cache
 
 status "Checking if Magento frontend is accessible at '${setupOptions[base_url]}'"
 magento_home_page_content="$(curl -sL ${setupOptions[base_url]})"

@@ -11,6 +11,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+ - Upgraded Varnish to v4.1
+ - Improved Magento re-installation speed by avoiding unnecessary cache cleaning
+ - Custom code sniffer rules replaced with PSR2
+
 ### Added
 
  - Support for new location of `generated` directory in Magento 2.2.0

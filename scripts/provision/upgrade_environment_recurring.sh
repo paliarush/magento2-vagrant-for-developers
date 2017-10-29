@@ -56,6 +56,21 @@ if [[ ${is_varnish_installed} -eq 0 ]]; then
     apt-get install -y varnish 2> >(logError) > >(log)
 fi
 
+if varnishd -V 2>&1 | grep -q '3.0.5' ; then
+    status "Upgrading Varnish to v4.1"
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get remove varnish -y 2> >(logError) > >(log)
+    apt-get remove --auto-remove varnish -y 2> >(logError) > >(log)
+    apt-get purge varnish -y 2> >(logError) > >(log)
+    apt-get purge --auto-remove varnish -y 2> >(logError) > >(log)
+
+    curl -s https://packagecloud.io/install/repositories/varnishcache/varnish41/script.deb.sh | bash 2> >(logError) > >(log)
+    apt-get install varnish -y  2> >(logError) > >(log)
+
+    rm -f "${vagrant_dir}/etc/magento2_default_varnish.vcl"
+    rm -f "/etc/varnish/default.vcl"
+fi
+
 is_redis_installed="$(isServiceAvailable redis)"
 if [[ ${is_redis_installed} -eq 0 ]]; then
     status "Installing Redis"
