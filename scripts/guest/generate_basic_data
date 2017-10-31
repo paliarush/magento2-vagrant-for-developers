@@ -1,0 +1,615 @@
+#!/usr/bin/env bash
+
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/output_functions.sh"
+
+host_name="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_host_name")"
+
+status "Generating sample data"
+
+incrementNestingLevel
+
+adminToken=$(curl -sb -X POST "http://${host_name}/rest/V1/integration/admin/token" \
+    -H "Content-Type:application/json" \
+    -d '{"username":"admin", "password":"123123q"}')
+adminToken=$(echo ${adminToken} | sed -e 's/"//g')
+
+category_creation_response=$(curl -sb -X POST "http://${host_name}/rest/V1/categories" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "category": {
+                "parentId": 2,
+                "name": "Test Category",
+                "isActive": true,
+                "includeInMenu": true
+            }
+        }')
+
+pattern='\{\"id\":([0-9]+),'
+if [[ "${category_creation_response}" =~ ${pattern} ]]; then
+    category_id=${BASH_REMATCH[1]}
+fi
+
+attribute_creation_response=$(curl -sb -X POST "http://${host_name}/rest/V1/products/attributes/color/options" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "option": {
+                "label": "red"
+            }
+        }')
+
+attribute_creation_response=$(curl -sb -X POST "http://${host_name}/rest/V1/products/attributes/color/options" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "option": {
+                "label": "blue"
+            }
+        }')
+
+attribute_creation_response=$(curl -sb -X POST "http://${host_name}/rest/V1/products/attributes/color/options" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "option": {
+                "label": "green"
+            }
+        }')
+
+attribute_set_add_response=$(curl -sb -X POST "http://${host_name}/rest/V1/products/attribute-sets/attributes" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+          "attributeSetId": 4,
+          "attributeGroupId": 7,
+          "attributeCode": "color",
+          "sortOrder": 0
+        }')
+
+product_creation_response=$(curl -sb -X POST "http://${host_name}/rest/V1/products" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "product": {
+                "sku": "testSimpleProduct",
+                "name": "Test Simple Product",
+                "attribute_set_id": 4,
+                "price": 22,
+                "weight": 1,
+                "status": 1,
+                "visibility": 4,
+                "type_id": "simple",
+                "extension_attributes": {
+                    "stock_item": {
+                        "qty": 12345,
+                        "is_in_stock": true
+                    }
+                },
+                "custom_attributes": [
+                    {
+                        "attribute_code": "category_ids",
+                        "value": [
+                            "'"${category_id}"'"
+                        ]
+                    }
+                ]
+            }
+        }')
+
+product_creation_response2=$(curl -sb -X POST "http://${host_name}/rest/V1/products" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "product": {
+                "sku": "testSimpleProduct2",
+                "name": "Test Simple Product 2",
+                "attribute_set_id": 4,
+                "price": 32,
+                "weight": 1,
+                "status": 1,
+                "visibility": 4,
+                "type_id": "simple",
+                "extension_attributes": {
+                    "stock_item": {
+                        "qty": 12345,
+                        "is_in_stock": true
+                    }
+                },
+                "custom_attributes": [
+                    {
+                        "attribute_code": "category_ids",
+                        "value": [
+                            "'"${category_id}"'"
+                        ]
+                    }
+                ]
+            }
+        }')
+
+product_creation_response_child1=$(curl -sb -X POST "http://${host_name}/rest/V1/products" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "product": {
+                "sku": "testConfigProduct-red",
+                "name": "Test Red Configurable Product",
+                "attribute_set_id": 4,
+                "price": 10,
+                "weight": 1,
+                "status": 1,
+                "visibility": 1,
+                "type_id": "simple",
+                "extension_attributes": {
+                    "stock_item": {
+                        "qty": 1000,
+                        "is_in_stock": true
+                    }
+                },
+                "custom_attributes": [
+                    {
+                        "attribute_code": "category_ids",
+                        "value": [
+                            "'"${category_id}"'"
+                        ]
+                    },
+                    {
+                        "attribute_code": "color",
+                        "value": "4"
+                    }
+                ]
+            }
+        }')
+
+product_creation_response_child2=$(curl -sb -X POST "http://${host_name}/rest/V1/products" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "product": {
+                "sku": "testConfigProduct-blue",
+                "name": "Test Blue Configurable Product",
+                "attribute_set_id": 4,
+                "price": 10,
+                "weight": 1,
+                "status": 1,
+                "visibility": 1,
+                "type_id": "simple",
+                "extension_attributes": {
+                    "stock_item": {
+                        "qty": 1000,
+                        "is_in_stock": true
+                    }
+                },
+                "custom_attributes": [
+                    {
+                        "attribute_code": "category_ids",
+                        "value": [
+                            "'"${category_id}"'"
+                        ]
+                    },
+                    {
+                        "attribute_code": "color",
+                        "value": "5"
+                    }
+                ]
+            }
+        }')
+
+product_creation_response_child3=$(curl -sb -X POST "http://${host_name}/rest/V1/products" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "product": {
+                "sku": "testConfigProduct-green",
+                "name": "Test Green Configurable Product",
+                "attribute_set_id": 4,
+                "price": 10,
+                "weight": 1,
+                "status": 1,
+                "visibility": 1,
+                "type_id": "simple",
+                "extension_attributes": {
+                    "stock_item": {
+                        "qty": 1000,
+                        "is_in_stock": true
+                    }
+                },
+                "custom_attributes": [
+                    {
+                        "attribute_code": "category_ids",
+                        "value": [
+                            "'"${category_id}"'"
+                        ]
+                    },
+                    {
+                        "attribute_code": "color",
+                        "value": "6"
+                    }
+                ]
+            }
+        }')
+
+config_product_creation_response=$(curl -sb -X POST "http://${host_name}/rest/V1/products" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "product": {
+                "sku": "testConfigProduct",
+                "name": "Test Configurable Product",
+                "attribute_set_id": 4,
+                "price": 10,
+                "weight": 1,
+                "status": 1,
+                "visibility": 4,
+                "type_id": "configurable",
+                "extension_attributes": {
+                    "stock_item": {
+                        "qty": 1000,
+                        "is_in_stock": true
+                    }
+                },
+                "custom_attributes": [
+                    {
+                        "attribute_code": "category_ids",
+                        "value": [
+                            "'"${category_id}"'"
+                        ]
+                    }
+                ]
+            }
+        }')
+
+option_creation_resp=$(curl -sb -X POST "http://${host_name}/rest/V1/configurable-products/testConfigProduct/options" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "option": {
+                "attribute_id": "93",
+                "label": "Color",
+                "position": 0,
+                "values": [
+                    {
+                        "value_index": 4
+                    },
+                    {
+                        "value_index": 5
+                    },
+                    {
+                        "value_index": 6
+                    }
+                ]
+            }
+        }')
+
+product_creation_response_child1=$(curl -sb -X PUT "http://${host_name}/rest/V1/products" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "product": {
+                "id": 3,
+                "sku": "testConfigProduct-red",
+                "name": "Test Red Configurable Product",
+                "attribute_set_id": 4,
+                "price": 10,
+                "status": 1,
+                "visibility": 1,
+                "type_id": "simple",
+                "weight": 1,
+                "extension_attributes": {
+                    "website_ids": [
+                        1
+                    ],
+                    "category_links": [
+                        {
+                            "position": 0,
+                            "category_id": "3"
+                        }
+                    ],
+                    "stock_item": {
+                        "item_id": 3,
+                        "product_id": 3,
+                        "stock_id": 1,
+                        "qty": 1000,
+                        "is_in_stock": true,
+                        "is_qty_decimal": false,
+                        "show_default_notification_message": false,
+                        "use_config_min_qty": true,
+                        "min_qty": 0,
+                        "use_config_min_sale_qty": 1,
+                        "min_sale_qty": 1,
+                        "use_config_max_sale_qty": true,
+                        "max_sale_qty": 10000,
+                        "use_config_backorders": true,
+                        "backorders": 0,
+                        "use_config_notify_stock_qty": true,
+                        "notify_stock_qty": 1,
+                        "use_config_qty_increments": true,
+                        "qty_increments": 0,
+                        "use_config_enable_qty_inc": true,
+                        "enable_qty_increments": false,
+                        "use_config_manage_stock": true,
+                        "manage_stock": true,
+                        "low_stock_date": null,
+                        "is_decimal_divided": false,
+                        "stock_status_changed_auto": 0
+                    }
+                },
+                "product_links": [],
+                "options": [],
+                "media_gallery_entries": [],
+                "tier_prices": [],
+                "custom_attributes": [
+                    {
+                        "attribute_code": "color",
+                        "value": "4"
+                    },
+                    {
+                        "attribute_code": "category_ids",
+                        "value": [
+                            "3"
+                        ]
+                    },
+                    {
+                        "attribute_code": "options_container",
+                        "value": "container2"
+                    },
+                    {
+                        "attribute_code": "required_options",
+                        "value": "0"
+                    },
+                    {
+                        "attribute_code": "has_options",
+                        "value": "0"
+                    },
+                    {
+                        "attribute_code": "url_key",
+                        "value": "test-red-configurable-product"
+                    },
+                    {
+                        "attribute_code": "tax_class_id",
+                        "value": "2"
+                    }
+                ]
+            }
+        }')
+
+product_creation_response_child2=$(curl -sb -X PUT "http://${host_name}/rest/V1/products" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "product": {
+                "id": 4,
+                "sku": "testConfigProduct-blue",
+                "name": "Test Blue Configurable Product",
+                "attribute_set_id": 4,
+                "price": 10,
+                "status": 1,
+                "visibility": 1,
+                "type_id": "simple",
+                "created_at": "2017-09-12 01:50:09",
+                "updated_at": "2017-09-12 01:50:09",
+                "weight": 1,
+                "extension_attributes": {
+                   "website_ids": [
+                       1
+                   ],
+                   "category_links": [
+                       {
+                           "position": 0,
+                           "category_id": "3"
+                       }
+                   ],
+                   "stock_item": {
+                       "item_id": 4,
+                       "product_id": 4,
+                       "stock_id": 1,
+                       "qty": 1000,
+                       "is_in_stock": true,
+                       "is_qty_decimal": false,
+                       "show_default_notification_message": false,
+                       "use_config_min_qty": true,
+                       "min_qty": 0,
+                       "use_config_min_sale_qty": 1,
+                       "min_sale_qty": 1,
+                       "use_config_max_sale_qty": true,
+                       "max_sale_qty": 10000,
+                       "use_config_backorders": true,
+                       "backorders": 0,
+                       "use_config_notify_stock_qty": true,
+                       "notify_stock_qty": 1,
+                       "use_config_qty_increments": true,
+                       "qty_increments": 0,
+                       "use_config_enable_qty_inc": true,
+                       "enable_qty_increments": false,
+                       "use_config_manage_stock": true,
+                       "manage_stock": true,
+                       "low_stock_date": null,
+                       "is_decimal_divided": false,
+                       "stock_status_changed_auto": 0
+                   }
+                },
+                "product_links": [],
+                "options": [],
+                "media_gallery_entries": [],
+                "tier_prices": [],
+                "custom_attributes": [
+                   {
+                       "attribute_code": "category_ids",
+                       "value": [
+                           "3"
+                       ]
+                   },
+                   {
+                       "attribute_code": "options_container",
+                       "value": "container2"
+                   },
+                   {
+                       "attribute_code": "required_options",
+                       "value": "0"
+                   },
+                   {
+                       "attribute_code": "color",
+                       "value": "5"
+                   },
+                   {
+                       "attribute_code": "has_options",
+                       "value": "0"
+                   },
+                   {
+                       "attribute_code": "url_key",
+                       "value": "test-blue-configurable-product"
+                   },
+                   {
+                       "attribute_code": "tax_class_id",
+                       "value": "2"
+                   }
+                ]
+            }
+        }')
+
+product_creation_response_child3=$(curl -sb -X PUT "http://${host_name}/rest/V1/products" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "product": {
+                "id": 5,
+                "sku": "testConfigProduct-green",
+                "name": "Test Green Configurable Product",
+                "attribute_set_id": 4,
+                "price": 10,
+                "status": 1,
+                "visibility": 1,
+                "type_id": "simple",
+                "created_at": "2017-09-12 01:50:10",
+                "updated_at": "2017-09-12 01:50:10",
+                "weight": 1,
+                "extension_attributes": {
+                   "website_ids": [
+                       1
+                   ],
+                   "category_links": [
+                       {
+                           "position": 0,
+                           "category_id": "3"
+                       }
+                   ],
+                   "stock_item": {
+                       "item_id": 5,
+                       "product_id": 5,
+                       "stock_id": 1,
+                       "qty": 1000,
+                       "is_in_stock": true,
+                       "is_qty_decimal": false,
+                       "show_default_notification_message": false,
+                       "use_config_min_qty": true,
+                       "min_qty": 0,
+                       "use_config_min_sale_qty": 1,
+                       "min_sale_qty": 1,
+                       "use_config_max_sale_qty": true,
+                       "max_sale_qty": 10000,
+                       "use_config_backorders": true,
+                       "backorders": 0,
+                       "use_config_notify_stock_qty": true,
+                       "notify_stock_qty": 1,
+                       "use_config_qty_increments": true,
+                       "qty_increments": 0,
+                       "use_config_enable_qty_inc": true,
+                       "enable_qty_increments": false,
+                       "use_config_manage_stock": true,
+                       "manage_stock": true,
+                       "low_stock_date": null,
+                       "is_decimal_divided": false,
+                       "stock_status_changed_auto": 0
+                   }
+                },
+                "product_links": [],
+                "options": [],
+                "media_gallery_entries": [],
+                "tier_prices": [],
+                "custom_attributes": [
+                   {
+                       "attribute_code": "category_ids",
+                       "value": [
+                           "3"
+                       ]
+                   },
+                   {
+                       "attribute_code": "options_container",
+                       "value": "container2"
+                   },
+                   {
+                       "attribute_code": "required_options",
+                       "value": "0"
+                   },
+                   {
+                     "attribute_code": "color",
+                     "value": "6"
+                   },
+                   {
+                       "attribute_code": "has_options",
+                       "value": "0"
+                   },
+                   {
+                       "attribute_code": "url_key",
+                       "value": "test-green-configurable-product"
+                   },
+                   {
+                       "attribute_code": "tax_class_id",
+                       "value": "2"
+                   }
+                ]
+            }
+        }')
+
+child_create_response1=$(curl -sb -X POST "http://${host_name}/rest/V1/configurable-products/testConfigProduct/child" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{"childSku": "testConfigProduct-red"}')
+child_create_response2=$(curl -sb -X POST "http://${host_name}/rest/V1/configurable-products/testConfigProduct/child" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{"childSku": "testConfigProduct-blue"}')
+child_create_response3=$(curl -sb -X POST "http://${host_name}/rest/V1/configurable-products/testConfigProduct/child" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{"childSku": "testConfigProduct-green"}')
+
+customer_creation_response=$(curl -sb -X POST "http://${host_name}/rest/V1/customers" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${adminToken}" \
+    -d '{
+            "customer": {
+                "group_id":1,
+                "email":"customer@example.com",
+                "firstname":"John",
+                "lastname":"Doe",
+                "store_id":1,
+                "addresses":[
+                    {
+                        "region": {
+                            "region_code": "TX",
+                            "region": "Texas",
+                            "region_id": 57
+                        },
+                        "region_id": 57,
+                        "country_id": "US",
+                        "street": [
+                            "7700 Parmer Lane"
+                        ],
+                        "telephone": "5555555555",
+                        "postcode": "78729",
+                        "city": "Austin",
+                        "firstname": "John",
+                        "lastname": "Doe",
+                        "default_shipping": true,
+                        "default_billing": true
+                    }
+                ],
+                "disable_auto_group_change": 0
+            },
+            "password": "123123qQ"
+        }')
+
+decrementNestingLevel
