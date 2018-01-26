@@ -130,13 +130,16 @@ if [[ ${php_config_content} =~ ${pattern} ]]; then
     service apache2 restart 2> >(logError) > >(log)
 fi
 
+# 'n lts' below installs the latest long term support version of Nodejs
 if ! isNodeJsInstalled; then
     status "Installing js build tools"
     {
     apt-get install -y nodejs npm
     ln -s /usr/bin/nodejs /usr/bin/node
     npm install -g grunt-cli
-    npm install gulp -g 
+    npm install gulp -g
+    npm install -g n
+    n lts
     } 2> >(logError) > >(log)
 fi
 

@@ -32,6 +32,7 @@
    * [Activating ElasticSearch](#activating-elasticsearch)
    * [Redis for caching](#redis-for-caching)
    * [Reset environment](#reset-environment)
+   * [Switch NodeJS Versions](#switch-nodejs-versions)
  * [FAQ](#faq)
 
 ## What You get
@@ -50,7 +51,7 @@ It is easy to [install multiple Magento instances](#multiple-magento-instances) 
  1. Configures all software necessary for Magento 2 using [custom Ubuntu vagrant box](https://atlas.hashicorp.com/paliarush/boxes/magento2.ubuntu) (Apache 2.4, PHP 7.0 (or 5.6), MySQL 5.6, Git, Composer, XDebug, Rabbit MQ, Varnish)
  1. Installs Magento 2 from Git repositories or Composer packages (can be configured via `checkout_source_from` option in [etc/config.yaml](etc/config.yaml.dist))
  1. Configures PHP Storm project (partially at the moment)
- 1. Installs NodeJS, NPM, Grunt and Gulp for front end development
+ 1. Installs NodeJS, NPM, Grunt and Gulp for front end development. NOTE: This box uses the [n package manager](https://www.npmjs.com/package/n) to provide the latest NodeJS LTS version.
 
 ## How to install
 
@@ -270,6 +271,7 @@ bash m-composer update
 
 See [draft](https://github.com/paliarush/magento2-vagrant-for-developers/issues/120)
 
+
 ## Environment configuration
 
 ### Switch between PHP 5.6 and 7.0
@@ -327,6 +329,16 @@ Ultimate project reset can be achieved by combining all available flags:
 bash init_project.sh -fcp
 ```
 
+### Switch NodeJS Versions
+
+By default, the box will install the latest `NodeJS LTS` version using the [n package manager](https://www.npmjs.com/package/n). If you need another version of `Node` because of Magento's `package.json` requirements, simply run:
+
+```js
+n <version>
+```
+
+Note: See [Working with npm](https://www.npmjs.com/package/n#working-with-npm) if after switching versions with `n`, `npm` is not working properly.
+
 ### FAQ
 
  1. To debug any CLI script in current Vagrant project, set `debug:vagrant_project` option in [config.yaml](etc/config.yaml.dist) to `1`
@@ -338,3 +350,4 @@ bash init_project.sh -fcp
  1. If code is not synchronized properly on Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly), make sure that PhpStorm is running before making any changes in the code. This is important because otherwise PhpStorm will not be able to detect changes and upload them to the guest machine
  1. Please make sure that currently installed software, specified in [requirements section](#requirements), meets minimum version requirement
  1. Be careful if your OS is case-insensitive, NFS might break the symlinks if you cd into the wrong casing and you power the vagrant up. Just be sure to cd in to the casing the directory was originally created as.
+
