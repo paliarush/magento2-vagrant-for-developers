@@ -37,81 +37,96 @@
 
 ## What You get
 
-It is expected that Magento 2 project source code will be located and managed on the host. This is necessary to allow quick indexing of project files by IDE. All other infrastructure is deployed on the guest machine.
+It's expected that the Magento 2 project source code will be located and managed on the host to allow quick indexing of project files by IDE. All other infrastructure is deployed on the guest machine.
 
-Current Vagrant configuration aims to solve performance issues of Magento installed on Virtual Box **for development**. Custom solution is implemented for Windows hosts. See [explanation of the proposed solution](docs/performance-issue-on-windows-hosts.md).
+Current Vagrant configuration aims to solve performance issues of Magento installed on Virtual Box **for development**. A custom solution is implemented for Windows hosts. See [explanation of the proposed solution](docs/performance-issue-on-windows-hosts.md).
 
-Environment for Magento EE development is configured as well.
+The environment for Magento EE development is also configured.
 
 It is easy to [install multiple Magento instances](#multiple-magento-instances) based on different codebases simultaneously.
 
-[Project initialization script](init_project.sh) configures complete development environment:
+The [project initialization script](init_project.sh) configures a complete development environment:
 
  1. Adds some missing software on the host
- 1. Configures all software necessary for Magento 2 using [custom Ubuntu vagrant box](https://atlas.hashicorp.com/paliarush/boxes/magento2.ubuntu) (Apache 2.4, PHP 7.0 (or 5.6), MySQL 5.6, Git, Composer, XDebug, Rabbit MQ, Varnish)
+ 1. Configures all software necessary for Magento 2 using a [custom Ubuntu vagrant box](https://atlas.hashicorp.com/paliarush/boxes/magento2.ubuntu) (Apache 2.4, PHP 7.0 or 5.6, MySQL 5.6, Git, Composer, XDebug, Rabbit MQ, Varnish)
  1. Installs Magento 2 from Git repositories or Composer packages (can be configured via `checkout_source_from` option in [etc/config.yaml](etc/config.yaml.dist))
  1. Configures PHP Storm project (partially at the moment)
- 1. Installs NodeJS, NPM, Grunt and Gulp for front end development. NOTE: This box uses the [n package manager](https://www.npmjs.com/package/n) to provide the latest NodeJS LTS version.
+ 1. Installs NodeJS, NPM, Grunt and Gulp for front end development
+
+  :information_source: This box uses the [n package manager](https://www.npmjs.com/package/n) to provide the latest NodeJS LTS version.<br />
 
 ## How to install
 
-If you never used Vagrant before, read [Vagrant Docs](https://docs.vagrantup.com/v2)
+If you never used Vagrant before, read the [Vagrant Docs](https://docs.vagrantup.com/v2) first.
 
 ### Requirements
 
-Software listed below should be available in [PATH](https://en.wikipedia.org/wiki/PATH_\(variable\)) (except for PHP Storm).
+The software listed below should be available in [PATH](https://en.wikipedia.org/wiki/PATH_\(variable\)) (except for PHP Storm).
 
 - [Vagrant 1.8+](https://www.vagrantup.com/downloads.html)
 - [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). Make sure you have SSH keys generated and associated with your github account, see [how to check](https://help.github.com/articles/testing-your-ssh-connection/) and [how to configure](https://help.github.com/articles/generating-ssh-keys/) if not configured.<br />
-:information_source: It is possible to use another way of getting codebase instead of cloning, it does not matter for successful installation. Just put Magento 2 codebase inside of `vagrant-magento/magento2ce`.<br />
-:information_source: ![](docs/images/windows-icon.png) On Windows hosts Git must be [v2.7+](http://git-scm.com/download/win), also make sure to set the following options to avoid issues with incorrect line separators:
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) - Ensure that SSH keys are generated and associated with your Github account. See [how to check](https://help.github.com/articles/testing-your-ssh-connection/) and [how to configure](https://help.github.com/articles/generating-ssh-keys/), if not configured.<br />
+  :information_source: To obtain the codebase without cloning, just use the Magento 2 codebase instead of `vagrant-magento/magento2ce`. Either method will produce a successful installation.<br />
+
+  :information_source: On Windows hosts ![](docs/images/windows-icon.png) Git must be [v2.7+](http://git-scm.com/download/win). Also make sure to set the following options to avoid issues with incorrect line separators:
 
     ```
     git config --global core.autocrlf false
     git config --global core.eol LF
     git config --global diff.renamelimit 5000
     ```
-- ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) [PHP](http://php.net/manual/en/install.php) (any version) to allow Magento dependency management with [Composer](https://getcomposer.org/doc/00-intro.md)
-- [PHP Storm](https://www.jetbrains.com/phpstorm) is optional but recommended.
-- ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) [NFS server](https://en.wikipedia.org/wiki/Network_File_System) must be installed and running on \*nix and OSX hosts. Is usually available, so just try to follow [installation steps](#how-to-install) first.
+- [PHP](http://php.net/manual/en/install.php) ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) (any version) to allow Magento dependency management with [Composer](https://getcomposer.org/doc/00-intro.md)
+- [PHP Storm](https://www.jetbrains.com/phpstorm), optional but recommended
+- [NFS server](https://en.wikipedia.org/wiki/Network_File_System) ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) must be installed and running on \*nix and OSX hosts; usually available, follow [installation steps](#how-to-install) first
 
 ### Installation steps
 
 :information_source: In case of any issues during installation, please read [FAQ section](#faq)
 
- 1. Open terminal and change directory to the one which you want to contain Magento project. ![](docs/images/windows-icon.png) On Windows use Git Bash, which is available after Git installation
+ 1. Open terminal and change your directory to the one you want to contain Magento project. ![](docs/images/windows-icon.png) On Windows use Git Bash, which is available after Git installation.
 
- 1. Download project with Vagrant configuration. :warning: Do not open it in PhpStorm until `init_project.sh` has completed PhpStorm configuration:
+ 1. Download or clone the project with Vagrant configuration:
+    
+    :warning: Do not open it in PhpStorm until `init_project.sh` has completed PhpStorm configuration in the initialize project step below.
 
-   ```
-   git clone git@github.com:paliarush/magento2-vagrant-for-developers.git vagrant-magento
-   ```
+     ```
+     git clone git@github.com:paliarush/magento2-vagrant-for-developers.git vagrant-magento
+     ```
 
- 1. Optionally, if you use private repositories on GitHub or download packages from Magento Marketplace using Composer
+    Optionally, if you use private repositories on GitHub or download packages from the Magento Marketplace using Composer
 
-   - copy [etc/composer/auth.json.dist](etc/composer/auth.json.dist) to `etc/composer/auth.json`
-   - specify your GitHub token by adding `"github.com": "your-github-token"` to `github-oauth` section for GitHub authorization
-   - add Magento Marketplace keys for Marketplace authorization to `repo.magento.com` section
+     1. Copy [etc/composer/auth.json.dist](etc/composer/auth.json.dist) to `etc/composer/auth.json`.
+     1. Specify your GitHub token by adding `"github.com": "your-github-token"` to the `github-oauth` section for GitHub authorization.
+     1. Add the Magento Marketplace keys for Marketplace authorization to the `repo.magento.com` section.
+     1. Copy (optional) [etc/config.yaml.dist](etc/config.yaml.dist) as `etc/config.yaml` and make the necessary customizations.
 
- 1. Optionally, copy [etc/config.yaml.dist](etc/config.yaml.dist) as `etc/config.yaml` and make necessary customizations
+ 1. Initialize the project (this will configure the environment, install Magento, and configure the PHPStorm project):
 
- 1. Initialize project (this will configure environment, install Magento, configure PHPStorm project):
+    ```
+    cd vagrant-magento
+    bash init_project.sh
+    ```
 
-   ```
-   cd vagrant-magento
-   bash init_project.sh
-   ```
+    :information_source: If you get the following error you may need to change the minimum Vagrant compatibility at the top of your `/Vagrantfile` from  `Vagrant.require_version "~> 1.8"` to `Vagrant.require_version ">= 1.8"`.
 
- 1. Use `vagrant-magento` directory as project root in PHP Storm (not `vagrant-magento/magento2ce`). This is important, because in this case PHP Storm will be configured automatically by [init_project.sh](init_project.sh). If NFS files sync is disabled in [config](etc/config.yaml.dist) and ![](docs/images/windows-icon.png) on Windows hosts [verify deployment configuration in PHP Storm](docs/phpstorm-configuration-windows-hosts.md)
+    ```
+    Directory ‘e/magento2/vagrant-magento/etc’ was not mounted as expected by Vagrant. Please make sure ...
+    ```
 
- 1. Configure remote PHP interpreter in PHP Storm. Go to `Settings => Languages & Frameworks => PHP`, add new remote interpreter and select "Deployment configuration" as a source for connection details.
+ 1. Use the `vagrant-magento` directory as the project root in PHP Storm (not `vagrant-magento/magento2ce`). This is important, because in this case PHP Storm will be configured automatically by [init_project.sh](init_project.sh). If NFS files sync is disabled in [config](etc/config.yaml.dist) and ![](docs/images/windows-icon.png)on Windows hosts [verify the deployment configuration in PHP Storm](docs/phpstorm-configuration-windows-hosts.md).
+
+    Use the URL for accessing your Magento storefront in the browser as your Web server root URL. Typically this is the localhost, which refers to your development machine. Depending on how you've set up your VM you may also need a port number, like `hhtp://localhost:8080`.
+
+ 1. Configure the remote PHP interpreter in PHP Storm. Go to Preferences, then Languages and Frameworks. Click PHP and add a new remote interpreter. Select Deployment configuration as a source for connection details.
 
 ### Default credentials and settings
 
 Some of default settings are available for override. These settings can be found in the file [etc/config.yaml.dist](etc/config.yaml.dist).
-To override settings just create a copy of the file under the name 'config.yaml' and put there your custom settings.
-When using [init_project.sh](init_project.sh), if not specified manually, random IP address is generated and is used as suffix for host name to prevent collisions, in case when 2 or more instances are running at the same time.
+
+To override settings create a copy of the file under the name 'config.yaml' and add your custom settings.
+
+When using [init_project.sh](init_project.sh), if not specified manually, random IP address is generated and is used as suffix for host name to prevent collisions, in case when two or more instances are running at the same time.
+
 Upon a successful installation, you'll see the location and URL of the newly-installed Magento 2 application in console.
 
 **Web access**:
@@ -119,6 +134,8 @@ Upon a successful installation, you'll see the location and URL of the newly-ins
 - Access admin panel at `http://magento2.vagrant<random_suffix>/admin/`
 - Magento admin user/password: `admin/123123q`
 - Rabbit MQ control panel: `http://magento2.vagrant<random_suffix>:15672`, credentials `guest`/`guest`
+
+:information_source: Your admin URL, storefront URL, and admin user and password are located in `etc/config.yaml.dist`.
 
 **Codebase and DB access**:
 - Path to your Magento installation on the VM:
