@@ -21,7 +21,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
- - PHP 7.1 support
+ - PHP 7.1 and PHP 7.2 support
  - Support for new location of `generated` directory in Magento 2.2.0
  - Basic data generation can be turned off. Added configurable product and customer address generation 
 

@@ -80,13 +80,13 @@ fi
 
 status "Setting up PHP"
 
-php_ini_paths=( /etc/php/5.6/cli/php.ini /etc/php/7.0/cli/php.ini /etc/php/7.1/cli/php.ini )
+php_ini_paths=( /etc/php/5.6/cli/php.ini /etc/php/7.0/cli/php.ini /etc/php/7.1/cli/php.ini /etc/php/7.2/cli/php.ini )
 process_php_config ${php_ini_paths}
 
-if [[ ${php_version} == "5.6" ]] || [[ ${php_version} == "7.0" ]] || [[ ${php_version} == "7.1" ]]; then
+if [[ ${php_version} == "5.6" ]] || [[ ${php_version} == "7.0" ]] || [[ ${php_version} == "7.1" ]] || [[ ${php_version} == "7.2" ]]; then
     status "Configuring PHP ${php_version}"
     update-alternatives --set php "/usr/bin/php${php_version}"
-    a2dismod php5.6 2> >(logError) > >(log) && a2dismod php7.0 2> >(logError) > >(log) && a2dismod php7.1 2> >(logError) > >(log)
+    a2dismod php5.6 2> >(logError) > >(log) && a2dismod php7.0 2> >(logError) > >(log) && a2dismod php7.1 2> >(logError) > >(log) && a2dismod php7.2 2> >(logError) > >(log)
     a2enmod "php${php_version}" 2> >(logError) > >(log)
     sed -i "s|xdebug.remote_connect_back=1|xdebug.remote_host=192.168.10.1|g" "/etc/php/${php_version}/cli/conf.d/20-xdebug.ini"
 else
