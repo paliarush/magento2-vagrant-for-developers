@@ -84,6 +84,46 @@ if [[ ${is_redis_installed} -eq 0 ]]; then
     echo -n | sudo utils/install_server.sh 2> >(logError) > >(log)
 fi
 
+function install_php71 () {
+    status "Installing PHP 7.1"
+
+    apt-get update
+
+    # Setup PHP
+    apt-get install -y language-pack-en-base
+    LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php
+    apt-get update
+
+    # Install PHP 7.1
+    apt-get install -y php7.1 php7.1-mcrypt php7.1-curl php7.1-cli php7.1-mysql php7.1-gd php7.1-intl php7.1-xsl php7.1-bcmath php7.1-mbstring php7.1-soap php7.1-zip libapache2-mod-php7.1
+
+    # Install XDebug
+    apt-get install -y php7.1-dev
+    cd /usr/lib
+    rm -rf xdebug
+    git clone git://github.com/xdebug/xdebug.git
+    cd xdebug
+    phpize
+    ./configure --enable-xdebug
+    make
+    make install
+    ## Configure XDebug to allow remote connections from the host
+    mkdir -p /etc/php/7.1/cli/conf.d
+    touch /etc/php/7.1/cli/conf.d/20-xdebug.ini
+    echo 'zend_extension=/usr/lib/xdebug/modules/xdebug.so
+    xdebug.max_nesting_level=200
+    xdebug.remote_enable=1
+    xdebug.remote_host=192.168.10.1
+    xdebug.idekey=phpstorm' >> /etc/php/7.1/cli/conf.d/20-xdebug.ini
+    echo "date.timezone = America/Chicago" >> /etc/php/7.1/cli/php.ini
+    rm -rf /etc/php/7.1/apache2
+    ln -s /etc/php/7.1/cli /etc/php/7.1/apache2
+}
+
+if [[ ! -d "/etc/php/7.1" ]]; then
+    install_php71
+fi
+
 status "Fixing potential issue with MySQL being down after VM power off"
 service mysql restart 2> >(logError) > >(log)
 

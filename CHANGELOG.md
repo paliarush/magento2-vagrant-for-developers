@@ -13,12 +13,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+ - Config option 'php_version' should now be used for PHP version selection instead of 'use_php7'
  - Upgraded Varnish to v4.1
  - Improved Magento re-installation speed by avoiding unnecessary cache cleaning
  - Custom code sniffer rules replaced with PSR2
 
 ### Added
 
+ - PHP 7.1 support
  - Support for new location of `generated` directory in Magento 2.2.0
  - Basic data generation can be turned off. Added configurable product and customer address generation 
 
