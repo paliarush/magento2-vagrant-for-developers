@@ -9,6 +9,78 @@ function isServiceAvailable() {
     fi
 }
 
+function install_php71 () {
+    status "Installing PHP 7.1"
+
+    apt-get update
+
+    # Setup PHP
+    apt-get install -y language-pack-en-base
+    LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php
+    apt-get update
+
+    # Install PHP 7.1
+    apt-get install -y php7.1 php7.1-mcrypt php7.1-curl php7.1-cli php7.1-mysql php7.1-gd php7.1-intl php7.1-xsl php7.1-bcmath php7.1-mbstring php7.1-soap php7.1-zip libapache2-mod-php7.1
+
+    # Install XDebug
+    apt-get install -y php7.1-dev
+    cd /usr/lib
+    rm -rf xdebug
+    git clone git://github.com/xdebug/xdebug.git
+    cd xdebug
+    phpize
+    ./configure --enable-xdebug
+    make
+    make install
+    ## Configure XDebug to allow remote connections from the host
+    mkdir -p /etc/php/7.1/cli/conf.d
+    touch /etc/php/7.1/cli/conf.d/20-xdebug.ini
+    echo 'zend_extension=/usr/lib/xdebug/modules/xdebug.so
+    xdebug.max_nesting_level=200
+    xdebug.remote_enable=1
+    xdebug.remote_host=192.168.10.1
+    xdebug.idekey=phpstorm' >> /etc/php/7.1/cli/conf.d/20-xdebug.ini
+    echo "date.timezone = America/Chicago" >> /etc/php/7.1/cli/php.ini
+    rm -rf /etc/php/7.1/apache2
+    ln -s /etc/php/7.1/cli /etc/php/7.1/apache2
+}
+
+function install_php72 () {
+    status "Installing PHP 7.2"
+
+    apt-get update
+
+    # Setup PHP
+    apt-get install -y language-pack-en-base
+    LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php
+    apt-get update
+
+    # Install PHP 7.2
+    apt-get install -y php7.2 php7.2-curl php7.2-cli php7.2-mysql php7.2-gd php7.2-intl php7.2-xsl php7.2-bcmath php7.2-mbstring php7.2-soap php7.2-zip libapache2-mod-php7.2
+
+    # Install XDebug
+    apt-get install -y php7.2-dev
+    cd /usr/lib
+    rm -rf xdebug
+    git clone git://github.com/xdebug/xdebug.git
+    cd xdebug
+    phpize
+    ./configure --enable-xdebug
+    make
+    make install
+    ## Configure XDebug to allow remote connections from the host
+    mkdir -p /etc/php/7.2/cli/conf.d
+    touch /etc/php/7.2/cli/conf.d/20-xdebug.ini
+    echo 'zend_extension=/usr/lib/xdebug/modules/xdebug.so
+    xdebug.max_nesting_level=200
+    xdebug.remote_enable=1
+    xdebug.remote_host=192.168.10.1
+    xdebug.idekey=phpstorm' >> /etc/php/7.2/cli/conf.d/20-xdebug.ini
+    echo "date.timezone = America/Chicago" >> /etc/php/7.2/cli/php.ini
+    rm -rf /etc/php/7.2/apache2
+    ln -s /etc/php/7.2/cli /etc/php/7.2/apache2
+}
+
 use_php7=$4
 vagrant_dir="/vagrant"
 
@@ -17,36 +89,12 @@ source "${vagrant_dir}/scripts/output_functions.sh"
 status "Upgrading environment (recurring)"
 incrementNestingLevel
 
-status "Deleting obsolete repository"
-sudo rm -f /etc/apt/sources.list.d/ondrej-php-7_0-trusty.list
+if [[ ! -d "/etc/php/7.1" ]]; then
+    install_php71
+fi
 
-status "Upgrading vagrant box paliarush/magento2.ubuntu v1.1.0"
-if [[ ${use_php7} -eq 1 ]]; then
-    if /usr/bin/php7.0 -v | grep -q '7.0.5' ; then
-        status "Upgrading PHP 7.0.5"
-        apt-get update 2> >(logError) > >(log)
-        a2dismod php7.0 2> >(logError) > >(log)
-        rm -rf /etc/php/7.0/apache2
-        export DEBIAN_FRONTEND=noninteractive
-        apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install php7.0 php7.0-mcrypt php7.0-curl php7.0-cli php7.0-mysql php7.0-gd php7.0-intl php7.0-xsl php7.0-bcmath php7.0-mbstring php7.0-soap php7.0-zip libapache2-mod-php7.0 2> >(logError) > >(log)
-        a2enmod php7.0 2> >(logError) > >(log)
-
-        status "Installing XDebug"
-        cd /usr/lib
-        rm -rf xdebug
-        git clone git://github.com/xdebug/xdebug.git 2> >(logError) > >(log)
-        cd xdebug
-        phpize 2> >(logError) > >(log)
-        ./configure --enable-xdebug 2> >(logError) > >(log)
-        make 2> >(logError) > >(log)
-        make install 2> >(logError) > >(log)
-
-        rm -rf /etc/php/7.0/apache2
-        ln -s /etc/php/7.0/cli /etc/php/7.0/apache2
-
-        status "Restarting Apache"
-        service apache2 restart 2> >(logError) > >(log)
-    fi
+if [[ ! -d "/etc/php/7.2" ]]; then
+    install_php72
 fi
 
 is_varnish_installed="$(isServiceAvailable varnish)"
