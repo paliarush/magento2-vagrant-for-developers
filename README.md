@@ -107,12 +107,6 @@ The software listed below should be available in [PATH](https://en.wikipedia.org
     bash init_project.sh
     ```
 
-    :information_source: If you get the following error you may need to change the minimum Vagrant compatibility at the top of your `/Vagrantfile` from  `Vagrant.require_version "~> 1.8"` to `Vagrant.require_version ">= 1.8"`.
-
-    ```
-    Directory ‘e/magento2/vagrant-magento/etc’ was not mounted as expected by Vagrant. Please make sure ...
-    ```
-
  1. Use the `vagrant-magento` directory as the project root in PHP Storm (not `vagrant-magento/magento2ce`). This is important, because in this case PHP Storm will be configured automatically by [init_project.sh](init_project.sh). If NFS files sync is disabled in [config](etc/config.yaml.dist) and ![](docs/images/windows-icon.png)on Windows hosts [verify the deployment configuration in PHP Storm](docs/phpstorm-configuration-windows-hosts.md).
 
     Use the URL for accessing your Magento storefront in the browser as your Web server root URL. Typically this is the localhost, which refers to your development machine. Depending on how you've set up your VM you may also need a port number, like `hhtp://localhost:8080`.

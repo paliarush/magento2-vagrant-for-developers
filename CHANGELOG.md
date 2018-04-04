@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+ - Verified compatibility with Vagrant 2.x and loosened Vagrant version requirement
  - Config option 'php_version' should now be used for PHP version selection instead of 'use_php7'
  - Upgraded Varnish to v4.1
  - Improved Magento re-installation speed by avoiding unnecessary cache cleaning
