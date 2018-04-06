@@ -101,7 +101,7 @@ function install_php71 () {
     apt-get install -y php7.1-dev
     cd /usr/lib
     rm -rf xdebug71
-    git clone git://github.com/xdebug/xdebug.git
+    git clone git://github.com/xdebug/xdebug.git xdebug71
     cd xdebug71
     phpize
     ./configure --enable-xdebug
@@ -137,7 +137,7 @@ function install_php72 () {
     apt-get install -y php7.2-dev
     cd /usr/lib
     rm -rf xdebug72
-    git clone git://github.com/xdebug/xdebug.git
+    git clone git://github.com/xdebug/xdebug.git xdebug72
     cd xdebug72
     phpize
     ./configure --enable-xdebug
