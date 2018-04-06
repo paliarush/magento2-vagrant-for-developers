@@ -27,7 +27,7 @@
    * [Update Composer dependencies](#update-composer-dependencies)
    * [Running Magento tests](#running-magento-tests)
  * [Environment configuration](#environment-configuration)
-   * [Switch between PHP versions](#switch-between-php-56-and-70)
+   * [Switch between PHP versions](#switch-between-php-versions)
    * [Activating Varnish](#activating-varnish)
    * [Activating ElasticSearch](#activating-elasticsearch)
    * [Redis for caching](#redis-for-caching)
