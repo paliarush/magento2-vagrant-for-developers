@@ -12,22 +12,8 @@ function process_php_config () {
             sed -i "s|display_startup_errors = Off|display_startup_errors = On|g" ${php_ini_path}
             sed -i "s|error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT|error_reporting = E_ALL|g" ${php_ini_path}
             sed -i "s|;always_populate_raw_post_data = -1|always_populate_raw_post_data = -1|g" ${php_ini_path}
-
-            # TODO: Fix for a bug, should be removed in 3.0
-            sed -i "s|:/vendor/phpunit/phpunit|:${guest_magento_dir}/vendor/phpunit/phpunit|g" ${php_ini_path}
         fi
     done
-}
-
-function init_php56 () {
-    status "Installing PHP 5.6"
-    add-apt-repository ppa:ondrej/php 2> >(logError) > >(log)
-    apt-get update 2> >(logError) > >(log)
-    apt-get install -y php5.6 php-xdebug php5.6-xml php5.6-mcrypt php5.6-curl php5.6-cli php5.6-mysql php5.6-gd php5.6-intl php5.6-bcmath php5.6-mbstring php5.6-soap php5.6-zip libapache2-mod-php5.6 2> >(logError) > >(log)
-    echo '
-    xdebug.max_nesting_level=200
-    xdebug.remote_enable=1
-    xdebug.remote_host=192.168.10.1' >> /etc/php/5.6/mods-available/xdebug.ini
 }
 
 function isServiceAvailable() {
@@ -46,7 +32,19 @@ function isNodeJsInstalled() {
 }
 
 guest_magento_dir=$2
-use_php7=$4
+use_php7=$4 # TODO: Remove deprecated argument, php_version should be used instead
+php_version=$8
+
+# TODO: Remove support for deprecated argument use_php7
+if [[ -z ${php_version} ]]; then
+    if [[ ${use_php7} -eq 1 ]]; then
+        php_version="7.0"
+    else
+        php_version="5.6"
+    fi
+fi
+
+
 vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/output_functions.sh"
@@ -81,29 +79,20 @@ else
 fi
 
 status "Setting up PHP"
-php_ini_paths=( /etc/php/7.0/cli/php.ini /etc/php/5.6/cli/php.ini )
+
+php_ini_paths=( /etc/php/5.6/cli/php.ini /etc/php/7.0/cli/php.ini /etc/php/7.1/cli/php.ini /etc/php/7.2/cli/php.ini )
 process_php_config ${php_ini_paths}
 
-if [[ ${use_php7} -eq 1 ]]; then
-    status "Configuring PHP 7"
-    update-alternatives --set php /usr/bin/php7.0
-    if [[ -d "/etc/php/5.6" ]]; then
-        a2dismod php5.6 2> >(logError) > >(log)
-    fi
-    sed -i "s|xdebug.remote_connect_back=1|xdebug.remote_host=192.168.10.1|g" /etc/php/7.0/cli/conf.d/20-xdebug.ini
-    a2enmod php7.0 2> >(logError) > >(log)
-    # TODO: Fix for a bug, should be removed in 3.0
-    sed -i "/zend_extension=.*so/d" /etc/php/7.0/cli/conf.d/20-xdebug.ini
-    echo "zend_extension=xdebug.so" >> /etc/php/7.0/cli/conf.d/20-xdebug.ini
+if [[ ${php_version} == "5.6" ]] || [[ ${php_version} == "7.0" ]] || [[ ${php_version} == "7.1" ]] || [[ ${php_version} == "7.2" ]]; then
+    status "Configuring PHP ${php_version}"
+    update-alternatives --set php "/usr/bin/php${php_version}"
+    a2dismod php5.6 2> >(logError) > >(log) && a2dismod php7.0 2> >(logError) > >(log) && a2dismod php7.1 2> >(logError) > >(log) && a2dismod php7.2 2> >(logError) > >(log)
+    a2enmod "php${php_version}" 2> >(logError) > >(log)
+    sed -i "s|xdebug.remote_connect_back=1|xdebug.remote_host=192.168.10.1|g" "/etc/php/${php_version}/cli/conf.d/20-xdebug.ini"
 else
-    status "Configuring PHP 5.6"
-    if [[ ! -d "/etc/php/5.6" ]]; then
-        init_php56
-    fi
-    update-alternatives --set php /usr/bin/php5.6 && a2dismod php7.0 && a2enmod php5.6 2> >(logError) > >(log)
-    rm -rf /etc/php/5.6/apache2
-    ln -s /etc/php/5.6/cli /etc/php/5.6/apache2
-    sed -i "s|xdebug.remote_connect_back=1|xdebug.remote_host=192.168.10.1|g" /etc/php/5.6/mods-available/xdebug.ini
+    error "PHP version specified in the etc/config.yam is not supported."
+    decrementNestingLevel
+    exit 1
 fi
 service apache2 restart 2> >(logError) > >(log)
 
@@ -118,11 +107,7 @@ if [[ ${is_elastic_search_installed} -eq 0 ]]; then
 fi
 
 status "Enabling email logging"
-if [[ ${use_php7} -eq 1 ]]; then
-    php_ini_file="/etc/php/7.0/cli/php.ini"
-else
-    php_ini_file="/etc/php/5.6/cli/php.ini"
-fi
+php_ini_file="/etc/php/${php_version}/cli/php.ini"
 pattern=";sendmail_path"
 php_config_content="$(cat ${php_ini_file})"
 if [[ ${php_config_content} =~ ${pattern} ]]; then

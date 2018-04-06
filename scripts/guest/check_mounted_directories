@@ -9,13 +9,15 @@ incrementNestingLevel
 
 if [[ ! -f "${MAGENTO_ROOT}/bin/magento" ]]; then
     error "Directory '${MAGENTO_ROOT}' was not mounted as expected and Magento code base is not accessible on the guest machine.
-        If your host is OSX or *nix, please make sure that Vagrant is able to mount NFS shares on your environment (see https://github.com/paliarush/magento2-vagrant-for-developers/issues/88#issuecomment-254854019 )"
+        If your host is OSX or *nix, please make sure that Vagrant is able to mount NFS shares on your environment (see https://github.com/paliarush/magento2-vagrant-for-developers/issues/88#issuecomment-254854019 ).
+        Also remove any stale declarations from /etc/exports on the host."
     exit 1
 fi
 
 if [[ ! -f "/vagrant/etc/config.yaml" ]]; then
     error "Directory '/vagrant/etc' was not mounted as expected by Vagrant and is not accessible on the guest machine.
-        Please make sure that Vagrant is able to mount VirtualBox shared folders on your environment (see https://www.vagrantup.com/docs/synced-folders/basic_usage.html )"
+        Please make sure that Vagrant is able to mount VirtualBox shared folders on your environment (see https://www.vagrantup.com/docs/synced-folders/basic_usage.html ).
+        Also remove any stale declarations from /etc/exports on the host."
     exit 1
 fi
 

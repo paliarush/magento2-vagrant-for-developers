@@ -27,7 +27,7 @@
    * [Update Composer dependencies](#update-composer-dependencies)
    * [Running Magento tests](#running-magento-tests)
  * [Environment configuration](#environment-configuration)
-   * [Switch between PHP 5.6 and 7.0](#switch-between-php-56-and-70)
+   * [Switch between PHP versions](#switch-between-php-versions)
    * [Activating Varnish](#activating-varnish)
    * [Activating ElasticSearch](#activating-elasticsearch)
    * [Redis for caching](#redis-for-caching)
@@ -105,12 +105,6 @@ The software listed below should be available in [PATH](https://en.wikipedia.org
     ```
     cd vagrant-magento
     bash init_project.sh
-    ```
-
-    :information_source: If you get the following error you may need to change the minimum Vagrant compatibility at the top of your `/Vagrantfile` from  `Vagrant.require_version "~> 1.8"` to `Vagrant.require_version ">= 1.8"`.
-
-    ```
-    Directory ‘e/magento2/vagrant-magento/etc’ was not mounted as expected by Vagrant. Please make sure ...
     ```
 
  1. Use the `vagrant-magento` directory as the project root in PHP Storm (not `vagrant-magento/magento2ce`). This is important, because in this case PHP Storm will be configured automatically by [init_project.sh](init_project.sh). If NFS files sync is disabled in [config](etc/config.yaml.dist) and ![](docs/images/windows-icon.png)on Windows hosts [verify the deployment configuration in PHP Storm](docs/phpstorm-configuration-windows-hosts.md).
@@ -291,9 +285,9 @@ See [draft](https://github.com/paliarush/magento2-vagrant-for-developers/issues/
 
 ## Environment configuration
 
-### Switch between PHP 5.6 and 7.0
+### Switch between PHP versions
 
-Set "use_php7: 1" for PHP7 and "use_php7: 0" for PHP5.6 in [config.yaml](etc/config.yaml.dist).
+Switch between PHP versions using "php_version: <version>" option in [config.yaml](etc/config.yaml.dist). Supported versions are 5.6, 7.0, 7.1 and 7.2.
 PHP version will be applied after "vagrant reload".
 
 ### Activating Varnish
@@ -358,7 +352,6 @@ Note: See [Working with npm](https://www.npmjs.com/package/n#working-with-npm) i
 
 ### FAQ
 
- 1. Upgrade to PHP 7.1 can be done as described [here](https://gist.github.com/paliarush/6d88f3267de3bac636956f4be6bb3cd8#file-steps-to-upgrade-environment-to-php-7-1-md). Keep in mind that this is a temporary hack until proper support is implemented in the box
  1. To debug any CLI script in current Vagrant project, set `debug:vagrant_project` option in [config.yaml](etc/config.yaml.dist) to `1`
  1. Is Windows 10 supported? Yes, but you may face the same issue as described [here](https://github.com/paliarush/magento2-vagrant-for-developers/issues/36). Also Virtual box may not work on Windows 10 in headless mode, see how to [enable GUI mode](https://www.vagrantup.com/docs/virtualbox/configuration.html)
  1. ![](docs/images/linux-icon.png)![](docs/images/osx-icon.png) On OSX and \*nix hosts NFS will be used by default to sync your project files with guest. On some hosts Vagrant cannot configure NFS properly, in this case it is possible to deploy project without NFS by setting `use_nfs` option in [config.yaml](etc/config.yaml.dist) to `0` <br />

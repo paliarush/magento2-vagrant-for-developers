@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant.require_version "~> 1.8"
+Vagrant.require_version ">= 1.8"
 
 require 'yaml'
 
@@ -66,13 +66,14 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
     end
 
     shell_script_args = [
-        use_nfs_for_synced_folders ? "1" : "0",     #1
-        guest_magento_dir,                          #2
-        magento_host_name,                          #3
-        config_data['environment']['use_php7'],     #4
-        host_magento_dir,                           #5
-        OS.is_windows ? "1" : "0",                  #6
-        host_vagrant_dir                            #7
+        use_nfs_for_synced_folders ? "1" : "0",       #1
+        guest_magento_dir,                            #2
+        magento_host_name,                            #3
+        config_data['environment']['use_php7'] || 0,  #4 TODO: Remove legacy parameter, replaced with php_version
+        host_magento_dir,                             #5
+        OS.is_windows ? "1" : "0",                    #6
+        host_vagrant_dir,                             #7
+        config_data['environment']['php_version']     #8
     ]
 
     config.vm.provision "fix_no_tty", type: "shell", run: "always" do |s|
