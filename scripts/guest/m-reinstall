@@ -74,7 +74,7 @@ install_cmd="./bin/magento setup:install \
     --use-rewrites=1"
 
 # Configure Rabbit MQ
-if [[ -f "${MAGENTO_ROOT}/app/code/Magento/MessageQueue/LICENSE.txt" ]]; then
+if [[ -d "${MAGENTO_ROOT}/app/code/Magento/MessageQueue" ]] || [[ -d "${MAGENTO_ROOT}/vendor/magento/magento-message-queue" ]]; then
     install_cmd="${install_cmd} \
     --amqp-host=${setupOptions[amqp_host]} \
     --amqp-port=${setupOptions[amqp_port]} \
