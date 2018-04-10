@@ -18,12 +18,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
  - Upgraded Varnish to v4.1
  - Improved Magento re-installation speed by avoiding unnecessary cache cleaning
  - Custom code sniffer rules replaced with PSR2
+ - MessageQueue module will now be installed with CE if using Magento v2.3+
 
 ### Added
 
  - PHP 7.1 and PHP 7.2 support
  - Support for new location of `generated` directory in Magento 2.2.0
  - Basic data generation can be turned off. Added configurable product and customer address generation 
+ - Documentation in config.yaml.dist for choosing specific composer package versions
 
 ### Fixed
 
