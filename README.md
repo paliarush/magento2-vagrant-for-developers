@@ -361,7 +361,7 @@ Note: See [Working with npm](https://www.npmjs.com/package/n#working-with-npm) i
  1. If code is not synchronized properly on Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly), make sure that PhpStorm is running before making any changes in the code. This is important because otherwise PhpStorm will not be able to detect changes and upload them to the guest machine
  1. Please make sure that currently installed software, specified in [requirements section](#requirements), meets minimum version requirement
  1. Be careful if your OS is case-insensitive, NFS might break the symlinks if you cd into the wrong casing and you power the vagrant up. Just be sure to cd in to the casing the directory was originally created as.
- 1. If a during a vagrant reload, the following message appears:
+ 1. If during a vagrant reload, the following message appears:
  
     >There was a problem while downloading the metadata for your box
     to check for updates. This is not an error, since it is usually due
