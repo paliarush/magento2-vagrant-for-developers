@@ -361,4 +361,18 @@ Note: See [Working with npm](https://www.npmjs.com/package/n#working-with-npm) i
  1. If code is not synchronized properly on Windows hosts (or when NFS mode is disabled in [config.yaml](etc/config.yaml.dist) explicitly), make sure that PhpStorm is running before making any changes in the code. This is important because otherwise PhpStorm will not be able to detect changes and upload them to the guest machine
  1. Please make sure that currently installed software, specified in [requirements section](#requirements), meets minimum version requirement
  1. Be careful if your OS is case-insensitive, NFS might break the symlinks if you cd into the wrong casing and you power the vagrant up. Just be sure to cd in to the casing the directory was originally created as.
-
+ 1. If during a vagrant reload, the following message appears:
+ 
+    >There was a problem while downloading the metadata for your box
+    to check for updates. This is not an error, since it is usually due
+    to temporary network problems. This is just a warning. The problem
+    encountered was:
+    The requested URL returned error: 404 Not Found
+    
+    It is likely that your vagrant cli is caching an old url. Perform the following cli commands:
+    
+    ```bash
+    sed -i -- 's/atlas.hashicorp/vagrantcloud/g' ~/.vagrant.d/boxes/{name of your paliarush/ubuntu image}/metadata_url
+    mv ~/.vagrant.d/boxes/{name of your paliarush/ubuntu image}/metadata_url2 ~/.vagrant.d/boxes/{name of your paliarush/ubuntu image}/metadata_url
+    ``` 
+    

@@ -5,6 +5,7 @@ composer_project:
   # Current section used only if 'checkout_source_from' is set to 'composer'
 
   # [To apply changes: init_project.sh -fc]
+  # Custom version can be provided by using '={version}' appended to repo name. E.g. name: "magento/project-community-edition=2.2.0". Otherwise, default version is used
   name: "magento/project-community-edition"
   # Make sure to specify valid keys for this repository in etc/composer/auth.json
   url: "https://repo.magento.com"
