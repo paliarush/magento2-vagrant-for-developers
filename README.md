@@ -362,6 +362,7 @@ Note: See [Working with npm](https://www.npmjs.com/package/n#working-with-npm) i
  1. Please make sure that currently installed software, specified in [requirements section](#requirements), meets minimum version requirement
  1. Be careful if your OS is case-insensitive, NFS might break the symlinks if you cd into the wrong casing and you power the vagrant up. Just be sure to cd in to the casing the directory was originally created as.
  1. Cannot run unit tests from PHPStorm on Magento 2.2, see possible solution [here](https://github.com/paliarush/magento2-vagrant-for-developers/issues/167)
+ 1. [Permission denied (publickey)](https://github.com/paliarush/magento2-vagrant-for-developers/issues/165)
  1. If during a vagrant reload, the following message appears:
  
     >There was a problem while downloading the metadata for your box
