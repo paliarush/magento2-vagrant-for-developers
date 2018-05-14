@@ -34,6 +34,9 @@ if [[ ${is_windows_host} == 1 ]] || [[ ${use_nfs} == 0 ]]; then
     sudo chown -R vagrant:vagrant ${MAGENTO_ROOT}
 fi
 
+status "Killing MQ processes"
+pkill -f queue
+
 status "Installing/re-installing Magento"
 incrementNestingLevel
 
