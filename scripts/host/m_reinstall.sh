@@ -8,8 +8,8 @@ magento_app_code_dir="${vagrant_dir}/magento2ce/app/code/Magento"
 
 cd "${magento_app_code_dir}"
 
-echo "Deleting TestModule directories"
-ls | grep "TestModule" | xargs rm -rf 2> >(logError)
+status "Deleting TestModule directories"
+ls | grep "TestModule" | xargs rm -rf
 
 cd "${vagrant_dir}"
 vagrant ssh -c "bash /vagrant/scripts/guest/m-reinstall" 2> >(logError)
