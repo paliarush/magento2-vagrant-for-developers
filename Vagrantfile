@@ -4,6 +4,7 @@
 Vagrant.require_version ">= 1.8"
 
 require 'yaml'
+require 'vagrant/util/deep_merge'
 
 module OS
     def OS.is_windows
@@ -20,7 +21,7 @@ module Config
 
         config_data_dist = YAML.load_file(config_dist_file)
         config_data = File.exists?(config_file) ? YAML.load_file(config_file) : {}
-        return config_data_dist.deep_merge!(config_data)
+        return Vagrant::Util::DeepMerge.deep_merge(config_data_dist, config_data)
     end
 end
 
