@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+vagrant_dir="/vagrant"
+
+source "${vagrant_dir}/scripts/output_functions.sh"
+
+magento_context=$@
+
+status "Setting context to '${magento_context}'"
+incrementNestingLevel
+
+echo "${magento_context}" > "${MAGENTO_FILES_PATH}/current-context.txt"
+
+instance_path="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_context_${magento_context}_path")"
+export MAGENTO_ROOT="${MAGENTO_FILES_PATH}/instances/${instance_path}"
+export MAGENTO_ROOT_HOST="${MAGENTO_FILES_PATH_HOST}/instances/${instance_path}"
+
+sudo sed -i "/MAGENTO_ROOT/d" "/etc/profile"
+echo "export MAGENTO_ROOT=\"${MAGENTO_FILES_PATH}/instances/${instance_path}\"" | sudo tee --append /etc/profile > /dev/null
+echo "export MAGENTO_ROOT_HOST=\"${MAGENTO_FILES_PATH_HOST}/instances/${instance_path}\"" | sudo tee --append /etc/profile > /dev/null
+
+decrementNestingLevel

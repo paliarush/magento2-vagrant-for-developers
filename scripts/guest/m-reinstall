@@ -10,6 +10,10 @@ use_nfs="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")"
 is_windows_host=${IS_WINDOWS_HOST}
 generate_basic_data="$(bash ${get_config_value} "magento_generate_basic_data")"
 
+magento_context="$(bash "${vagrant_dir}/scripts/guest/get_magento_context")"
+magento_instance_path="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_context_${magento_context}_path")"
+magento_instance_db_name="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_context_${magento_context}_db_name")"
+
 declare -A setupOptions
 setupOptions[admin_frontname]="$(bash ${get_config_value} "magento_admin_frontname")"
 setupOptions[language]="$(bash ${get_config_value} "magento_language")"
@@ -18,9 +22,9 @@ setupOptions[currency]="$(bash ${get_config_value} "magento_currency")"
 setupOptions[admin_user]="$(bash ${get_config_value} "magento_admin_user")"
 setupOptions[admin_password]="$(bash ${get_config_value} "magento_admin_password")"
 setupOptions[db_host]='localhost'
-setupOptions[db_name]='magento'
+setupOptions[db_name]="${magento_instance_db_name}"
 setupOptions[db_user]='root'
-setupOptions[base_url]="http://${magento_host_name}/"
+setupOptions[base_url]="http://${magento_host_name}/${magento_instance_path}/"
 setupOptions[admin_lastname]='Admin'
 setupOptions[admin_firstname]='Admin'
 setupOptions[admin_email]='admin@example.com'

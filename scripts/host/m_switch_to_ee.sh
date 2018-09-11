@@ -7,7 +7,10 @@ source "${vagrant_dir}/scripts/output_functions.sh"
 status "Switching to Magento EE"
 incrementNestingLevel
 
-magento_ce_dir="${vagrant_dir}/magento2ce"
+magento_context="$(bash "${vagrant_dir}/scripts/host/get_magento_context.sh")"
+instance_path="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_context_${magento_context}_path")"
+magento_ce_dir="${vagrant_dir}/magento/instances/${instance_path}"
+
 magento_ee_dir="${magento_ce_dir}/magento2ee"
 host_os="$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")"
 php_executable="$(bash "${vagrant_dir}/scripts/host/get_path_to_php.sh")"

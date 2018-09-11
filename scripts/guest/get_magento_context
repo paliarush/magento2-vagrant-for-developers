@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# remove special characters if any
+tr -cd "[:print:]\n" < "${MAGENTO_FILES_PATH}/current-context.txt"

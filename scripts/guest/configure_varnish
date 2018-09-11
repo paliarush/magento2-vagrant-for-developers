@@ -38,7 +38,10 @@ if [[ $use_varnish == 1 ]]; then
     fi
 
     status "Updating Magento database to use varnish FPC"
-    mysql -D magento -e "INSERT INTO core_config_data
+
+    magento_context="$(bash "${vagrant_dir}/scripts/guest/get_magento_context")"
+    magento_instance_db_name="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_context_${magento_context}_db_name")"
+    mysql -D ${magento_instance_db_name} -e "INSERT INTO core_config_data
         ( scope, scope_id, path, value ) VALUES
         ( 'default', '0', 'system/full_page_cache/caching_application', '2' )
          ON DUPLICATE KEY UPDATE value = 2
@@ -59,7 +62,9 @@ else
     fi
 
     status "Updating Magento database to not use varnish FPC"
-    mysql -D magento -e "INSERT INTO core_config_data
+    magento_context="$(bash "${vagrant_dir}/scripts/guest/get_magento_context")"
+    magento_instance_db_name="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_context_${magento_context}_db_name")"
+    mysql -D ${magento_instance_db_name} -e "INSERT INTO core_config_data
         ( scope, scope_id, path, value ) VALUES
         ( 'default', '0', 'system/full_page_cache/caching_application', '1' )
          ON DUPLICATE KEY UPDATE value = 1

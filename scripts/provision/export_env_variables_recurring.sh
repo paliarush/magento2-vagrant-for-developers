@@ -17,9 +17,9 @@ if ! cat /etc/profile | grep -q 'export PATH=' ; then
     echo "export PATH=\$PATH:${vagrant_dir}/scripts/guest:$\"{guest_magento_dir}/bin\"" >> /etc/profile
 fi
 
-if ! cat /etc/profile | grep -q 'export MAGENTO_ROOT=' ; then
-    echo "export MAGENTO_ROOT=\"${guest_magento_dir}\"" >> /etc/profile
-    echo "export MAGENTO_ROOT_HOST=\"${host_magento_dir}\"" >> /etc/profile
+if ! cat /etc/profile | grep -q 'export MAGENTO_FILES_PATH=' ; then
+    echo "export MAGENTO_FILES_PATH=\"${guest_magento_dir}\"" >> /etc/profile
+    echo "export MAGENTO_FILES_PATH_HOST=\"${host_magento_dir}\"" >> /etc/profile
     echo "export IS_WINDOWS_HOST=${is_windows_host}" >> /etc/profile
 fi
 
@@ -27,5 +27,9 @@ if ! cat /etc/profile | grep -q 'export VAGRANT_ROOT=' ; then
     echo "export VAGRANT_ROOT=${vagrant_dir}" >> /etc/profile
     echo "export VAGRANT_ROOT_HOST=\"${host_vagrant_dir}\"" >> /etc/profile
 fi
+
+# re-initialize environment variables based on the last context used
+magento_context="$(bash "${vagrant_dir}/scripts/guest/get_magento_context")"
+bash "${vagrant_dir}/scripts/guest/set_magento_context" "${magento_context}"
 
 decrementNestingLevel

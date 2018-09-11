@@ -37,7 +37,7 @@ guest_cpus = config_data['guest']['cpus']
 use_nfs_for_synced_folders = !OS.is_windows && (config_data['guest']['use_nfs'] == 1)
 
 host_vagrant_dir = Dir.pwd + ''
-host_magento_dir = host_vagrant_dir + '/magento2ce'
+host_magento_dir = host_vagrant_dir + '/magento'
 
 VAGRANT_API_VERSION = 2
 Vagrant.configure(VAGRANT_API_VERSION) do |config|

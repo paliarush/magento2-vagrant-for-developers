@@ -37,10 +37,10 @@ host_os="$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")"
 if [[ $(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_composer_prefer_source") == 1 ]]; then
     # prefer-source is slow but guarantees that there will be no issues related to max path length on Windows
     status "composer --ignore-platform-reqs --prefer-source --no-interaction "$@""
-    "${php_executable}" "${composer_phar}" --ignore-platform-reqs --prefer-source --no-interaction "$@" 2> >(log) > >(log)
+    "${php_executable}" -d memory_limit=2G "${composer_phar}" --ignore-platform-reqs --prefer-source --no-interaction "$@" 2> >(log) > >(log)
 else
     status "composer --ignore-platform-reqs --no-interaction "$@""
-    "${php_executable}" "${composer_phar}" --ignore-platform-reqs --no-interaction "$@" 2> >(log) > >(log)
+    "${php_executable}" -d memory_limit=2G "${composer_phar}" --ignore-platform-reqs --no-interaction "$@" 2> >(log) > >(log)
 fi
 
 decrementNestingLevel
