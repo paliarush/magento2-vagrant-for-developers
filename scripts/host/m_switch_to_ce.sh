@@ -29,6 +29,51 @@ while getopts 'fu' flag; do
 done
 
 if [[ "${checkout_source_from}" == "git" ]]; then
+
+    # BEGIN: Copy base project files
+    status "Copying project base files"
+    rm -rf "${magento_ce_dir}/app" && mkdir "${magento_ce_dir}/app"
+    rsync -a "${vagrant_dir}/magento/sources/magento2ce/app/etc/" "${magento_ce_dir}/app/etc"
+    find "${vagrant_dir}/magento/sources/magento2ce/app" -maxdepth 1 -type f | xargs -I {} cp {} "${magento_ce_dir}/app"
+
+
+    rm -rf "${magento_ce_dir}/bin" && mkdir "${magento_ce_dir}/bin"
+    rsync -a "${vagrant_dir}/magento/sources/magento2ce/bin/" "${magento_ce_dir}/bin"
+
+    rm -rf "${magento_ce_dir}/lib" && mkdir "${magento_ce_dir}/lib"
+    rsync -a "${vagrant_dir}/magento/sources/magento2ce/lib/web/" "${magento_ce_dir}/lib/web"
+    mkdir -p "${magento_ce_dir}/lib/internal/LinLibertineFont"
+    rsync -a "${vagrant_dir}/magento/sources/magento2ce/lib/internal/LinLibertineFont/" "${magento_ce_dir}/lib/internal/LinLibertineFont"
+    find "${vagrant_dir}/magento/sources/magento2ce/lib" -maxdepth 1 -type f | xargs -I {} cp {} "${magento_ce_dir}/lib"
+
+
+    rm -rf "${magento_ce_dir}/phpserver" && mkdir "${magento_ce_dir}/phpserver"
+    rsync -a "${vagrant_dir}/magento/sources/magento2ce/phpserver/" "${magento_ce_dir}/phpserver"
+
+    rm -rf "${magento_ce_dir}/pub" && mkdir "${magento_ce_dir}/pub"
+    find "${vagrant_dir}/magento/sources/magento2ce/pub" -maxdepth 1 -type f | xargs -I {} cp {} "${magento_ce_dir}/pub"
+    mkdir -p "${magento_ce_dir}/pub/static"
+    find "${vagrant_dir}/magento/sources/magento2ce/pub/static" -maxdepth 1 -type f | xargs -I {} cp {} "${magento_ce_dir}/pub/static"
+    mkdir -p "${magento_ce_dir}/pub/media"
+    find "${vagrant_dir}/magento/sources/magento2ce/pub/media" -maxdepth 1 -type f | xargs -I {} cp {} "${magento_ce_dir}/pub/media"
+    rsync -a "${vagrant_dir}/magento/sources/magento2ce/pub/errors/" "${magento_ce_dir}/pub/errors"
+
+    rm -rf "${magento_ce_dir}/setup" && mkdir "${magento_ce_dir}/setup"
+    rsync -a "${vagrant_dir}/magento/sources/magento2ce/setup/" "${magento_ce_dir}/setup"
+
+    rm -rf "${magento_ce_dir}/var" && mkdir "${magento_ce_dir}/var"
+    cp "${vagrant_dir}/magento/sources/magento2ce/var/.htaccess" "${magento_ce_dir}/var/.htaccess"
+
+    rm -rf "${magento_ce_dir}/generated" && mkdir "${magento_ce_dir}/generated"
+    cp "${vagrant_dir}/magento/sources/magento2ce/generated/.htaccess" "${magento_ce_dir}/generated/.htaccess"
+
+    rm -rf "${magento_ce_dir}/vendor" && mkdir "${magento_ce_dir}/vendor"
+    cp "${vagrant_dir}/magento/sources/magento2ce/vendor/.htaccess" "${magento_ce_dir}/vendor/.htaccess"
+
+    rm `find "${magento_ce_dir}" -maxdepth 1 -type f ! -name "composer.json" `
+    find "${vagrant_dir}/magento/sources/magento2ce/" -maxdepth 1 -type f ! -name "composer.*" | xargs -I {} cp {} "${magento_ce_dir}"
+    # END: Copy base project files
+
     # Current installation is Git-based
     if [[ ! -f ${magento_ee_dir}/LICENSE_EE.txt ]]; then
         if [[ ${force_switch} -eq 0 ]]; then
