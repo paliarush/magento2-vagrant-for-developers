@@ -4,7 +4,10 @@ vagrant_dir="/vagrant"
 
 source "${vagrant_dir}/scripts/output_functions.sh"
 
-host_name="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_host_name")"
+magento_context="$(bash "${vagrant_dir}/scripts/guest/get_magento_context")"
+magento_instance_path="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_context_${magento_context}_path")"
+
+host_name="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_host_name")/${magento_instance_path}"
 
 status "Generating sample data"
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 use_nfs_for_synced_folders=$1
-guest_magento_dir=$2
+guest_magento_dir="${2}/instances"
 magento_host_name=$3
 use_php7=$4
-host_magento_dir=$5
+host_magento_dir="${5}/instances"
 is_windows_host=$6
 
 vagrant_dir="/vagrant"
