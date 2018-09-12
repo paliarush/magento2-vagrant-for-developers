@@ -172,4 +172,9 @@ echo "zend_extension=xdebug.so" >> /etc/php/7.0/cli/conf.d/20-xdebug.ini
 status "Fixing potential issue with MySQL being down after VM power off"
 service mysql restart 2> >(logError) > >(log)
 
+status "Checking for composer updates"
+chmod a+w "/home/vagrant/.composer/" 2> >(logError) > >(log)
+composer self-update 2> >(logError) > >(log)
+composer global require hirak/prestissimo 2> >(logError) > >(log)
+
 decrementNestingLevel

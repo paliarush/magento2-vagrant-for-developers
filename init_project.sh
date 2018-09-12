@@ -20,10 +20,10 @@ if [[ ! -f "${config_path}" ]]; then
     cp "${config_path}.dist" "${config_path}"
 fi
 
-magento_ce_dir="${vagrant_dir}/magento2ce"
-magento_ce_sample_data_dir="${magento_ce_dir}/magento2ce-sample-data"
-magento_ee_dir="${magento_ce_dir}/magento2ee"
-magento_ee_sample_data_dir="${magento_ce_dir}/magento2ee-sample-data"
+magento_ce_dir="${vagrant_dir}/magento/sources/magento2ce"
+magento_ce_sample_data_dir="${magento_ce_dir}/magento/sources/magento2ce-sample-data"
+magento_ee_dir="${magento_ce_dir}/magento/sources/magento2ee"
+magento_ee_sample_data_dir="${magento_ce_dir}/magento/sources/magento2ee-sample-data"
 host_os="$(bash "${vagrant_dir}/scripts/host/get_host_os.sh")"
 use_nfs="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")"
 repository_url_ce="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "repository_url_ce")"
