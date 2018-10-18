@@ -39,6 +39,7 @@ incompatible_magento_version_pattern='"version": "2.0.[0-5]'
 if [[ ${cache_backend} == "redis" ]] && [[ ! ${magento_composer_content} =~ ${incompatible_magento_version_pattern} ]]; then
     status "Using Redis backend for caching"
     perl -i -p0e "s/\n*\);/${redis_configuration});/smg" "${MAGENTO_ROOT}/app/etc/env.php"
+    perl -i -p0e "s/\n*\];/${redis_configuration}];/smg" "${MAGENTO_ROOT}/app/etc/env.php"
     redis-cli flushall 2> >(logError) > >(log)
 else
     status "Using file system backend for caching"
