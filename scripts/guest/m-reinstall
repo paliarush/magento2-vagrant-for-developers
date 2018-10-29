@@ -46,6 +46,9 @@ status "Removing Magento configuration files (env.php and config.php)"
 rm -f "${MAGENTO_ROOT}/app/etc/config.php"
 rm -f "${MAGENTO_ROOT}/app/etc/env.php"
 
+status "Restoring stored in git config.php (if applicable)"
+git checkout "${MAGENTO_ROOT}/app/etc/config.php" &>/dev/null
+
 bash m-clear-cache
 # Cache cleaning takes 5-10 seconds and should be avoided until the end of installation to speed up the process
 export SKIP_CACHE_CLEAN=1
