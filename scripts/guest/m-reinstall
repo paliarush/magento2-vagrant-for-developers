@@ -80,7 +80,7 @@ install_cmd="./bin/magento setup:install \
     --use-rewrites=1"
 
 # Configure Rabbit MQ
-if [[ -d "${MAGENTO_ROOT}/app/code/Magento/MessageQueue" ]] || [[ -d "${MAGENTO_ROOT}/vendor/magento/magento-message-queue" ]]; then
+if [[ -d "${MAGENTO_ROOT}/app/code/Magento/MessageQueue" ]] || [[ -d "${MAGENTO_ROOT}/vendor/magento/module-message-queue" ]]; then
     install_cmd="${install_cmd} \
     --amqp-host=${setupOptions[amqp_host]} \
     --amqp-port=${setupOptions[amqp_port]} \
