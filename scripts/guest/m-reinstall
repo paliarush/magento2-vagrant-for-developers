@@ -46,6 +46,9 @@ status "Removing Magento configuration files (env.php and config.php)"
 rm -f "${MAGENTO_ROOT}/app/etc/config.php"
 rm -f "${MAGENTO_ROOT}/app/etc/env.php"
 
+status "Restoring stored in git config.php (if applicable)"
+git checkout "${MAGENTO_ROOT}/app/etc/config.php" &>/dev/null
+
 bash m-clear-cache
 # Cache cleaning takes 5-10 seconds and should be avoided until the end of installation to speed up the process
 export SKIP_CACHE_CLEAN=1
@@ -77,7 +80,7 @@ install_cmd="./bin/magento setup:install \
     --use-rewrites=1"
 
 # Configure Rabbit MQ
-if [[ -d "${MAGENTO_ROOT}/app/code/Magento/MessageQueue" ]] || [[ -d "${MAGENTO_ROOT}/vendor/magento/magento-message-queue" ]]; then
+if [[ -d "${MAGENTO_ROOT}/app/code/Magento/MessageQueue" ]] || [[ -d "${MAGENTO_ROOT}/vendor/magento/module-message-queue" ]]; then
     install_cmd="${install_cmd} \
     --amqp-host=${setupOptions[amqp_host]} \
     --amqp-port=${setupOptions[amqp_port]} \
