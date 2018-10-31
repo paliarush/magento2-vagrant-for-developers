@@ -33,7 +33,7 @@ redis_configuration=",
 "
 
 # Removing existing configuration
-perl -i -p0e "s/,\s*'cache'.*\],/,/smg" "${MAGENTO_ROOT}/app/etc/env.php"
+perl -i -p0e "s/,\s*'cache'.*,/,/smg" "${MAGENTO_ROOT}/app/etc/env.php"
 
 incompatible_magento_version_pattern='"version": "2.0.[0-5]'
 if [[ ${cache_backend} == "redis" ]] && [[ ! ${magento_composer_content} =~ ${incompatible_magento_version_pattern} ]]; then
