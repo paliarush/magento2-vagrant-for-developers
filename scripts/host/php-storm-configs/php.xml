@@ -2,17 +2,17 @@
 <project version="4">
   <component name="PhpUnit">
     <phpunit_settings>
-      <PhpUnitSettings load_method="CUSTOM_LOADER" custom_loader_path="$PROJECT_DIR$/magento2ce/vendor/phpunit/phpunit/phpunit" phpunit_phar_path="" />
+      <PhpUnitSettings load_method="CUSTOM_LOADER" custom_loader_path="$PROJECT_DIR$/magento/vendor/phpunit/phpunit/phpunit" phpunit_phar_path="" />
     </phpunit_settings>
   </component>
   <component name="MessDetector">
     <phpmd_settings>
-      <MessDetectorConfiguration tool_path="$USER_HOME$/PhpstormProjects/magento2-vagrant/magento2ce/vendor/phpmd/phpmd/src/bin/phpmd" />
+      <MessDetectorConfiguration tool_path="$USER_HOME$/PhpstormProjects/magento2-vagrant/magento/vendor/phpmd/phpmd/src/bin/phpmd" />
     </phpmd_settings>
   </component>
   <component name="PhpCodeSniffer">
     <phpcs_settings>
-      <PhpCSConfiguration standards="MySource;PEAR;PHPCS;PSR1;PSR2;Squiz;Zend" tool_path="$USER_HOME$/PhpstormProjects/magento2-vagrant/magento2ce/vendor/squizlabs/php_codesniffer/scripts/phpcs" />
+      <PhpCSConfiguration standards="MySource;PEAR;PHPCS;PSR1;PSR2;Squiz;Zend" tool_path="$USER_HOME$/PhpstormProjects/magento2-vagrant/magento/vendor/squizlabs/php_codesniffer/scripts/phpcs" />
     </phpcs_settings>
   </component>
   <component name="PhpInterpreters">

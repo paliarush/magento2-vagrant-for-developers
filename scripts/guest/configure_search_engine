@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
 # Init environment variables
-vagrant_dir="/vagrant"
+vagrant_dir="/var/www/html"
 
 source "${vagrant_dir}/scripts/output_functions.sh"
 
 status "Configuring search engine according to config.yaml"
 incrementNestingLevel
 
-if [[ -z "$(grep "search_engine:" /vagrant/etc/config.yaml)" ]]; then
-    sed -i '/environment:/a \ \ search_engine: "mysql"' /vagrant/etc/config.yaml
+if [[ -z "$(grep "search_engine:" /var/www/html/etc/config.yaml)" ]]; then
+    sed -i '/environment:/a \ \ search_engine: "mysql"' /var/www/html/etc/config.yaml
 fi
 
 if [[ -f "${MAGENTO_ROOT}/LICENSE_EE.txt" ]]; then

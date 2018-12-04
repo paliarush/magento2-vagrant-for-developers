@@ -59,7 +59,8 @@ function log() {
         else
             log_file="${default_log}"
         fi
-        echo "${input}" | sed "s/\[[[:digit:]]\{1,\}m//g" >> "${log_file}"
+        # TODO: fix
+#        echo "${input}" | sed "s/\[[[:digit:]]\{1,\}m//g" >> "${log_file}"
     fi
 }
 
@@ -113,7 +114,10 @@ function outputInfoOnly()
 function incrementNestingLevel()
 {
     if [[ ! -f "${nesting_level_file}" ]]; then
-        echo 1 > "${nesting_level_file}"
+    # TODO: Fix input/output error
+#        echo 1 > "${nesting_level_file}"
+#        chmod a+w "${nesting_level_file}"
+        echo "TODO: Fix nesting level"
     else
         nesting_level="$(cat "${nesting_level_file}")"
         nesting_level="$((${nesting_level}+1))"
@@ -148,6 +152,8 @@ function initLogFile()
     fi
     echo "log/${log_file}.log" > "${log_file_path}"
     rm -f "${vagrant_dir}/log/${log_file}.log"
+    touch "${vagrant_dir}/log/${log_file}.log"
+    chmod a+w "${vagrant_dir}/log/${log_file}.log"
 }
 
 function getIndentationByNesting()

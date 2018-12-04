@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-vagrant_dir="/vagrant"
+vagrant_dir="/var/www/html"
 
 source "${vagrant_dir}/scripts/output_functions.sh"
 
@@ -14,8 +14,8 @@ if [[ ! -f "${MAGENTO_ROOT}/bin/magento" ]]; then
     exit 1
 fi
 
-if [[ ! -f "/vagrant/etc/config.yaml" ]]; then
-    error "Directory '/vagrant/etc' was not mounted as expected by Vagrant and is not accessible on the guest machine.
+if [[ ! -f "/var/www/html/etc/config.yaml" ]]; then
+    error "Directory '/var/www/html/etc' was not mounted as expected by Vagrant and is not accessible on the guest machine.
         Please make sure that Vagrant is able to mount VirtualBox shared folders on your environment (see https://www.vagrantup.com/docs/synced-folders/basic_usage.html ).
         Also remove any stale declarations from /etc/exports on the host."
     exit 1

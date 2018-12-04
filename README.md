@@ -378,3 +378,20 @@ Note: See [Working with npm](https://www.npmjs.com/package/n#working-with-npm) i
     mv ~/.vagrant.d/boxes/{name of your paliarush/ubuntu image}/metadata_url2 ~/.vagrant.d/boxes/{name of your paliarush/ubuntu image}/metadata_url
     ``` 
     
+# Kubernetes
+
+All the commands should be executed in the root of the project:
+1. `cd scripts && eval $(minikube docker-env) && docker build -t magento2-kubernetes:dev -f ./Dockerfile ../scripts`
+1. To load local image must have it specified in the `magento2-deployment.yaml` with pull image policy set to `Never`: `kubectl delete deployment magento2 && python local_deploy.py --all --ingress`
+
+## Login to containers
+
+1. Get list of available pods `kubectl get pods`
+2. Login to Magento container on magento2 pod `kubectl exec -it <magento2-pod> --container magento2 -- /bin/bash`
+2. Login to Nginx container on magento2 pod `kubectl exec -it <magento2-pod> --container nginx -- /bin/bash`
+2. Login to MySQL container on mysql pod `kubectl exec -it <mysql-pod> /bin/bash`
+
+
+## Manual steps (workarounds)
+1. `find . -print -exec chmod a+w {} \;` needed to allow write permissions over NFS since users are different on the guest and host
+2. `chmod a+x magento/bin/magento`

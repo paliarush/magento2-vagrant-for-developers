@@ -7,7 +7,7 @@ use_php7=$4
 host_magento_dir=$5
 is_windows_host=$6
 
-vagrant_dir="/vagrant"
+vagrant_dir="/var/www/html"
 
 source "${vagrant_dir}/scripts/output_functions.sh"
 
@@ -35,11 +35,11 @@ status "Configuring composer"
 composer_auth_json="${vagrant_dir}/etc/composer/auth.json"
 if [[ -f ${composer_auth_json} ]]; then
     status "Installing composer OAuth tokens from ${composer_auth_json}"
-    if [[ ! -d /home/vagrant/.composer ]] ; then
-        sudo -H -u vagrant bash -c 'mkdir /home/vagrant/.composer' 2> >(logError) > >(log)
+    if [[ ! -d /home/var/www/html/.composer ]] ; then
+        sudo -H -u vagrant bash -c 'mkdir /home/var/www/html/.composer' 2> >(logError) > >(log)
     fi
     if [[ -f ${composer_auth_json} ]]; then
-        cp "${composer_auth_json}" "/home/vagrant/.composer/auth.json"
+        cp "${composer_auth_json}" "/home/var/www/html/.composer/auth.json"
     fi
 fi
 

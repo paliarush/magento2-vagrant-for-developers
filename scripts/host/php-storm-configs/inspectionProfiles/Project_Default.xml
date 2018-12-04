@@ -8,7 +8,7 @@
           <list>
             <RulesetDescriptor>
               <option name="name" value="Magento PHPMD rule set" />
-              <option name="path" value="$PROJECT_DIR$/magento2ce/dev/tests/static/testsuite/Magento/Test/Php/_files/phpmd/ruleset.xml" />
+              <option name="path" value="$PROJECT_DIR$/magento/dev/tests/static/testsuite/Magento/Test/Php/_files/phpmd/ruleset.xml" />
             </RulesetDescriptor>
           </list>
         </option>
@@ -17,7 +17,7 @@
         <list>
           <RulesetDescriptor>
             <option name="name" value="Magento PHPMD rule set" />
-            <option name="path" value="$PROJECT_DIR$/magento2ce/dev/tests/static/testsuite/Magento/Test/Php/_files/phpmd/ruleset.xml" />
+            <option name="path" value="$PROJECT_DIR$/magento/dev/tests/static/testsuite/Magento/Test/Php/_files/phpmd/ruleset.xml" />
           </RulesetDescriptor>
         </list>
       </option>

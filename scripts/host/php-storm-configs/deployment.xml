@@ -5,11 +5,11 @@
       <paths name="<host_name>">
         <serverdata>
           <mappings>
-            <mapping deploy="<magento_guest_path>" local="$PROJECT_DIR$/magento2ce" web="/" />
+            <mapping deploy="<magento_guest_path>" local="$PROJECT_DIR$/magento" web="/" />
           </mappings>
           <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/magento2ce/app/etc" />
-            <excludedPath local="true" path="$PROJECT_DIR$/magento2ce/var" />
+            <excludedPath local="true" path="$PROJECT_DIR$/magento/app/etc" />
+            <excludedPath local="true" path="$PROJECT_DIR$/magento/var" />
           </excludedPaths>
         </serverdata>
       </paths>

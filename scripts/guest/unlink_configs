@@ -7,7 +7,7 @@ function process_configs () {
     do
         if [[ -L ${config_dir}/${config} ]] && [[ -e ${config_dir}/${config} ]]; then
             sudo rm ${config_dir}/${config}
-            sudo mv /vagrant/etc/guest/${config} ${config_dir}/${config}
+            sudo mv /var/www/html/etc/guest/${config} ${config_dir}/${config}
         elif [[ ! -e ${config_dir}/${config} ]] && [[ -e "${config_dir}/${config}.back" ]]; then
             sudo rm -rf ${config_dir}/${config}
             sudo cp -rp "${config_dir}/${config}.back" ${config_dir}/${config}
@@ -15,7 +15,7 @@ function process_configs () {
     done
 }
 
-vagrant_dir="/vagrant"
+vagrant_dir="/var/www/html"
 
 source "${vagrant_dir}/scripts/output_functions.sh"
 

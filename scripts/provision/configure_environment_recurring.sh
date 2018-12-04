@@ -45,7 +45,7 @@ if [[ -z ${php_version} ]]; then
 fi
 
 
-vagrant_dir="/vagrant"
+vagrant_dir="/var/www/html"
 
 source "${vagrant_dir}/scripts/output_functions.sh"
 
@@ -66,7 +66,7 @@ update-rc.d unlink-configs defaults 04 2> >(log) > >(log)
 
 status "Upgrading existing environment"
 if [[ -f "${vagrant_dir}/.idea/deployment.xml" ]]; then
-    sed -i.back "s|magento2ce/var/generation|magento2ce/var|g" "${vagrant_dir}/.idea/deployment.xml"
+    sed -i.back "s|magento/var/generation|magento/var|g" "${vagrant_dir}/.idea/deployment.xml"
 fi
 
 status "Copying varnish vcl file"
@@ -111,7 +111,7 @@ php_ini_file="/etc/php/${php_version}/cli/php.ini"
 pattern=";sendmail_path"
 php_config_content="$(cat ${php_ini_file})"
 if [[ ${php_config_content} =~ ${pattern} ]]; then
-    sed -i "s|;sendmail_path =|sendmail_path = \"/vagrant/scripts/guest/log_email ${vagrant_dir}/log/email\"|g" ${php_ini_file}
+    sed -i "s|;sendmail_path =|sendmail_path = \"/var/www/html/scripts/guest/log_email ${vagrant_dir}/log/email\"|g" ${php_ini_file}
     service apache2 restart 2> >(logError) > >(log)
 fi
 
