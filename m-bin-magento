@@ -4,7 +4,7 @@ set -e
 
 cd "$(dirname "${BASH_SOURCE[0]}")" && vagrant_dir=$PWD
 
-source "${vagrant_dir}/scripts/output_functions.sh"
+source "${vagrant_dir}/scripts/functions.sh"
 resetNestingLevel
 current_script_name=`basename "$0"`
 initLogFile ${current_script_name}
@@ -16,7 +16,7 @@ fi
 
 arguments=$@
 cd "${vagrant_dir}"
-vagrant ssh -c "\$MAGENTO_ROOT/bin/magento $arguments" 2> >(logError)
+executeInMagento2Container php -- "/var/www/html/magento/bin/magento" ${arguments} 2> >(logError)
 # To debug, comment out line above and uncomment line below
 # vagrant ssh -c "php -d xdebug.remote_autostart=1 \$MAGENTO_ROOT/bin/magento $arguments" 2> >(logError)
 

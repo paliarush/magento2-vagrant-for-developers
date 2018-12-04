@@ -2,7 +2,7 @@
 
 vagrant_dir="/var/www/html"
 
-source "${vagrant_dir}/scripts/output_functions.sh"
+source "${vagrant_dir}/scripts/functions.sh"
 
 status "Configuring Varnish FPC according to config.yaml"
 incrementNestingLevel
@@ -38,7 +38,8 @@ if [[ $use_varnish == 1 ]]; then
     fi
 
     status "Updating Magento database to use varnish FPC"
-    mysql -D magento -e "INSERT INTO core_config_data
+    # TODO: Make credentials configurable
+    mysql -u"root" -p"1234" -h"magento2-mysql" -D magento -e "INSERT INTO core_config_data
         ( scope, scope_id, path, value ) VALUES
         ( 'default', '0', 'system/full_page_cache/caching_application', '2' )
          ON DUPLICATE KEY UPDATE value = 2
@@ -59,7 +60,7 @@ else
     fi
 
     status "Updating Magento database to not use varnish FPC"
-    mysql -D magento -e "INSERT INTO core_config_data
+    mysql -u"root" -p"1234" -h"magento2-mysql" -D magento -e "INSERT INTO core_config_data
         ( scope, scope_id, path, value ) VALUES
         ( 'default', '0', 'system/full_page_cache/caching_application', '1' )
          ON DUPLICATE KEY UPDATE value = 1

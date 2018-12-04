@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -e
+
+cd "$(dirname "${BASH_SOURCE[0]}")" && vagrant_dir=$PWD
+
+source "${vagrant_dir}/scripts/functions.sh"
+
+kubectl exec -it "$(getMysqlPodId)" --container mysql -- /bin/bash

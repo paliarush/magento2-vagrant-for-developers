@@ -8,7 +8,7 @@ is_windows_host=$6
 host_vagrant_dir=$7
 vagrant_dir="/vagrant"
 
-source "${vagrant_dir}/scripts/output_functions.sh"
+source "${vagrant_dir}/scripts/functions.sh"
 
 status "Exporting environment variables"
 incrementNestingLevel

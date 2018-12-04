@@ -2,7 +2,7 @@
 
 vagrant_dir="/var/www/html"
 
-source "${vagrant_dir}/scripts/output_functions.sh"
+source "${vagrant_dir}/scripts/functions.sh"
 
 debug_magento_storefront="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_magento_storefront")"
 if [[ ${debug_magento_storefront} == 1 ]]; then

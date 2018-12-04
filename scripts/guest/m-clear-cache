@@ -2,7 +2,7 @@
 
 vagrant_dir="/var/www/html"
 
-source "${vagrant_dir}/scripts/output_functions.sh"
+source "${vagrant_dir}/scripts/functions.sh"
 
 if [[ ${SKIP_CACHE_CLEAN} -eq 1 ]] ; then
     exit 0

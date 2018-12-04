@@ -2,7 +2,7 @@
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../.." && vagrant_dir=$PWD
 
-source "${vagrant_dir}/scripts/output_functions.sh"
+source "${vagrant_dir}/scripts/functions.sh"
 
 magento_ce_dir="${vagrant_dir}/magento"
 magento_ee_dir="${magento_ce_dir}/magento2ee"

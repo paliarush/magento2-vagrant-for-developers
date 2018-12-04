@@ -2,7 +2,7 @@
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../.." && vagrant_dir=$PWD
 
-source "${vagrant_dir}/scripts/output_functions.sh"
+source "${vagrant_dir}/scripts/functions.sh"
 
 cd "${vagrant_dir}"
 if [[ ! -f "${vagrant_dir}/etc/guest/mysql/my.cnf" ]]; then
@@ -12,6 +12,6 @@ if [[ ! -f "${vagrant_dir}/etc/guest/mysql/my.cnf" ]]; then
         Also remove any stale declarations from /etc/exports on the host."
     exit 1
 fi
-vagrant ssh -c "bash /var/www/html/scripts/guest/check_mounted_directories" 2> >(logError)
+executeInMagento2Container bash -- "/var/www/html/scripts/guest/check_mounted_directories" 2> >(logError)
 # Explicit exit is necessary to bypass incorrect output from vagrant in case of errors
 exit 0

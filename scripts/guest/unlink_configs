@@ -17,7 +17,7 @@ function process_configs () {
 
 vagrant_dir="/var/www/html"
 
-source "${vagrant_dir}/scripts/output_functions.sh"
+source "${vagrant_dir}/scripts/functions.sh"
 
 status "Reverting configs before shutdown or reboot to allow proper services initialization on booting"
 incrementNestingLevel

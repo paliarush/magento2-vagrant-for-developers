@@ -189,3 +189,19 @@ function bash()
 {
     $(which bash) "$@" 2> >(logError)
 }
+
+function getMagento2PodId()
+{
+    echo "$(kubectl get pods | grep -ohE 'magento2-[a-z0-9]{9}-[a-z0-9]{5}')"
+}
+
+function getMysqlPodId()
+{
+    echo "$(kubectl get pods | grep -ohE 'magento2-mysql-[a-z0-9]{9}-[a-z0-9]{5}')"
+}
+
+function executeInMagento2Container()
+{
+    magento2_pod_id="$(getMagento2PodId)"
+    kubectl exec "${magento2_pod_id}" --container magento2 "$@" 2> >(logError)
+}

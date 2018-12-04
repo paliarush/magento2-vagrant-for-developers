@@ -9,7 +9,7 @@ is_windows_host=$6
 
 vagrant_dir="/var/www/html"
 
-source "${vagrant_dir}/scripts/output_functions.sh"
+source "${vagrant_dir}/scripts/functions.sh"
 
 status "Configuring environment"
 incrementNestingLevel
