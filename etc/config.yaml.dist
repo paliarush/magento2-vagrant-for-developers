@@ -41,8 +41,6 @@ environment:
   use_varnish: 0
   # [To apply changes: m-reinstall] Possible values: mysql, elasticsearch
   search_engine: "mysql"
-  # [To apply changes: m-clear-cache] Possible values: redis, filesystem
-  cache_backend: "redis"
 
 magento:
   # [To apply changes: m-switch-to-ce -f OR m-switch-to-ee -f]

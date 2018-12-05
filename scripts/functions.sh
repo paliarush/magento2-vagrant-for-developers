@@ -190,14 +190,20 @@ function bash()
     $(which bash) "$@" 2> >(logError)
 }
 
+# TODO: Move kubectl related functions to the host-only scripts
 function getMagento2PodId()
 {
-    echo "$(kubectl get pods | grep -ohE 'magento2-[a-z0-9]{9}-[a-z0-9]{5}')"
+    echo "$(kubectl get pods | grep -ohE 'magento2-monolith-[a-z0-9\-]+')"
+}
+
+function getRedisMasterPodId()
+{
+    echo "$(kubectl get pods | grep -ohE 'magento2-redis-master-[a-z0-9\-]+')"
 }
 
 function getMysqlPodId()
 {
-    echo "$(kubectl get pods | grep -ohE 'magento2-mysql-[a-z0-9]{9}-[a-z0-9]{5}')"
+    echo "$(kubectl get pods | grep -ohE 'magento2-mysql-[a-z0-9\-]+')"
 }
 
 function executeInMagento2Container()

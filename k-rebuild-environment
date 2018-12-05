@@ -8,7 +8,13 @@ source "${vagrant_dir}/scripts/functions.sh"
 resetNestingLevel
 
 # TODO: Add status messages
-cd "${vagrant_dir}/scripts" && eval $(minikube docker-env) && docker build -t magento2-kubernetes:dev -f ./Dockerfile ../scripts
-cd "${vagrant_dir}" && kubectl delete deployment magento2 && python local_deploy.py --all --ingress
+cd "${vagrant_dir}/scripts" && eval $(minikube docker-env) && docker build -t magento2-monolith:dev -f ./Dockerfile ../scripts
+
+# TODO: Repeat for other deployments, not just Magento 2
+# TODO: Remove stale replica sets
+# See https://github.com/kubernetes/kubernetes/issues/33664#issuecomment-386661882
+cd "${vagrant_dir}" && python local_deploy.py --all --ingress \
+    && kubectl patch deployment magento2-monolith -p \
+  "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
 
 info "$(regular)See details in $(bold)${vagrant_dir}/log/${current_script_name}.log$(regular). For debug output set $(bold)debug:vagrant_project$(regular) to $(bold)1$(regular) in $(bold)etc/config.yaml$(regular)"
