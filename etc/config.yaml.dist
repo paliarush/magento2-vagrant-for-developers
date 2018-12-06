@@ -35,14 +35,14 @@ guest:
 
 environment:
   # [To apply changes: vagrant reload] Valid versions: 5.6, 7.0, 7.1, 7.2
-  php_version: "7.0"
+  php_version: "7.1"
   composer_prefer_source: 0
   # [To apply changes: m-reinstall OR m-varnish enable/disable]
   use_varnish: 0
   # [To apply changes: m-reinstall] Possible values: mysql, elasticsearch
   search_engine: "mysql"
   # [To apply changes: m-clear-cache] Possible values: redis, filesystem
-  cache_backend: "redis"
+  cache_backend: "filesystem"
 
 magento:
   # [To apply changes: m-switch-to-ce -f OR m-switch-to-ee -f]
