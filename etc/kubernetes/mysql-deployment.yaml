@@ -1,0 +1,63 @@
+# the following code is for creating single-instance mysql deployment & service
+apiVersion: v1
+kind: Service
+metadata:
+  name: magento2-mysql
+  labels:
+    app: magento2
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: magento2
+    tier: mysql
+  clusterIP: None
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+  labels:
+    app: magento2
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment #Single-instance MySQL Deployment
+metadata:
+  name: magento2-mysql
+  labels:
+    app: magento2
+spec:
+  selector:
+    matchLabels:
+      app: magento2
+      tier: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: magento2
+        tier: mysql
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "1234"
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
