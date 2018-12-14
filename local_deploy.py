@@ -6,7 +6,7 @@ config_path = os.path.dirname(os.path.abspath(__file__)) + "/etc/kubernetes/"
 
 
 def kubectl_build_command(config_name):
-    return 'cat ' + resolve_config(config_name) + ' | sed "s#{{PWD}}#$PWD#g" | kubectl apply -f -'
+    return 'cat ' + resolve_config(config_name) + ' | sed "s#{{PWD}}#$PWD#g" | sed "s#{{MINIKUBE_IP}}#$(minikube ip)#g" | kubectl apply -f -'
 
 
 def resolve_config(config_name):
