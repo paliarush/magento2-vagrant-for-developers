@@ -7,12 +7,22 @@ cd "$(dirname "${BASH_SOURCE[0]}")" && vagrant_dir=$PWD
 source "${vagrant_dir}/scripts/functions.sh"
 resetNestingLevel
 
-# TODO: Add status messages
+#minikube stop 2> >(logError)
+#
+##minikube delete 2> >(logError)
+#
+#minikube start --cpus=2 --memory=4096 2> >(logError)
+#
+## TODO: Add status messages
 cd "${vagrant_dir}/scripts" && eval $(minikube docker-env) && docker build -t magento2-monolith:dev -f ./Dockerfile ../scripts
 
 # TODO: Repeat for other deployments, not just Magento 2
 # TODO: Remove stale replica sets
 # See https://github.com/kubernetes/kubernetes/issues/33664#issuecomment-386661882
+
+
+#kubectl delete pvc sources-volume-claim
+#kubectl delete pv default-sources-volume
 cd "${vagrant_dir}" && python local_deploy.py --all --ingress \
     && kubectl patch deployment magento2-monolith -p \
   "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"

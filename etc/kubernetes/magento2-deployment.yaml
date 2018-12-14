@@ -45,7 +45,7 @@ data:
     }
 ---
 #This it to deploy magento2 container to Kubernetes
-apiVersion: apps/v1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: magento2-monolith

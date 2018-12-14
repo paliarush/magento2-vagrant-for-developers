@@ -105,6 +105,7 @@ php ${install_cmd} 2> >(logError) > >(log)
 status "Configuring Redis as cache backend"
 php "${MAGENTO_ROOT}/bin/magento" setup:config:set --page-cache=redis --page-cache-redis-server=magento2-redis-master
 php "${MAGENTO_ROOT}/bin/magento" setup:config:set --cache-backend=redis --cache-backend-redis-server=magento2-redis-master
+#php "${MAGENTO_ROOT}/bin/magento" setup:config:set --session-save=redis --session-save-redis-host=magento2-redis-master
 
 if [[ $? != 0 ]]; then
     error "Magento installation failed."

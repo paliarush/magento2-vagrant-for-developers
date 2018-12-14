@@ -382,5 +382,5 @@ Note: See [Working with npm](https://www.npmjs.com/package/n#working-with-npm) i
 
 
 ## Manual steps (workarounds)
-1. `find . -print -exec chmod a+w {} \;` needed to allow write permissions over NFS since users are different on the guest and host
+1. `sudo chmod a+w .` needed to allow write permissions over NFS since users are different on the guest and host
 2. `chmod a+x magento/bin/magento`

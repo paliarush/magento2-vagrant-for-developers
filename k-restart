@@ -8,6 +8,7 @@ source "${vagrant_dir}/scripts/functions.sh"
 resetNestingLevel
 
 minikube stop 2> >(logError)
-minikube start --cpus=2 --memory=3048 2> >(logError)
+
+minikube start --cpus=2 --memory=4096 2> >(logError)
 
 info "$(regular)See details in $(bold)${vagrant_dir}/log/${current_script_name}.log$(regular). For debug output set $(bold)debug:vagrant_project$(regular) to $(bold)1$(regular) in $(bold)etc/config.yaml$(regular)"
