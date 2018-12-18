@@ -19,6 +19,8 @@ RUN apt-get update \
 RUN docker-php-ext-configure \
   gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
 
+RUN docker-php-ext-configure opcache --enable-opcache
+
 # Install required PHP extensions
 RUN docker-php-ext-install \
   dom \
@@ -30,7 +32,8 @@ RUN docker-php-ext-install \
   xsl \
   zip \
   bcmath \
-  soap
+  soap \
+  opcache
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN pecl install -o -f xdebug
