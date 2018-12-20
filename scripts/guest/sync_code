@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+rsync -a "/var/www/persistent-slow/$@" "/var/www/html/$@" --exclude='.git/' --delete
+
+echo 'rsync -aR /var/www/persistent-slow/'$@' /var/www/html/'$@' --exclude='\'.git/\'

@@ -6,7 +6,7 @@ source "${vagrant_dir}/scripts/functions.sh"
 
 cd "${vagrant_dir}"
 
-executeInMagento2Container "/var/www/html/scripts/guest/m-clear-cache" 2> >(logError)
+fswatch -0 --exclude="\\.git" --exclude="\\.idea" --exclude=".*___jb_tmp___" --exclude=".*___jb_old___" "${vagrant_dir}" | xargs -0 -n 1 -I {} "/Users/oleksandrpaliarush/Projects/magento2-kubernetes-for-developers/scripts/host/execute_sync" {}
 
 # Explicit exit is necessary to bypass incorrect output from vagrant in case of errors
 exit 0

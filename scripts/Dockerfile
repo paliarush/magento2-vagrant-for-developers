@@ -44,6 +44,8 @@ RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install -y redis-tools && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y rsync && rm -rf /var/lib/apt/lists/*
+
 ENV DUMMY="Dummy variable which can be modified for image regeneration, when changes are done to the files copied later"
 
 ENV PATH="/var/www/html/scripts/guest:/var/www/html/magento/bin:${PATH}"
@@ -53,6 +55,7 @@ ENV MAGENTO_ROOT_HOST "/Users/<user>/Projects/magento2-kubernetes-for-developers
 ENV VAGRANT_ROOT_HOST "/Users/<user>/Projects/magento2-kubernetes-for-developers"
 ENV IS_WINDOWS_HOST 0
 ENV VAGRANT_ROOT "/var/www/html"
+ENV COMPOSER_HOME "/var/www/shared/.composer"
 
 COPY etc/php-xdebug.ini /usr/local/etc/php/conf.d/zz-xdebug-settings.ini
 COPY etc/php-fpm.ini /usr/local/etc/php/conf.d/zz-magento.ini

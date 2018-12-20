@@ -60,6 +60,9 @@ if [[ -d "${MAGENTO_ROOT}/dev" ]]; then
     fi
 fi
 
+status "Flushing redis storage"
+redis-cli -h magento2-redis-master flushall
+
 if [[ -f "${MAGENTO_ROOT}/app/etc/env.php" ]]; then
 
     bash configure_debugging

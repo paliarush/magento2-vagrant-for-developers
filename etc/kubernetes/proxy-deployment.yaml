@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: magento-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/ingress.allow-http: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+# Monolith installation
+      - path: /
+        backend:
+          serviceName: magento2
+          servicePort: 80
+
+## Multi-service installation
+#      - path: /magento
+#        backend:
+#          serviceName: magento2
+#          servicePort: 80
+#      - path: /checkout
+#        backend:
+#          serviceName: magento2-checkout
+#          servicePort: 80

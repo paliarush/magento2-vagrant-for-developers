@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+cd "$(dirname "${BASH_SOURCE[0]}")/../.." && vagrant_dir=$PWD
+
+source "${vagrant_dir}/scripts/functions.sh"
+
+relative_path=$(echo "$@" | sed -e "s|^${vagrant_dir}/||")
+executeInMagento2Container "/var/www/persistent/scripts/guest/sync_code" $relative_path

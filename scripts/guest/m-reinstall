@@ -2,6 +2,11 @@
 
 vagrant_dir="/var/www/html"
 
+# TODO: Convert echo to normal status
+echo "Uploading codebase to the memory"
+rm -rf /var/www/html/*
+rsync -a /var/www/persistent/* /var/www/html --exclude='.git/'
+
 source "${vagrant_dir}/scripts/functions.sh"
 
 get_config_value="/var/www/html/scripts/get_config_value.sh"
@@ -103,9 +108,8 @@ php ${install_cmd} 2> >(logError) > >(log)
 # php -d xdebug.remote_autostart=1 ${install_cmd} 2> >(logError) > >(log)
 
 #status "Configuring Redis as cache backend"
-#php "${MAGENTO_ROOT}/bin/magento" setup:config:set --page-cache=redis --page-cache-redis-server=magento2-redis-master
-#php "${MAGENTO_ROOT}/bin/magento" setup:config:set --cache-backend=redis --cache-backend-redis-server=magento2-redis-master
-#php "${MAGENTO_ROOT}/bin/magento" setup:config:set --session-save=redis --session-save-redis-host=magento2-redis-master
+php "${MAGENTO_ROOT}/bin/magento" setup:config:set --page-cache=redis --page-cache-redis-server=magento2-redis-master
+php "${MAGENTO_ROOT}/bin/magento" setup:config:set --cache-backend=redis --cache-backend-redis-server=magento2-redis-master
 
 if [[ $? != 0 ]]; then
     error "Magento installation failed."

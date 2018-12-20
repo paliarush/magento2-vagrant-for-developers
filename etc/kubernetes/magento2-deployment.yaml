@@ -43,7 +43,7 @@ data:
 
         server_name _;
         set $MAGE_ROOT /var/www/html/magento;
-        include /var/www/html/magento/nginx.conf.sample;
+        include /var/www/persistent/magento/nginx.conf.sample;
       }
     }
 ---
@@ -75,7 +75,11 @@ spec:
         ports:
         - containerPort: 80
         volumeMounts:
+        - name: code-slow
+          mountPath: /var/www/persistent-slow
         - name: code
+          mountPath: /var/www/persistent
+        - name: memory
           mountPath: /var/www/html
         resources:
           limits:
@@ -87,6 +91,8 @@ spec:
         image: nginx:1.9
         volumeMounts:
         - name: code
+          mountPath: /var/www/persistent
+        - name: memory
           mountPath: /var/www/html
         - name: nginx-config-volume
           mountPath: /etc/nginx/nginx.conf
@@ -98,10 +104,14 @@ spec:
           claimName: sources-volume-claim
 
 # Shared folders
-#      - name: code
-#        hostPath:
-#          path: {{PWD}}
+      - name: code-slow
+        hostPath:
+          path: {{PWD}}
 
       - name: nginx-config-volume
         configMap:
           name: nginx-config
+      - name: memory
+        emptyDir:
+          medium: Memory
+          sizeLimit: 1000Mi
