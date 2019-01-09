@@ -1,5 +1,6 @@
 /.vagrant
 /.idea
+/.composer
 /log/*.log
 /scripts/.current_nesting_level
 /scripts/.current_log_path
