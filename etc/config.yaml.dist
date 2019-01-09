@@ -46,9 +46,9 @@ magento:
   # [To apply changes: m-switch-to-ce -f OR m-switch-to-ee -f]
   install_sample_data: 0
   # [To apply changes: m-switch-to-ce -f OR m-switch-to-ee -f] Generate customer (customer@example.com:123123qQ), category, simple product, configurable product after successful Magento installation
-  generate_basic_data: 0
+  generate_basic_data: 1
   # [To apply changes: init_project.sh -f]
-  host_name: "192.168.99.103:30101"
+  host_name: "192.168.99.103"
   # [To apply changes: m-reinstall]
   admin_frontname: "admin"
   language: "en_US"

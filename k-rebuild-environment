@@ -7,14 +7,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")" && vagrant_dir=$PWD
 source "${vagrant_dir}/scripts/functions.sh"
 resetNestingLevel
 
-#minikube stop 2> >(logError)
-#
-##minikube delete 2> >(logError)
-#
-#minikube start --cpus=2 --memory=4096 2> >(logError)
-#
+
 ## TODO: Add status messages
-cd "${vagrant_dir}/scripts" && eval $(minikube docker-env) && docker build -t magento2-monolith:dev -f ./Dockerfile ../scripts
+cd "${vagrant_dir}/scripts" && eval $(minikube docker-env) && docker build -t magento2-monolith:dev -f ../etc/docker/Dockerfile ../scripts
 
 # TODO: Repeat for other deployments, not just Magento 2
 # TODO: Remove stale replica sets

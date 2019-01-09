@@ -6,7 +6,7 @@ source "${vagrant_dir}/scripts/functions.sh"
 
 cd "${vagrant_dir}"
 
-executeInMagento2Container bash -- "/var/www/html/scripts/guest/m-clear-cache" 2> >(logError)
+executeInMagento2Container "/var/www/html/scripts/guest/m-clear-cache" 2> >(logError)
 
 # Explicit exit is necessary to bypass incorrect output from vagrant in case of errors
 exit 0
