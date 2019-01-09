@@ -53,6 +53,7 @@ ENV MAGENTO_ROOT_HOST "/Users/<user>/Projects/magento2-kubernetes-for-developers
 ENV VAGRANT_ROOT_HOST "/Users/<user>/Projects/magento2-kubernetes-for-developers"
 ENV IS_WINDOWS_HOST 0
 ENV VAGRANT_ROOT "/var/www/html"
+ENV COMPOSER_HOME "/var/www/shared/.composer"
 
 COPY etc/php-xdebug.ini /usr/local/etc/php/conf.d/zz-xdebug-settings.ini
 COPY etc/php-fpm.ini /usr/local/etc/php/conf.d/zz-magento.ini

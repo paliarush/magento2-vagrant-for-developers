@@ -1,5 +1,6 @@
 /*
 !/.gitignore
+!/docker
 !/composer
 /composer/*
 !/composer/auth.json.dist
