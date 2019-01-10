@@ -59,7 +59,7 @@ function log() {
         else
             log_file="${default_log}"
         fi
-        echo "${input}" | sed "s/\[[[:digit:]]\{1,\}m//g" >> "${log_file}"
+        echo "${input}" | sed "s/\[[[:digit:]]\{1,\}m//g" >> "${log_file}" 2> /dev/null
     fi
 }
 

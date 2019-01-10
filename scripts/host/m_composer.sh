@@ -4,7 +4,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.." && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-magento_ce_dir="${vagrant_dir}/magento"
+cd "${vagrant_dir}"
 
-cd ${magento_ce_dir}
-bash "${vagrant_dir}/scripts/host/composer.sh" "$@" 2> >(logError)
+# TODO: parameterize container
+
+arguments=$@
+executeInMagento2Container -- "/var/www/html/scripts/guest/composer.sh" ${arguments} 2> >(logError)

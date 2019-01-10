@@ -63,9 +63,6 @@ done
 # Install Magento application
 cd ${MAGENTO_ROOT}
 
-status "composer install"
-composer install
-
 install_cmd="./bin/magento setup:install \
     --db-host=${setupOptions[db_host]} \
     --db-name=${setupOptions[db_name]} \
