@@ -6,7 +6,7 @@ source "${vagrant_dir}/scripts/functions.sh"
 
 host_name="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "magento_host_name")"
 
-status "Generating sample data"
+status "Generating basic data"
 
 incrementNestingLevel
 

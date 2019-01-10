@@ -146,16 +146,6 @@ function composerCreateProject()
 
 bash "${vagrant_dir}/scripts/host/check_requirements.sh"
 
-
-# TODO: Make dynamic
-#status "Generating random IP address, and host name to prevent collisions (if no custom values specified)"
-#random_ip="$(( ( RANDOM % 240 )  + 12 ))"
-#forwarded_ssh_port="$(( random_ip + 3000 ))"
-#sed -i.back "s|ip_address: \"192.168.10.2\"|ip_address: \"192.168.10.${random_ip}\"|g" "${config_path}"
-#sed -i.back "s|host_name: \"magento2.vagrant2\"|host_name: \"magento2.vagrant${random_ip}\"|g" "${config_path}"
-#sed -i.back "s|forwarded_ssh_port: 3000|forwarded_ssh_port: ${forwarded_ssh_port}|g" "${config_path}"
-#rm -f "${config_path}.back"
-
 # Clean up the project before initialization if "-f" option was specified. Remove codebase if "-fc" is used.
 force_project_cleaning=0
 force_codebase_cleaning=0
@@ -204,9 +194,10 @@ fi
 #    bash "${vagrant_dir}/scripts/host/composer.sh" install
 #fi
 
-status "Initializing vagrant box"
+status "Initializing dev box"
 cd "${vagrant_dir}"
 
+status "Starting minikube"
 minikube start --cpus=2 --memory=4096 2> >(logError) | {
   while IFS= read -r line
   do
@@ -215,8 +206,15 @@ minikube start --cpus=2 --memory=4096 2> >(logError) | {
   done
   filterVagrantOutput "${lastline}"
 }
+status "Configuring kubernetes cluster on the minikube"
 # TODO: change k-rebuild-environment to comply with formatting requirements
 bash "${vagrant_dir}/k-rebuild-environment"
+
+minikube_ip="$(minikube service magento2 --url | grep -oE '[0-9][^:]+' | head -1)"
+status "Saving minikube IP to etc/config.yaml (${minikube_ip})"
+sed -i.back "s|ip_address: \".*\"|ip_address: \"${minikube_ip}\"|g" "${config_path}"
+sed -i.back "s|host_name: \".*\"|host_name: \"${minikube_ip}\"|g" "${config_path}"
+rm -f "${config_path}.back"
 
 bash "${vagrant_dir}/scripts/host/check_mounted_directories.sh"
 

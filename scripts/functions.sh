@@ -59,8 +59,7 @@ function log() {
         else
             log_file="${default_log}"
         fi
-        # TODO: fix
-#        echo "${input}" | sed "s/\[[[:digit:]]\{1,\}m//g" >> "${log_file}"
+        echo "${input}" | sed "s/\[[[:digit:]]\{1,\}m//g" >> "${log_file}"
     fi
 }
 
@@ -114,10 +113,8 @@ function outputInfoOnly()
 function incrementNestingLevel()
 {
     if [[ ! -f "${nesting_level_file}" ]]; then
-    # TODO: Fix input/output error
-#        echo 1 > "${nesting_level_file}"
-#        chmod a+w "${nesting_level_file}"
-        echo "TODO: Fix nesting level"
+        echo 1 > "${nesting_level_file}"
+        chmod a+w "${nesting_level_file}"
     else
         nesting_level="$(cat "${nesting_level_file}")"
         nesting_level="$((${nesting_level}+1))"
