@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-vagrant_dir="/var/www/html"
+vagrant_dir="${VAGRANT_ROOT}"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
@@ -8,22 +8,22 @@ debug_magento_storefront="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "d
 if [[ ${debug_magento_storefront} == 1 ]]; then
     status "Enabling Magento storefront debugging (as specified in etc/config.yaml)"
     incrementNestingLevel
-    update_magento_config 'dev/debug/template_hints_storefront' '1'
-    update_magento_config 'dev/debug/template_hints_blocks' '1'
+    "${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'dev/debug/template_hints_storefront' '1'
+    "${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'dev/debug/template_hints_blocks' '1'
     decrementNestingLevel
 else
-    update_magento_config 'dev/debug/template_hints_storefront' '0' 2> >(logError) > >(log)
-    update_magento_config 'dev/debug/template_hints_blocks' '0' 2> >(logError) > >(log)
+    "${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'dev/debug/template_hints_storefront' '0' 2> >(logError) > >(log)
+    "${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'dev/debug/template_hints_blocks' '0' 2> >(logError) > >(log)
 fi
 
 debug_magento_admin="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "debug_magento_admin")"
 if [[ ${debug_magento_admin} == 1 ]]; then
     status "Enabling Magento admin debugging (as specified in etc/config.yaml)"
     incrementNestingLevel
-    update_magento_config 'dev/debug/template_hints_admin' '1'
+    "${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'dev/debug/template_hints_admin' '1'
     decrementNestingLevel
 else
-    update_magento_config 'dev/debug/template_hints_admin' '0' 2> >(logError) > >(log)
+    "${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'dev/debug/template_hints_admin' '0' 2> >(logError) > >(log)
 fi
 
 # Switch to desired Magento mode

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-vagrant_dir="/var/www/html"
+vagrant_dir="${VAGRANT_ROOT}"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
@@ -15,8 +15,8 @@ while getopts 'f' flag; do
   esac
 done
 
-if [[ -z "$(grep "use_varnish:" /var/www/html/etc/config.yaml)" ]]; then
-    sed -i '/environment:/a \ \ use_varnish: 0' /var/www/html/etc/config.yaml
+if [[ -z "$(grep "use_varnish:" "${vagrant_dir}/etc/config.yaml")" ]]; then
+    sed -i '/environment:/a \ \ use_varnish: 0' "${vagrant_dir}/etc/config.yaml"
 fi
 
 # Configure Varnish if enabled in config
@@ -80,7 +80,7 @@ if [[ $restart_services == 1 ]]; then
     if [[ $use_varnish == 1 ]]; then
         sudo varnishd -f /etc/varnish/default.vcl
     fi
-    bash m-clear-cache
+    bash "${VAGRANT_ROOT}/scripts/guest/m-clear-cache"
 fi
 
 decrementNestingLevel

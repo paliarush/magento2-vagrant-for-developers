@@ -1,41 +1,41 @@
 #!/usr/bin/env bash
 
-function process_configs () {
-    configs_path=$1
-    configs=$2
-    for config in "${configs[@]}"
-    do
-        if [[ ! -d /var/www/html/etc/guest/${config} ]] && [[ ! -f /var/www/html/etc/guest/${config} ]]; then
-            if [[ -d ${configs_path}/${config} ]] || [[ -f ${configs_path}/${config} ]]; then
-                sudo rm -rf "${configs_path}/${config}.back"
-                sudo cp -rp ${configs_path}/${config} "${configs_path}/${config}.back"
-                sudo mv ${configs_path}/${config} /var/www/html/etc/guest/${config}
-                sudo ln -s /var/www/html/etc/guest/${config} ${configs_path}/${config}
-            fi
-        fi
-    done
-}
-
-vagrant_dir="/var/www/html"
-
-source "${vagrant_dir}/scripts/functions.sh"
-
-# Below configuration is required to allow managing mysql as a service
-if ! cat /etc/apparmor.d/local/usr.sbin.mysqld | grep -q '/var/www/html/etc/guest' ; then
-    echo "
-        /var/www/html/etc/guest/mysql/*.pem r,
-        /var/www/html/etc/guest/mysql/conf.d/ r,
-        /var/www/html/etc/guest/mysql/conf.d/* r,
-        /var/www/html/etc/guest/mysql/*.cnf r," >> /etc/apparmor.d/local/usr.sbin.mysqld
-fi
-
-status "Making guest configs visible and editable in the host IDE"
-incrementNestingLevel
-
-# Configs located under /etc/*
-config_dir="/etc"
-# See unlink_configs script
-configs=( apache2 php mysql varnish rabbitmq )
-process_configs ${config_dir} ${configs}
+#function process_configs () {
+#    configs_path=$1
+#    configs=$2
+#    for config in "${configs[@]}"
+#    do
+#        if [[ ! -d ${vagrant_dir}/etc/guest/${config} ]] && [[ ! -f ${vagrant_dir}/etc/guest/${config} ]]; then
+#            if [[ -d ${configs_path}/${config} ]] || [[ -f ${configs_path}/${config} ]]; then
+#                sudo rm -rf "${configs_path}/${config}.back"
+#                sudo cp -rp ${configs_path}/${config} "${configs_path}/${config}.back"
+#                sudo mv ${configs_path}/${config} ${vagrant_dir}/etc/guest/${config}
+#                sudo ln -s ${vagrant_dir}/etc/guest/${config} ${configs_path}/${config}
+#            fi
+#        fi
+#    done
+#}
+#
+#vagrant_dir="${vagrant_dir}"
+#
+#source "${vagrant_dir}/scripts/functions.sh"
+#
+## Below configuration is required to allow managing mysql as a service
+#if ! cat /etc/apparmor.d/local/usr.sbin.mysqld | grep -q '${vagrant_dir}/etc/guest' ; then
+#    echo "
+#        ${vagrant_dir}/etc/guest/mysql/*.pem r,
+#        ${vagrant_dir}/etc/guest/mysql/conf.d/ r,
+#        ${vagrant_dir}/etc/guest/mysql/conf.d/* r,
+#        ${vagrant_dir}/etc/guest/mysql/*.cnf r," >> /etc/apparmor.d/local/usr.sbin.mysqld
+#fi
+#
+#status "Making guest configs visible and editable in the host IDE"
+#incrementNestingLevel
+#
+## Configs located under /etc/*
+#config_dir="/etc"
+## See unlink_configs script
+#configs=( apache2 php mysql varnish rabbitmq )
+#process_configs ${config_dir} ${configs}
 
 decrementNestingLevel

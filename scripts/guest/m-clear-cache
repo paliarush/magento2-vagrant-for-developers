@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-vagrant_dir="/var/www/html"
+vagrant_dir="${VAGRANT_ROOT}"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
@@ -65,7 +65,7 @@ redis-cli -h magento2-redis-master flushall
 
 if [[ -f "${MAGENTO_ROOT}/app/etc/env.php" ]]; then
 
-    bash configure_debugging
+    bash "${VAGRANT_ROOT}/scripts/guest/configure_debugging"
 
     status "Flushing cache using 'bin/magento cache:flush'"
     php "${MAGENTO_ROOT}/bin/magento" cache:flush 2> >(logError) > >(log)

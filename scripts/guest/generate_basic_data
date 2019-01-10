@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-vagrant_dir="/var/www/html"
+vagrant_dir="${VAGRANT_ROOT}"
 
 source "${vagrant_dir}/scripts/functions.sh"
 

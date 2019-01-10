@@ -45,7 +45,7 @@ if [[ -z ${php_version} ]]; then
 fi
 
 
-vagrant_dir="/var/www/html"
+vagrant_dir="${vagrant_dir}"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
@@ -111,7 +111,7 @@ php_ini_file="/etc/php/${php_version}/cli/php.ini"
 pattern=";sendmail_path"
 php_config_content="$(cat ${php_ini_file})"
 if [[ ${php_config_content} =~ ${pattern} ]]; then
-    sed -i "s|;sendmail_path =|sendmail_path = \"/var/www/html/scripts/guest/log_email ${vagrant_dir}/log/email\"|g" ${php_ini_file}
+    sed -i "s|;sendmail_path =|sendmail_path = \"${vagrant_dir}/scripts/guest/log_email ${vagrant_dir}/log/email\"|g" ${php_ini_file}
     service apache2 restart 2> >(logError) > >(log)
 fi
 

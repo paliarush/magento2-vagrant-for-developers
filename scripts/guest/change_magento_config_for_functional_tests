@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-vagrant_dir="/var/www/html"
+vagrant_dir="${VAGRANT_ROOT}"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
 status "Changing Magento configuration to allow execution of functional tests"
 incrementNestingLevel
 
-update_magento_config 'cms/wysiwyg/enabled' 'disabled'
-update_magento_config 'admin/security/admin_account_sharing' '1'
-update_magento_config 'admin/security/use_form_key' '0'
+"${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'cms/wysiwyg/enabled' 'disabled'
+"${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'admin/security/admin_account_sharing' '1'
+"${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'admin/security/use_form_key' '0'
 
 decrementNestingLevel

@@ -15,6 +15,6 @@ cd "${vagrant_dir}"
 
 # TODO: parameterize container
 
-executeInMagento2Container "/var/www/html/scripts/guest/m-reinstall" 2> >(logError)
+executeInMagento2Container "${vagrant_dir}/scripts/guest/m-reinstall" 2> >(logError)
 # Explicit exit is necessary to bypass incorrect output from vagrant in case of errors
 exit 0

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-vagrant_dir="/var/www/html"
+vagrant_dir="${VAGRANT_ROOT}"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-get_config_value="/var/www/html/scripts/get_config_value.sh"
+get_config_value="${vagrant_dir}/scripts/get_config_value.sh"
 magento_host_name="$(bash ${get_config_value} "magento_host_name")"
 use_nfs="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "guest_use_nfs")"
 is_windows_host=${IS_WINDOWS_HOST}
@@ -50,7 +50,7 @@ rm -f "${MAGENTO_ROOT}/app/etc/env.php"
 status "Restoring stored in git config.php (if applicable)"
 git checkout "${MAGENTO_ROOT}/app/etc/config.php" &>/dev/null
 
-bash m-clear-cache
+bash "${VAGRANT_ROOT}/scripts/guest/m-clear-cache"
 # Cache cleaning takes 5-10 seconds and should be avoided until the end of installation to speed up the process
 export SKIP_CACHE_CLEAN=1
 
@@ -124,25 +124,25 @@ fi
 #fi
 
 if [[ ${generate_basic_data} != 0 ]]; then
-    bash generate_basic_data
+    bash "${VAGRANT_ROOT}/scripts/guest/generate_basic_data"
 fi
-bash configure_search_engine
-bash change_magento_config_for_functional_tests
-bash update_magento_config 'admin/security/session_lifetime' '86400'
+bash "${VAGRANT_ROOT}/scripts/guest/configure_search_engine"
+bash "${VAGRANT_ROOT}/scripts/guest/change_magento_config_for_functional_tests"
+bash "${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'admin/security/session_lifetime' '86400'
 
 export SKIP_CACHE_CLEAN=0
-bash m-clear-cache
+bash "${VAGRANT_ROOT}/scripts/guest/m-clear-cache"
 
 status "Checking if Magento frontend is accessible at '${setupOptions[base_url]}'"
 magento_home_page_content="$(curl -sL ${setupOptions[base_url]})"
 pattern="All rights reserved."
 if [[ ${magento_home_page_content} =~ ${pattern} ]]; then
 
-    bash warm_up_cache
+    bash "${VAGRANT_ROOT}/scripts/guest/warm_up_cache"
 
     status "Generating XSD references for PHP Storm"
-    php bin/magento dev:urn-catalog:generate /var/www/html/.idea/misc.xml
-    sed -i "s|${MAGENTO_ROOT}|${MAGENTO_ROOT_HOST}|g" "/var/www/html/.idea/misc.xml"
+    php bin/magento dev:urn-catalog:generate ${vagrant_dir}/.idea/misc.xml
+    sed -i "s|${MAGENTO_ROOT}|${MAGENTO_ROOT_HOST}|g" "${vagrant_dir}/.idea/misc.xml"
 
     decrementNestingLevel
     success "Magento reinstalled successfully"

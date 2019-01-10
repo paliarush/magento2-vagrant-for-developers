@@ -42,8 +42,8 @@ data:
         listen [::]:80 default_server;
 
         server_name _;
-        set $MAGE_ROOT /var/www/html/magento;
-        include /var/www/html/magento/nginx.conf.sample;
+        set $MAGE_ROOT {{PWD}}/magento;
+        include {{PWD}}/magento/nginx.conf.sample;
       }
     }
 ---
@@ -76,18 +76,31 @@ spec:
         - containerPort: 80
         volumeMounts:
         - name: code
-          mountPath: /var/www/html
+          mountPath: {{PWD}}
         resources:
           limits:
             memory: 2000Mi
           requests:
             memory: 1500Mi
+        env:
+        - name: VAGRANT_ROOT
+          value: {{PWD}}
+        - name: COMPOSER_HOME
+          value: {{PWD}}/.composer
+        - name: MAGENTO_ROOT
+          value: {{PWD}}/magento
+        - name: MAGENTO_ROOT_HOST
+          value: {{PWD}}/magento
+        - name: VAGRANT_ROOT_HOST
+          value: {{PWD}}
+        - name: IS_WINDOWS_HOST
+          value: 0
 
       - name: nginx
         image: nginx:1.9
         volumeMounts:
         - name: code
-          mountPath: /var/www/html
+          mountPath: {{PWD}}
         - name: nginx-config-volume
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf

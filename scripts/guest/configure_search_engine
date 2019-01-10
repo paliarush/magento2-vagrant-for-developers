@@ -1,33 +1,33 @@
 #!/usr/bin/env bash
 
 # Init environment variables
-vagrant_dir="/var/www/html"
+vagrant_dir="${VAGRANT_ROOT}"
 
 source "${vagrant_dir}/scripts/functions.sh"
 
 status "Configuring search engine according to config.yaml"
 incrementNestingLevel
 
-if [[ -z "$(grep "search_engine:" /var/www/html/etc/config.yaml)" ]]; then
-    sed -i '/environment:/a \ \ search_engine: "mysql"' /var/www/html/etc/config.yaml
+if [[ -z "$(grep "search_engine:" ${vagrant_dir}/etc/config.yaml)" ]]; then
+    sed -i '/environment:/a \ \ search_engine: "mysql"' ${vagrant_dir}/etc/config.yaml
 fi
 
 if [[ -f "${MAGENTO_ROOT}/LICENSE_EE.txt" ]]; then
     search_engine="$(bash "${vagrant_dir}/scripts/get_config_value.sh" "environment_search_engine")"
     if [[ ${search_engine} == "elasticsearch" ]]; then
         status "Configuring ElasticSearch search engine"
-        update_magento_config 'catalog/search/engine' 'elasticsearch'
-        update_magento_config 'catalog/search/elasticsearch_server_hostname' 'localhost'
-        update_magento_config 'catalog/search/elasticsearch_server_port' '9200'
-        update_magento_config 'catalog/search/elasticsearch_index_prefix' 'magento2'
-        update_magento_config 'catalog/search/elasticsearch_enable_auth' '0'
-        update_magento_config 'catalog/search/elasticsearch_server_timeout' '15'
+        "${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'catalog/search/engine' 'elasticsearch'
+        "${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'catalog/search/elasticsearch_server_hostname' 'localhost'
+        "${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'catalog/search/elasticsearch_server_port' '9200'
+        "${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'catalog/search/elasticsearch_index_prefix' 'magento2'
+        "${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'catalog/search/elasticsearch_enable_auth' '0'
+        "${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'catalog/search/elasticsearch_server_timeout' '15'
     elif [[ ${search_engine} == "mysql" ]]; then
         status "Configuring MySQL search engine"
-        update_magento_config 'catalog/search/engine' 'mysql'
+        "${VAGRANT_ROOT}/scripts/guest/update_magento_config" 'catalog/search/engine' 'mysql'
     fi
 
-    bash m-clear-cache
+    bash "${VAGRANT_ROOT}/scripts/guest/m-clear-cache"
 
     status "Rebuilding catalog search index"
     php "${MAGENTO_ROOT}/bin/magento" indexer:reindex catalogsearch_fulltext 2> >(logError) > >(log)
