@@ -9,7 +9,14 @@ resetNestingLevel
 
 
 ## TODO: Add status messages
-cd "${vagrant_dir}/scripts" && eval $(minikube docker-env) && docker build -t magento2-monolith:dev -f ../etc/docker/Dockerfile ../scripts
+cd "${vagrant_dir}/scripts" && eval $(minikube docker-env) && docker build -t magento2-monolith:dev -f ../etc/docker/Dockerfile ../scripts 2> >(logError) | {
+  while IFS= read -r line
+  do
+    filterVagrantOutput "${line}"
+    lastline="${line}"
+  done
+  filterVagrantOutput "${lastline}"
+}
 
 # TODO: Repeat for other deployments, not just Magento 2
 # TODO: Remove stale replica sets

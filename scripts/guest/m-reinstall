@@ -141,7 +141,7 @@ if [[ ${magento_home_page_content} =~ ${pattern} ]]; then
     bash "${VAGRANT_ROOT}/scripts/guest/warm_up_cache"
 
     status "Generating XSD references for PHP Storm"
-    php bin/magento dev:urn-catalog:generate ${vagrant_dir}/.idea/misc.xml
+    php "${MAGENTO_ROOT}/bin/magento" dev:urn-catalog:generate "${vagrant_dir}/.idea/misc.xml"
     sed -i "s|${MAGENTO_ROOT}|${MAGENTO_ROOT_HOST}|g" "${vagrant_dir}/.idea/misc.xml"
 
     decrementNestingLevel

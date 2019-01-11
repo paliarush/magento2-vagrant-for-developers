@@ -144,6 +144,26 @@ function composerCreateProject()
     fi
 }
 
+function isMinikubeRunning() {
+    minikube_status="$(minikube status | grep minikube: 2> >(log))"
+    if [[ ${minikube_status} == "minikube: Running" ]]; then
+        echo 1
+    fi
+}
+
+function isMinikubeStopped() {
+    minikube_status="$(minikube status | grep minikube: 2> >(log))"
+    if [[ ${minikube_status} == "minikube: Stopped" ]]; then
+        echo 1
+    fi
+}
+
+function isMinikubeInitialized() {
+    if [[ $(isMinikubeRunning) -eq 1 || $(isMinikubeStopped) -eq 1 ]]; then
+        echo 1
+    fi
+}
+
 bash "${vagrant_dir}/scripts/host/check_requirements.sh"
 
 # Clean up the project before initialization if "-f" option was specified. Remove codebase if "-fc" is used.
@@ -161,10 +181,26 @@ done
 if [[ ${force_project_cleaning} -eq 1 ]]; then
     status "Cleaning up the project before initialization since '-f' option was used"
 
-    # TODO: Fix. Fails when minikube does not exist
-    set +e
-    minikube delete 2> /dev/null
-    set -e
+    if [[ $(isMinikubeRunning) -eq 1 ]]; then
+        minikube stop 2> >(logError) | {
+          while IFS= read -r line
+          do
+            filterVagrantOutput "${line}"
+            lastline="${line}"
+          done
+          filterVagrantOutput "${lastline}"
+        }
+    fi
+    if [[ $(isMinikubeStopped) -eq 1 ]]; then
+        minikube delete 2> >(logError) | {
+          while IFS= read -r line
+          do
+            filterVagrantOutput "${line}"
+            lastline="${line}"
+          done
+          filterVagrantOutput "${lastline}"
+        }
+    fi
 
     mv "${vagrant_dir}/etc/guest/.gitignore" "${vagrant_dir}/etc/.gitignore.back"
     rm -rf "${vagrant_dir}/.vagrant" "${vagrant_dir}/etc/guest"
@@ -188,14 +224,16 @@ if [[ ! -d ${magento_ce_dir} ]]; then
     fi
 fi
 
-#if [[ "${checkout_source_from}" == "git" ]]; then
-#    status "Installing Magento dependencies via Composer"
-#    cd "${magento_ce_dir}"
-#    bash "${vagrant_dir}/scripts/host/composer.sh" install
-#fi
-
 status "Initializing dev box"
 cd "${vagrant_dir}"
+
+if [[ $(isMinikubeInitialized) -eq 1 ]]; then
+    warning "The project has already been initialized.
+    To re-initialize the project add the '-f' flag (using just '-f' will not affect Magento codebase or PHP Storm settings).
+    To delete Magento codebase and initialize it from scratch based on etc/config.yaml add '-c' flag.
+    To reconfigure PHP Storm add '-p' flag."
+    exit 0
+fi
 
 status "Starting minikube"
 minikube start --cpus=2 --memory=4096 2> >(logError) | {

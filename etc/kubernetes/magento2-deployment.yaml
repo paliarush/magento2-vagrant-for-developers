@@ -94,7 +94,7 @@ spec:
         - name: VAGRANT_ROOT_HOST
           value: {{PWD}}
         - name: IS_WINDOWS_HOST
-          value: 0
+          value: "0"
 
       - name: nginx
         image: nginx:1.9

@@ -16,7 +16,7 @@ fi
 
 arguments=$@
 cd "${vagrant_dir}"
-executeInMagento2Container php -- "/var/www/html/magento/bin/magento" ${arguments} 2> >(logError)
+executeInMagento2Container php -- "${vagrant_dir}/magento/bin/magento" ${arguments} 2> >(logError)
 # To debug, comment out line above and uncomment line below
 # vagrant ssh -c "php -d xdebug.remote_autostart=1 \$MAGENTO_ROOT/bin/magento $arguments" 2> >(logError)
 
