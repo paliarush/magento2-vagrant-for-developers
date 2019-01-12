@@ -1,0 +1,57 @@
+replicaCount: 1
+
+image:
+  repository: shiftedreality/magento-kubernetes-components-php
+  tag: 7.1-fpm
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: NodePort
+  port: 80
+  nodePort: 30102
+
+persistence:
+  nfs:
+    enabled: true
+
+monolith:
+  volumeHostPath: /Users/user/Projects/magento2-kubernetes-for-developers
+
+checkout:
+  name: magento2-checkout
+  volumeHostPath: /Users/user/Projects/magento2-kubernetes-for-developers
+  service:
+    type: NodePort
+    ports:
+      nodePort: 30102
+      port: 80
+  deployment:
+    nginxImage: nginx:1.9
+    codeImage: shiftedreality/magento-kubernetes-components-php
+    imageTag: 7.1-fpm
+    imagePullPolicy: Always
+
+resources: {}
+  # Uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+global:
+  chekout:
+    mysqlHost: checkout-mysql
+    volumeHostPath: /Users/user/Projects/magento2-kubernetes-for-developers
+

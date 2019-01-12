@@ -190,6 +190,7 @@ function bash()
 # TODO: Move kubectl related functions to the host-only scripts
 function getMagento2PodId()
 {
+    # TODO: Calculate based on current helm release
     echo "$(kubectl get pods | grep -ohE 'magento2-monolith-[a-z0-9\-]+')"
 }
 
@@ -206,5 +207,25 @@ function getMysqlPodId()
 function executeInMagento2Container()
 {
     magento2_pod_id="$(getMagento2PodId)"
-    kubectl exec "${magento2_pod_id}" --container magento2 "$@" 2> >(logError)
+    kubectl exec "${magento2_pod_id}" --container monolith "$@" 2> >(logError)
+}
+
+function isMinikubeRunning() {
+    minikube_status="$(minikube status | grep minikube: 2> >(log))"
+    if [[ ${minikube_status} == "minikube: Running" ]]; then
+        echo 1
+    fi
+}
+
+function isMinikubeStopped() {
+    minikube_status="$(minikube status | grep minikube: 2> >(log))"
+    if [[ ${minikube_status} == "minikube: Stopped" ]]; then
+        echo 1
+    fi
+}
+
+function isMinikubeInitialized() {
+    if [[ $(isMinikubeRunning) -eq 1 || $(isMinikubeStopped) -eq 1 ]]; then
+        echo 1
+    fi
 }

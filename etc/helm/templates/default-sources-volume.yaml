@@ -1,0 +1,19 @@
+{{- if .Values.persistence.nfs.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "magento.fullname" . }}-volume
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+  - ReadWriteMany
+  storageClassName: standard
+  nfs:
+    # The address 192.168.99.1 is the Minikube gateway to the host. This way
+    # not the container IP will be visible by the NFS server on the host machine,
+    # but the IP address of the `minikube ip` command. You will need to
+    # grant access to the `minikube ip` IP address.
+    server: 192.168.99.1
+    path: {{.Values.global.monolith.volumeHostPath}}
+{{- end }}

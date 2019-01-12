@@ -1,0 +1,14 @@
+{{- if .Values.persistence.nfs.enabled }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "checkout.fullname" . }}-claim
+  namespace: default
+spec:
+  storageClassName: standard
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+{{- end }}

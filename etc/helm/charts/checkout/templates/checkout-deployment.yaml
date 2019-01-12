@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "checkout.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "checkout.name" . }}
+    helm.sh/chart: {{ include "checkout.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "checkout.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "checkout.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: {{ .Chart.Name }}-code
+              mountPath: {{.Values.global.checkout.volumeHostPath}}
+        - name: {{ .Chart.Name }}-nginx
+          image: nginx:1.9
+          volumeMounts:
+          - name: {{ .Chart.Name }}-code
+            mountPath: {{.Values.global.checkout.volumeHostPath}}
+          - name: {{ template "checkout.fullname" . }}-nginx-config-volume
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+      volumes:
+        - name: {{ template "checkout.fullname" . }}-nginx-config-volume
+          configMap:
+            name: {{ template "checkout.fullname" . }}-nginx-config
+        - name: {{ .Chart.Name }}-code
+        {{- if .Values.persistence.nfs.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "checkout.fullname" . }}-claim
+        {{- else }}
+          hostPath:
+            path: {{.Values.global.checkout.volumeHostPath}}
+        {{- end -}}

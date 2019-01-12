@@ -1,0 +1,11 @@
+1. Get the application URL by running these commands:
+minikube service {{ include "magento.fullname" . }}
+
+Deployed database can by accessed by next hosts from inside network:
+{{ .Release.Name }}-mysql
+
+2. Get the application URL by running these commands:
+     minikube service {{ .Release.Name }}-checkout
+Deployed databases can by accessed by next hosts from inside networks:
+
+{{ .Release.Name }}-checkout-mysql

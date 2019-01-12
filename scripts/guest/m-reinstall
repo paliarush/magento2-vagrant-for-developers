@@ -146,7 +146,7 @@ if [[ ${magento_home_page_content} =~ ${pattern} ]]; then
 
     decrementNestingLevel
     success "Magento reinstalled successfully"
-    info "Magento application was deployed to $(bold)${MAGENTO_ROOT}$(regular) and installed successfully
+    info "$(regular)Magento application was deployed to $(bold)${MAGENTO_ROOT}$(regular) and installed successfully
 
     Access storefront at $(bold)${setupOptions[base_url]}$(regular)
     Access admin panel at $(bold)${setupOptions[base_url]}${setupOptions[admin_frontname]}/$(regular)"

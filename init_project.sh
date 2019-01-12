@@ -144,26 +144,6 @@ function composerCreateProject()
     fi
 }
 
-function isMinikubeRunning() {
-    minikube_status="$(minikube status | grep minikube: 2> >(log))"
-    if [[ ${minikube_status} == "minikube: Running" ]]; then
-        echo 1
-    fi
-}
-
-function isMinikubeStopped() {
-    minikube_status="$(minikube status | grep minikube: 2> >(log))"
-    if [[ ${minikube_status} == "minikube: Stopped" ]]; then
-        echo 1
-    fi
-}
-
-function isMinikubeInitialized() {
-    if [[ $(isMinikubeRunning) -eq 1 || $(isMinikubeStopped) -eq 1 ]]; then
-        echo 1
-    fi
-}
-
 bash "${vagrant_dir}/scripts/host/check_requirements.sh"
 
 # Clean up the project before initialization if "-f" option was specified. Remove codebase if "-fc" is used.
@@ -245,10 +225,12 @@ minikube start --cpus=2 --memory=4096 2> >(logError) | {
   filterVagrantOutput "${lastline}"
 }
 status "Configuring kubernetes cluster on the minikube"
+# TODO: Optimize. Helm tiller must be initialized and started before environment configuration can begin
+helm init && sleep 10
 # TODO: change k-rebuild-environment to comply with formatting requirements
 bash "${vagrant_dir}/k-rebuild-environment"
 
-minikube_ip="$(minikube service magento2 --url | grep -oE '[0-9][^:]+' | head -1)"
+minikube_ip="$(minikube service magento2-monolith --url | grep -oE '[0-9][^:]+' | head -1)"
 status "Saving minikube IP to etc/config.yaml (${minikube_ip})"
 sed -i.back "s|ip_address: \".*\"|ip_address: \"${minikube_ip}\"|g" "${config_path}"
 sed -i.back "s|host_name: \".*\"|host_name: \"${minikube_ip}\"|g" "${config_path}"

@@ -7,7 +7,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")" && vagrant_dir=$PWD
 source "${vagrant_dir}/scripts/functions.sh"
 resetNestingLevel
 
-minikube stop 2> >(logError)
+if [[ $(isMinikubeRunning) -eq 1 ]]; then
+    minikube stop 2> >(logError)
+fi
 
 minikube start --cpus=2 --memory=4096 2> >(logError)
 

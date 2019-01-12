@@ -8,3 +8,4 @@
 !/magento2_virtual_host.conf.dist
 !/guest
 !/kubernetes
+!/helm

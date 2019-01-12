@@ -6,5 +6,5 @@ cd "$(dirname "${BASH_SOURCE[0]}")" && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-magento2_url_with_port80="$(minikube service magento2 --url | grep -oE 'http:[^:]+'):80"
+magento2_url_with_port80="$(minikube service magento2-monolith --url | grep -oE 'http:[^:]+'):80"
 open ${magento2_url_with_port80}

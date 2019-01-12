@@ -61,7 +61,7 @@ if [[ -d "${MAGENTO_ROOT}/dev" ]]; then
 fi
 
 status "Flushing redis storage"
-redis-cli -h magento2-redis-master flushall
+redis-cli -h magento2-redis-master flushall 2> >(logError) > >(log)
 
 if [[ -f "${MAGENTO_ROOT}/app/etc/env.php" ]]; then
 

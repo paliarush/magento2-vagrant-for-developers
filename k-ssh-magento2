@@ -6,4 +6,4 @@ cd "$(dirname "${BASH_SOURCE[0]}")" && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-kubectl exec -it "$(getMagento2PodId)" --container magento2 -- /bin/bash
+kubectl exec -it "$(getMagento2PodId)" --container monolith -- /bin/bash

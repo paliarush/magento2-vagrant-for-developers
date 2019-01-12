@@ -1,0 +1,32 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ template "magento.fullname" . }}-nginx-config
+data:
+  nginx.conf: |
+    events {
+      worker_connections 1024;
+    }
+
+    http {
+      include mime.types;
+      default_type application/octet-stream;
+      sendfile on;
+      keepalive_timeout 65;
+      client_max_body_size 200M;
+      gzip  on;
+      fastcgi_read_timeout 30000s;
+
+      upstream fastcgi_backend {
+        server 127.0.0.1:9000;
+      }
+
+      server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        server_name _;
+        set $MAGE_ROOT {{.Values.global.monolith.volumeHostPath}}/magento;
+        include {{.Values.global.monolith.volumeHostPath}}/magento/nginx.conf.sample;
+      }
+    }

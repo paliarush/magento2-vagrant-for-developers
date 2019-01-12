@@ -19,14 +19,24 @@ cd "${vagrant_dir}/scripts" && eval $(minikube docker-env) && docker build -t ma
 }
 
 # TODO: Repeat for other deployments, not just Magento 2
-# TODO: Remove stale replica sets
 # See https://github.com/kubernetes/kubernetes/issues/33664#issuecomment-386661882
 
 
-#kubectl delete pvc sources-volume-claim
-#kubectl delete pv default-sources-volume
-cd "${vagrant_dir}" && python local_deploy.py --all --ingress \
-    && kubectl patch deployment magento2-monolith -p \
-  "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
+# TODO: Delete does not work when no releases created yet
+cd "${vagrant_dir}/etc/helm"
+helm list -q | xargs helm delete
+set +e && helm del --purge magento2 && set -e
+
+cd "${vagrant_dir}/etc/helm" && helm install \
+    --name magento2 \
+    --values values.yaml \
+    --set global.monolith.volumeHostPath="${vagrant_dir}" \
+    --set global.checkout.volumeHostPath="${vagrant_dir}" .
+
+
+## Bypass Helm
+#cd "${vagrant_dir}" && python local_deploy.py --all --ingress \
+#    && kubectl patch deployment magento2-monolith -p \
+#  "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
 
 info "$(regular)See details in $(bold)${vagrant_dir}/log/${current_script_name}.log$(regular). For debug output set $(bold)debug:vagrant_project$(regular) to $(bold)1$(regular) in $(bold)etc/config.yaml$(regular)"

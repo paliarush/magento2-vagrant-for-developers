@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "magento.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "magento.name" . }}
+    helm.sh/chart: {{ include "magento.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "magento.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "magento.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: magento2-monolith:dev
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: code
+              mountPath: {{.Values.global.monolith.volumeHostPath}}
+          resources:
+            limits:
+              memory: 2000Mi
+            requests:
+              memory: 1500Mi
+          env:
+            - name: VAGRANT_ROOT
+              value: {{.Values.global.monolith.volumeHostPath}}
+            - name: COMPOSER_HOME
+              value: {{.Values.global.monolith.volumeHostPath}}/.composer
+            - name: MAGENTO_ROOT
+              value: {{.Values.global.monolith.volumeHostPath}}/magento
+            - name: MAGENTO_ROOT_HOST
+              value: {{.Values.global.monolith.volumeHostPath}}/magento
+            - name: VAGRANT_ROOT_HOST
+              value: {{.Values.global.monolith.volumeHostPath}}
+            - name: IS_WINDOWS_HOST
+              value: "0"
+        - name: nginx
+          image: nginx:1.9
+          volumeMounts:
+          - name: code
+            mountPath: {{.Values.global.monolith.volumeHostPath}}
+          - name: nginx-config-volume
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+      volumes:
+        - name: nginx-config-volume
+          configMap:
+            name: {{ template "magento.fullname" . }}-nginx-config
+        - name: code
+        {{- if .Values.persistence.nfs.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "magento.fullname" . }}-claim
+        {{- else }}
+          hostPath:
+            path: {{.Values.global.monolith.volumeHostPath}}
+        {{- end -}}

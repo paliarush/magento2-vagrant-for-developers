@@ -1,0 +1,12 @@
+dependencies:
+- name: mysql
+  version: "0.9.2"
+  appVersion: 5.7.14
+  repository: "@stable"
+- name: redis
+  repository: "@stable"
+  version: "5.0"
+#- name: checkout
+#  repository: http://localhost:10191
+#  version: 0.1.0
+#  condition: global.checkout.enabled

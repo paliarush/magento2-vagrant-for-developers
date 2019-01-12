@@ -6,4 +6,4 @@ cd "$(dirname "${BASH_SOURCE[0]}")" && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/functions.sh"
 
-kubectl exec -it "$(getRedisMasterPodId)" --container master -- /bin/bash
+kubectl exec -it "$(getRedisMasterPodId)" --container magento2-redis -- /bin/bash
