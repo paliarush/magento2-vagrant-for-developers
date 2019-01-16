@@ -15,7 +15,7 @@ spec:
       - path: /
         backend:
           serviceName: {{ include "magento.fullname" . }}
-          servicePort: 80
+          servicePort: {{ .Values.service.port }}
 
 ## Multi-service installation
 #      - path: /magento

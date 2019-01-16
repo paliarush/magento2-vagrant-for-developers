@@ -25,15 +25,31 @@ spec:
           image: magento2-monolith:dev
           imagePullPolicy: Never
           ports:
-            - containerPort: 80
+            - containerPort: {{ .Values.service.port }}
           volumeMounts:
             - name: code
               mountPath: {{.Values.global.monolith.volumeHostPath}}
-          resources:
-            limits:
-              memory: 2000Mi
-            requests:
-              memory: 1500Mi
+          env:
+            - name: VAGRANT_ROOT
+              value: {{.Values.global.monolith.volumeHostPath}}
+            - name: COMPOSER_HOME
+              value: {{.Values.global.monolith.volumeHostPath}}/.composer
+            - name: MAGENTO_ROOT
+              value: {{.Values.global.monolith.volumeHostPath}}/magento
+            - name: MAGENTO_ROOT_HOST
+              value: {{.Values.global.monolith.volumeHostPath}}/magento
+            - name: VAGRANT_ROOT_HOST
+              value: {{.Values.global.monolith.volumeHostPath}}
+            - name: IS_WINDOWS_HOST
+              value: "0"
+        - name: {{ .Chart.Name }}-xdebug
+          image: magento2-monolith:dev-xdebug
+          imagePullPolicy: Never
+          ports:
+            - containerPort: {{ .Values.xdebugService.port }}
+          volumeMounts:
+            - name: code
+              mountPath: {{.Values.global.monolith.volumeHostPath}}
           env:
             - name: VAGRANT_ROOT
               value: {{.Values.global.monolith.volumeHostPath}}

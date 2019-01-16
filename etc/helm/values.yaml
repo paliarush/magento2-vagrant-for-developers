@@ -10,8 +10,13 @@ fullnameOverride: ""
 
 service:
   type: NodePort
-  port: 80
-  nodePort: 30102
+  port: 8001
+  nodePort: 30301
+
+xdebugService:
+  type: NodePort
+  port: 8002
+  nodePort: 30302
 
 persistence:
   nfs:
@@ -22,8 +27,8 @@ monolith:
   service:
     type: NodePort
     ports:
-      nodePort: 30102
-      port: 80
+      nodePort: 30301
+      port: 8001
   deployment:
     nginxImage: nginx:1.9
     codeImage: shiftedreality/magento-kubernetes-components-php

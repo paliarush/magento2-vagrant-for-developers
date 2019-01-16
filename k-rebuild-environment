@@ -9,14 +9,8 @@ resetNestingLevel
 
 
 ## TODO: Add status messages
-cd "${vagrant_dir}/scripts" && eval $(minikube docker-env) && docker build -t magento2-monolith:dev -f ../etc/docker/Dockerfile ../scripts 2> >(logError) | {
-  while IFS= read -r line
-  do
-    filterVagrantOutput "${line}"
-    lastline="${line}"
-  done
-  filterVagrantOutput "${lastline}"
-}
+cd "${vagrant_dir}/scripts" && eval $(minikube docker-env) && docker build -t magento2-monolith:dev -f ../etc/docker/monolith/Dockerfile ../scripts
+cd "${vagrant_dir}/scripts" && eval $(minikube docker-env) && docker build -t magento2-monolith:dev-xdebug -f ../etc/docker/monolith-with-xdebug/Dockerfile ../scripts
 
 # TODO: Repeat for other deployments, not just Magento 2
 # See https://github.com/kubernetes/kubernetes/issues/33664#issuecomment-386661882
@@ -26,6 +20,9 @@ cd "${vagrant_dir}/scripts" && eval $(minikube docker-env) && docker build -t ma
 cd "${vagrant_dir}/etc/helm"
 helm list -q | xargs helm delete
 set +e && helm del --purge magento2 && set -e
+
+# TODO: Need to make sure all resources have been successfully deleted before the attempt of recreating them
+sleep 7
 
 cd "${vagrant_dir}/etc/helm" && helm install \
     --name magento2 \
