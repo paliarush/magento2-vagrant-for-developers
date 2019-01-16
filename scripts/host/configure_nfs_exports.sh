@@ -2,7 +2,7 @@
 
 set -e
 
-vagrant_dir=$PWD
+cd "$(dirname "${BASH_SOURCE[0]}")/../.." && vagrant_dir=$PWD
 
 source "${vagrant_dir}/scripts/functions.sh"
 resetNestingLevel
@@ -14,10 +14,11 @@ if [[ ${debug_vagrant_project} -eq 1 ]]; then
     set -x
 fi
 
-nfs_exports_record="\"${vagrant_dir}\" -alldirs -mapall=501:20 -mask 255.0.0.0 -network 192.0.0.0"
+nfs_exports_record="\"${vagrant_dir}\" -alldirs -mapall=$(id -u):$(id -g) -mask 255.0.0.0 -network 192.0.0.0"
 if [[ -z "$(grep "${nfs_exports_record}" /etc/exports)" ]]; then
     status "Updating /etc/exports to enable codebase sharing with containers via NFS"
     echo "${nfs_exports_record}" | sudo tee -a "/etc/exports" 2> >(logError) > >(log)
+    sudo nfsd restart
     # TODO: Implement NFS exports clean up on project removal to prevent NFS mounting errors
 else
     status "NFS exports are properly configured and do not need to be updated"
