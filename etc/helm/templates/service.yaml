@@ -9,10 +9,10 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.global.monolith.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      nodePort: {{ .Values.service.nodePort }}
+    - port: {{ .Values.global.monolith.service.port }}
+      nodePort: {{ .Values.global.monolith.service.nodePort }}
   selector:
     app.kubernetes.io/name: {{ include "magento.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

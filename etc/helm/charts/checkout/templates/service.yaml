@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "checkout.fullname" . }}
+  labels:
+    app: {{ include "checkout.name" . }}
+    app.kubernetes.io/name: {{ include "checkout.name" . }}
+    helm.sh/chart: {{ include "checkout.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.global.checkout.service.type }}
+  ports:
+    - port: {{ .Values.global.checkout.service.port }}
+      nodePort: {{ .Values.global.checkout.service.nodePort }}
+  selector:
+    app.kubernetes.io/name: {{ include "checkout.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

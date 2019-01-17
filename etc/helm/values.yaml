@@ -8,10 +8,10 @@ image:
 nameOverride: ""
 fullnameOverride: ""
 
-service:
-  type: NodePort
-  port: 8001
-  nodePort: 30301
+#service:
+#  type: NodePort
+#  port: 8001
+#  nodePort: 30301
 
 xdebugService:
   type: NodePort
@@ -24,11 +24,6 @@ persistence:
 
 monolith:
   name: magento2
-  service:
-    type: NodePort
-    ports:
-      nodePort: 30301
-      port: 8001
   deployment:
     nginxImage: nginx:1.9
     codeImage: shiftedreality/magento-kubernetes-components-php
@@ -38,7 +33,15 @@ global:
   checkout:
     db:
       enabled: false
+    service:
+      type: NodePort
+      nodePort: 30102
+      port: 80
   monolith:
+    service:
+      type: NodePort
+      nodePort: 30301
+      port: 8001
     mysqlHost: magento-mysql
     volumeHostPath: /Users/user/Projects/magento2-kubernetes-for-developers
 

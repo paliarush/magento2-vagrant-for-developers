@@ -25,7 +25,7 @@ spec:
           image: magento2-monolith:dev
           imagePullPolicy: Never
           ports:
-            - containerPort: {{ .Values.service.port }}
+            - containerPort: {{ .Values.global.monolith.service.port }}
           volumeMounts:
             - name: code
               mountPath: {{.Values.global.monolith.volumeHostPath}}
