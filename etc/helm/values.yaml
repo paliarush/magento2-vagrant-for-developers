@@ -20,7 +20,7 @@ xdebugService:
 
 persistence:
   nfs:
-    enabled: true
+    enabled: false
 
 monolith:
   name: magento2
@@ -35,6 +35,9 @@ monolith:
     imageTag: 7.1-fpm
     imagePullPolicy: Always
 global:
+  checkout:
+    db:
+      enabled: false
   monolith:
     mysqlHost: magento-mysql
     volumeHostPath: /Users/user/Projects/magento2-kubernetes-for-developers

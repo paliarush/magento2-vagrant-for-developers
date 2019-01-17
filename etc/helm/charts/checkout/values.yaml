@@ -15,7 +15,7 @@ service:
 
 persistence:
   nfs:
-    enabled: true
+    enabled: false
 
 monolith:
   volumeHostPath: /Users/user/Projects/magento2-kubernetes-for-developers
@@ -53,5 +53,7 @@ affinity: {}
 global:
   chekout:
     mysqlHost: checkout-mysql
+    db:
+      enabled: true
     volumeHostPath: /Users/user/Projects/magento2-kubernetes-for-developers
 
