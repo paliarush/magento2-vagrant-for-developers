@@ -31,6 +31,7 @@ monolith:
     imagePullPolicy: Always
 global:
   checkout:
+    enabled: false
     db:
       enabled: false
     service:
