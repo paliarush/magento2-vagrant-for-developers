@@ -1,5 +1,7 @@
 # Vagrant project for Magento 2 developers (optimized for Mac, Windows and \*nix hosts)
 
+:warning: Current project is not supported anymore. Please check out https://github.com/magento/magento2-kubernetes-devbox which is under development and may become an official devbox for Magento 2 in the future.
+
 [![Tests passing on OSX](docs/images/tests_badge.png)](https://github.com/paliarush/magento2-vagrant-for-developers-tests)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Semver](http://img.shields.io/SemVer/2.0.0.png?color=blue)](http://semver.org/spec/v2.0.0.html)
